@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="retrofit_connect_timeout_seconds">60</integer>
+    <integer name="retrofit_read_timeout_seconds">60</integer>
+    <integer name="retrofit_write_timeout_seconds">60</integer>
+
+</resources>

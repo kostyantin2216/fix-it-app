@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorButton">#8BC34A</color>
+
+    <color name="gold">#ffd700</color>
+
+    <color name="transparentWhite_20">#20FFFFFF</color>
+    <color name="transparentWhite_40">#40FFFFFF</color>
+    <color name="transparentWhite_60">#60FFFFFF</color>
+    <color name="transparentWhite_80">#80FFFFFF</color>
+
+    <color name="transparentBlack_20">#20000000</color>
+    <color name="transparentBlack_40">#40000000</color>
+    <color name="transparentBlack_60">#60000000</color>
+    <color name="transparentBlack_80">#80000000</color>
+    <color name="transparentBlack_AA">#AA000000</color>
+    <color name="transparentBlack_BB">#BB000000</color>
+
+    <color name="grey_50">#FAFAFA</color>
+    <color name="grey_100">#F5F5F5</color>
+    <color name="grey_200">#EEEEEE</color>
+    <color name="grey_300">#E0E0E0</color>
+    <color name="grey_400">#BDBDBD</color>
+    <color name="grey_500">#9E9E9E</color>
+    <color name="grey_600">#757575</color>
+    <color name="grey_700">#616161</color>
+    <color name="grey_800">#424242</color>
+    <color name="grey_900">#212121</color>
+
+</resources>

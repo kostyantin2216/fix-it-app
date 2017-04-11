@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Fix It Core</string>
+    <string name="data_access_activity_name">Fix It Data</string>
+
+    <!-- Data Types -->
+    <string name="map_areas">Map Areas</string>
+
+    <string name="error_default_display_msg">We apologize for any inconveniences but an unexpected error has occurred :(</string>
+    <string name="error_no_network_msg">Please check your internet connection and try again!</string>
+
+    <string name="report_error">Report Error</string>
+    <string name="internet_settings">Internet Settings</string>
+    <string name="continue_">Continue</string>
+
+</resources>

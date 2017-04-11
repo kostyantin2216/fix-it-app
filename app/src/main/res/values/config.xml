@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="google_geo_api_key">AIzaSyBqA5tZjB_QeP7ONTgDQURWcafuavNVzNE</string>
+    <integer name="db_version">3</integer>
+
+    <integer name="max_tradesmen_selection">3</integer>
+    
+</resources>

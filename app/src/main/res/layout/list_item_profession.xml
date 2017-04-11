@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_marginTop="@dimen/list_item_vertical_padding"
+    android:layout_marginBottom="@dimen/list_item_vertical_padding"
+    android:layout_marginLeft="@dimen/list_item_horizontal_padding"
+    android:layout_marginRight="@dimen/list_item_horizontal_padding">
+
+    <ImageView
+        android:id="@+id/iv_profession_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_plumber"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/tv_profession_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/extra_large_text_size"
+        android:background="@color/transparentBlack_AA"
+        android:textColor="@android:color/white"
+        android:padding="12dp"
+        android:layout_gravity="bottom"
+        tools:text="Plumber"/>
+
+</FrameLayout>

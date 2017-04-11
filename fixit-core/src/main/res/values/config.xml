@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="server_api_base_url">http://10.0.0.3/</string>
+    <string name="api_key">TlKm7GFjtGVD2YoQruca9emGfSz9j323</string>
+    <string name="user_agent">Fix-It-Android</string>
+
+    <string name="email_for_support">kostya2216@gmail.com</string>
+
+    <integer name="server_connection_retry_limit">5</integer>
+    <integer name="server_connection_retry_interval_ms">800</integer>
+
+    <integer name="search_result_polling_retry_limit">5</integer>
+    <integer name="search_result_polling_retry_interval_ms">800</integer>
+
+    <integer name="synchronization_min_interval_ms">3600000</integer> <!-- 1 hour -->
+
+    <integer name="default_recycler_item_animation_time_millis">700</integer>
+
+</resources>

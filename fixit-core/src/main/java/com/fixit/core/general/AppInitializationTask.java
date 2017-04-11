@@ -1,0 +1,172 @@
+package com.fixit.core.general;
+
+import android.content.Context;
+import android.os.Handler;
+import android.os.Process;
+import android.provider.Settings;
+import android.text.TextUtils;
+
+import com.fixit.core.config.AppConfig;
+import com.fixit.core.data.AppInstallation;
+import com.fixit.core.factories.DAOFactory;
+import com.fixit.core.factories.ServerAPIFactory;
+import com.fixit.core.rest.apis.AppInstallationAPI;
+import com.fixit.core.rest.apis.AppServiceAPI;
+import com.fixit.core.synchronization.SynchronizationTask;
+import com.fixit.core.utils.FILog;
+import com.fixit.core.utils.PrefUtils;
+
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
+import retrofit2.Response;
+
+/**
+ * Created by konstantin on 4/2/2017.
+ */
+public class AppInitializationTask extends Thread {
+
+    private final static String LOG_TAG = AppInitializationTask.class.getSimpleName();
+
+    private final AppInitializationCallback mCallback;
+    private WeakReference<Context> mContextReference;
+
+    private final Handler mHandler;
+    private final Set<String> mErrors;
+
+    private int mAsyncCount;
+    private boolean finishedSynchronousWork = false;
+
+    public AppInitializationTask(Context context, AppInitializationCallback callback) {
+        mContextReference = new WeakReference<>(context);
+        mCallback = callback;
+        mErrors = new HashSet<>();
+        mAsyncCount = 0;
+        mHandler = new Handler(context.getMainLooper());
+    }
+
+    private Context getContext() {
+        Context context = mContextReference.get();
+        if(context == null && mCallback != null) {
+            context = mCallback.getApplicationContext();
+            mContextReference = new WeakReference<>(context);
+        }
+        return context;
+    }
+
+    @Override
+    public void run() {
+        Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+
+        FILog.i(LOG_TAG, "starting app initialization");
+
+        Context context = getContext();
+        if(context != null) {
+            ServerAPIFactory serverAPIFactory = mCallback.getServerApiFactory();
+            DAOFactory daoFactory = mCallback.getDaoFactory();
+
+            if(false/* TODO: change to: TextUtils.isEmpty(PrefUtils.getInstallationId(context))*/) {
+                sendInstallation(context, serverAPIFactory.createAppInstallationApi());
+            }
+
+            synchronizeDatabase(context, serverAPIFactory.createAppServiceApi(), daoFactory);
+        } else {
+            FILog.e(LOG_TAG, "cannot initialize app without context");
+        }
+
+        finishedSynchronousWork = true;
+        if (isComplete()) {
+            finish();
+        }
+    }
+
+    private void sendInstallation(Context context, AppInstallationAPI api) {
+        String installationId = createUniqueID(context);
+
+        AppInstallation appInstallation = new AppInstallation(
+                installationId,
+                "", // TODO: get url from google play.
+                AppConfig.getDeviceInfo(),
+                AppConfig.getVersionInfo(context),
+                new Date()
+        );
+
+        try {
+            Response<AppInstallation> response = api.create(appInstallation).execute();
+            appInstallation = response.body();
+            PrefUtils.setInstallationId(context, appInstallation.getId());
+        } catch (IOException e) {
+            // Do nothing, try again next time app opens.
+            FILog.e(LOG_TAG, "Couldn't send app installation to server.", e);
+        }
+    }
+
+    private void synchronizeDatabase(Context context, AppServiceAPI api, DAOFactory daoFactory) {
+        SynchronizationTask task = new SynchronizationTask(context, api, daoFactory, new SynchronizationTask.SynchronizationCallback() {
+            @Override
+            public void onSynchronizationComplete() {
+                finishAsync();
+            }
+
+            @Override
+            public void onSynchronizationError(String msg, Throwable t) {
+                mCallback.onInitializationError(msg, true);
+                finishAsync();
+            }
+        });
+
+        if(task.isReadyForSynchronization()) {
+            startAsync();
+            task.run(); // We are already in a background thread so just run the sync task thread instead of starting it.
+        }
+    }
+
+    private void startAsync() {
+        mAsyncCount++;
+    }
+
+    private synchronized void finishAsync() {
+        mAsyncCount--;
+        if(isComplete()) {
+            finish();
+        }
+    }
+
+    private boolean isComplete() {
+        return mAsyncCount == 0 && finishedSynchronousWork;
+    }
+
+    private void finish() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onInitializationComplete(mErrors);
+                mErrors.clear();
+            }
+        });
+    }
+
+    private String createUniqueID(Context context) {
+        String uniqueId = "";
+        uniqueId = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+
+        if(TextUtils.isEmpty(uniqueId)
+                || uniqueId.toLowerCase().contains("android")){
+            uniqueId = UUID.randomUUID().toString().replace("-","");
+        }
+        return uniqueId;
+    }
+
+    public interface AppInitializationCallback {
+        Context getApplicationContext();
+        ServerAPIFactory getServerApiFactory();
+        DAOFactory getDaoFactory();
+        void onInitializationComplete(Set<String> errors);
+        void onInitializationError(String error, boolean fatal);
+    }
+}
