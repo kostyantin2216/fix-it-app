@@ -15,7 +15,7 @@ public class ResultsController extends BaseController {
 
     public ResultsController(BaseApplication baseApplication) {
         super(baseApplication);
-        mSearchManager = new SearchManager(getServerApiFactory().createAppServiceApi());
+        mSearchManager = new SearchManager(getServerApiFactory().createSearchServiceApi());
     }
 
     public void fetchResults(String searchId, SearchManager.ResultCallback callback) {

@@ -10,14 +10,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 
 import com.fixit.app.R;
+import com.fixit.app.ifs.validation.AddressValidator;
 import com.fixit.app.ui.fragments.ProfessionsListFragment;
 import com.fixit.app.ui.fragments.SearchFragment;
 import com.fixit.core.BaseApplication;
 import com.fixit.core.controllers.SearchController;
+import com.fixit.core.data.JobLocation;
+import com.fixit.core.data.MutableLatLng;
 import com.fixit.core.data.Profession;
 import com.fixit.core.general.SearchManager;
 import com.fixit.core.ui.activities.BaseActivity;
 import com.fixit.core.utils.Constants;
+import com.fixit.core.utils.FILog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -36,6 +40,7 @@ public class SearchActivity extends BaseActivity<SearchController>
                    SearchManager.SearchCallback,
                    ProfessionsListFragment.ProfessionSelectionListener {
 
+    private static final String LOG_TAG = "#" + SearchActivity.class.getSimpleName();
     private static final String FRAG_TAG_SEARCH = "searchFrag";
     private static final String FRAG_TAG_PROFESSIONS = "professionsFrag";
 
@@ -44,7 +49,10 @@ public class SearchActivity extends BaseActivity<SearchController>
     private static final String DIALOG_ERROR = "dialog_error";
 
     private GoogleApiClient mGoogleApiClient;
+    private AddressValidator mAddressValidator;
     private boolean mResolvingError = false;
+
+    private JobLocation mJobLocation;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +73,8 @@ public class SearchActivity extends BaseActivity<SearchController>
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(this, this)
                 .build();
+
+        mAddressValidator = new AddressValidator();
     }
 
     @Override
@@ -168,9 +178,32 @@ public class SearchActivity extends BaseActivity<SearchController>
 
     @Override
     public void performSearch(String professionName, String address) {
-        Profession profession = getController().getProfession(professionName);
+        final Profession profession = getController().getProfession(professionName);
         if(profession != null) {
-            getController().sendSearch(this, profession, address, this);
+            mAddressValidator.validate(address, new AddressValidator.AddressValidationCallback() {
+                @Override
+                public void onAddressValidated(AddressValidator.AddressValidationResult result) {
+                    if(result.isValid && result.jobLocation != null) {
+                        mJobLocation = result.jobLocation;
+                        double lat = mJobLocation.getLat();
+                        double lng = mJobLocation.getLng();
+                        getController().sendSearch(
+                                SearchActivity.this,
+                                profession,
+                                new MutableLatLng(lat, lng),
+                                SearchActivity.this
+                        );
+                    } else {
+                        notifyUser(getString(R.string.invalid_address));
+                    }
+                }
+
+                @Override
+                public void onValidationError(String error, Throwable t) {
+                    FILog.e(LOG_TAG, "Address Geocode Validation error: " + error, t, getApplicationContext());
+                    invalidAddress();
+                }
+            });
         } else {
             notifyUser(getString(R.string.invalid_profession));
         }

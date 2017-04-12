@@ -6,30 +6,18 @@ package com.fixit.core.rest.responses.data;
 
 public class SearchResponseData {
 
-    private boolean addressSupported;
-    private String searchId;
+    private String searchKey;
 
-    public boolean isAddressSupported() {
-        return addressSupported;
+    public String getSearchKey() {
+        return searchKey;
     }
 
-    public void setAddressSupported(boolean addressSupported) {
-        this.addressSupported = addressSupported;
-    }
-
-    public String getSearchId() {
-        return searchId;
-    }
-
-    public void setSearchId(String searchId) {
-        this.searchId = searchId;
+    public void setSearchKey(String searchKey) {
+        this.searchKey = searchKey;
     }
 
     @Override
     public String toString() {
-        return "SearchResponseData{" +
-                "addressSupported=" + addressSupported +
-                ", searchId='" + searchId + '\'' +
-                '}';
+        return "SearchResponseData [searchKey=" + searchKey + "]";
     }
 }

@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.fixit.core.BaseApplication;
+import com.fixit.core.data.MutableLatLng;
 import com.fixit.core.data.Profession;
 import com.fixit.core.database.ProfessionDAO;
 import com.fixit.core.general.SearchManager;
@@ -22,7 +23,7 @@ public class SearchController extends BaseController {
 
     public SearchController(BaseApplication baseApplication) {
         super(baseApplication);
-        mSearchManager = new SearchManager(getServerApiFactory().createAppServiceApi());
+        mSearchManager = new SearchManager(getServerApiFactory().createSearchServiceApi());
         mProfessionDao = getDaoFactory().createProfessionDao();
     }
 
@@ -34,8 +35,8 @@ public class SearchController extends BaseController {
         return mProfessionDao.findProfessionByName(name);
     }
 
-    public void sendSearch(Context context, Profession profession, String address, SearchManager.SearchCallback callback) {
-        mSearchManager.sendSearch(context, profession, address, callback);
+    public void sendSearch(Context context, Profession profession, MutableLatLng location, SearchManager.SearchCallback callback) {
+        mSearchManager.sendSearch(context, profession, location, callback);
     }
 
 }

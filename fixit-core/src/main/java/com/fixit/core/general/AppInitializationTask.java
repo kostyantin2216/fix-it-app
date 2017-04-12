@@ -11,7 +11,7 @@ import com.fixit.core.data.AppInstallation;
 import com.fixit.core.factories.DAOFactory;
 import com.fixit.core.factories.ServerAPIFactory;
 import com.fixit.core.rest.apis.AppInstallationAPI;
-import com.fixit.core.rest.apis.AppServiceAPI;
+import com.fixit.core.rest.apis.SynchronizationServiceAPI;
 import com.fixit.core.synchronization.SynchronizationTask;
 import com.fixit.core.utils.FILog;
 import com.fixit.core.utils.PrefUtils;
@@ -73,7 +73,7 @@ public class AppInitializationTask extends Thread {
                 sendInstallation(context, serverAPIFactory.createAppInstallationApi());
             }
 
-            synchronizeDatabase(context, serverAPIFactory.createAppServiceApi(), daoFactory);
+            synchronizeDatabase(context, serverAPIFactory.createSynchronizationApi(), daoFactory);
         } else {
             FILog.e(LOG_TAG, "cannot initialize app without context");
         }
@@ -105,7 +105,7 @@ public class AppInitializationTask extends Thread {
         }
     }
 
-    private void synchronizeDatabase(Context context, AppServiceAPI api, DAOFactory daoFactory) {
+    private void synchronizeDatabase(Context context, SynchronizationServiceAPI api, DAOFactory daoFactory) {
         SynchronizationTask task = new SynchronizationTask(context, api, daoFactory, new SynchronizationTask.SynchronizationCallback() {
             @Override
             public void onSynchronizationComplete() {

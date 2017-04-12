@@ -1,13 +1,46 @@
 package com.fixit.app.ifs.geodata;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by konstantin on 3/30/2017.
  */
 
 public class AddressComponent {
+
+    public enum Type {
+        street_number,
+        route,
+        sublocality,
+        locality,
+        administrative_area_level_1,
+        country,
+        postal_code;
+
+        public static Type find(String name) {
+            switch (name) {
+                case "street_number":
+                    return street_number;
+                case "route":
+                    return route;
+                case "sublocality":
+                    return sublocality;
+                case "locality":
+                    return locality;
+                case "administrative_area_level_1":
+                    return administrative_area_level_1;
+                case "country":
+                    return country;
+                case "postal_code":
+                    return postal_code;
+                default:
+                    return null;
+            }
+        }
+    }
 
     private String long_name;
     private String short_name;
@@ -37,6 +70,18 @@ public class AddressComponent {
         this.types = types;
     }
 
+    public static Map<Type, AddressComponent> sortByType(List<AddressComponent> addressComponents) {
+        Map<Type, AddressComponent> sorted = new HashMap<>();
+        for (AddressComponent component : addressComponents) {
+            for (String componentType : component.getTypes()) {
+                Type type = Type.find(componentType);
+                if (type != null) {
+                    sorted.put(type, component);
+                }
+            }
+        }
+        return sorted;
+    }
     @Override
     public String toString() {
         return "AddressComponent{" +

@@ -1,32 +1,27 @@
 package com.fixit.core.rest.services;
 
-import com.fixit.core.rest.apis.AppServiceAPI;
+import com.fixit.core.rest.apis.SearchServiceAPI;
 import com.fixit.core.rest.requests.APIRequest;
 import com.fixit.core.rest.requests.data.SearchRequestData;
 import com.fixit.core.rest.requests.data.SearchResultRequestData;
-import com.fixit.core.rest.requests.data.SynchronizationRequestData;
 import com.fixit.core.rest.responses.APIResponse;
 import com.fixit.core.rest.responses.data.SearchResponseData;
 import com.fixit.core.rest.responses.data.SearchResultResponseData;
-import com.fixit.core.rest.responses.data.SynchronizationResponseData;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 /**
- * Created by Kostyantin on 3/20/2017.
+ * Created by Kostyantin on 4/12/2017.
  */
 
-public interface AppServiceService {
+public interface SearchServiceService {
 
-    @POST(AppServiceAPI.API_NAME + AppServiceAPI.EP_SYNCHRONIZE)
-    Call<APIResponse<SynchronizationResponseData>> synchronize(@Body APIRequest<SynchronizationRequestData> request);
-
-    @POST(AppServiceAPI.API_NAME + AppServiceAPI.EP_SEARCH)
+    @POST(SearchServiceAPI.API_NAME)
     Call<APIResponse<SearchResponseData>> beginSearch(@Body APIRequest<SearchRequestData> request);
 
-    @POST(AppServiceAPI.API_NAME + AppServiceAPI.EP_RESULTS)
+    @POST(SearchServiceAPI.API_NAME)
     Call<APIResponse<SearchResultResponseData>> fetchResults(@Body APIRequest<SearchResultRequestData> request);
 
 }

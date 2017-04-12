@@ -30,7 +30,7 @@ public class APIResponse<RD> {
     @Override
     public String toString() {
         return "APIResponse{" +
-                "header=" + header +
+                "mHeader=" + header +
                 ", data=" + data +
                 '}';
     }

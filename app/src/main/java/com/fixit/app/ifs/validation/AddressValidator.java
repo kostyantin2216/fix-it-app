@@ -2,12 +2,18 @@ package com.fixit.app.ifs.validation;
 
 import android.os.AsyncTask;
 
+import com.fixit.app.ifs.geodata.AddressComponent;
+import com.fixit.app.ifs.geodata.GeocodeGeometry;
 import com.fixit.app.ifs.geodata.GeocodeResponse;
 import com.fixit.app.ifs.geodata.GeocodeResult;
+import com.fixit.core.data.JobLocation;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.Map;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -24,7 +30,7 @@ public class AddressValidator {
         new ValidationTask(callback).execute(address);
     }
 
-    private static class ValidationTask extends AsyncTask<String, Void, Boolean> {
+    private static class ValidationTask extends AsyncTask<String, Void, AddressValidationResult> {
 
         private final AddressValidationCallback mCallback;
 
@@ -33,7 +39,7 @@ public class AddressValidator {
         }
 
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected AddressValidationResult doInBackground(String... params) {
             String address = params[0];
 
             OkHttpClient httpClient = new OkHttpClient.Builder().build();
@@ -54,7 +60,7 @@ public class AddressValidator {
                 if(geocodeResponse.getStatus().equals("OK")) {
                     for(GeocodeResult result : geocodeResponse.getResults()) {
                         if(result.getTypes().contains("street_address")) {
-                            return true;
+                            return new AddressValidationResult(geocodeResponse);
                         }
                     }
                 }
@@ -62,17 +68,72 @@ public class AddressValidator {
                 mCallback.onValidationError("Could not execute request to google apis geocoder.", e);
             }
 
-            return false;
+            return new AddressValidationResult(null);
         }
 
         @Override
-        protected void onPostExecute(Boolean isValid) {
-            mCallback.onAddressValidated(isValid);
+        protected void onPostExecute(AddressValidationResult result) {
+            mCallback.onAddressValidated(result);
+        }
+    }
+
+    public static class AddressValidationResult {
+        public final JobLocation jobLocation;
+
+        private AddressValidationResult(GeocodeResponse geocodeResponse) {
+            if(geocodeResponse != null && geocodeResponse.getStatus().equals("OK")) {
+                List<GeocodeResult> results = geocodeResponse.getResults();
+                GeocodeResult result = null;
+                for(GeocodeResult tempResult : results) {
+                    if(tempResult.getTypes().contains("street_address")) {
+                        result = tempResult;
+                        break;
+                    }
+                }
+
+                if(result != null) {
+                    jobLocation = new JobLocation();
+
+                    Map<AddressComponent.Type, AddressComponent> addressComponentsByType = AddressComponent.sortByType(result.getAddress_components());
+
+                    for(Map.Entry<AddressComponent.Type, AddressComponent> addressComponentForType : addressComponentsByType.entrySet()) {
+                        AddressComponent addressComponent = addressComponentForType.getValue();
+                        switch (addressComponentForType.getKey()) {
+                            case street_number:
+                                jobLocation.setStreetNum(Integer.valueOf(addressComponent.getLong_name()));
+                                break;
+                            case route:
+                                jobLocation.setStreet(addressComponent.getLong_name());
+                                break;
+                            case sublocality:
+                                jobLocation.setNeighborhood(addressComponent.getLong_name());
+                                break;
+                            case locality:
+                                jobLocation.setCity(addressComponent.getLong_name());
+                                break;
+                            case administrative_area_level_1:
+                                jobLocation.setProvince(addressComponent.getLong_name());
+                                break;
+                            case postal_code:
+                                jobLocation.setZipCode(addressComponent.getLong_name());
+                                break;
+                        }
+                    }
+
+                    LatLng latLng = result.getGeometry().getLocation();
+                    jobLocation.setLat(latLng.latitude);
+                    jobLocation.setLng(latLng.longitude);
+                } else {
+                    jobLocation = null;
+                }
+            } else {
+                this.jobLocation = null;
+            }
         }
     }
 
     public interface AddressValidationCallback {
-        public void onAddressValidated(boolean isValid);
+        public void onAddressValidated(AddressValidationResult result);
         public void onValidationError(String error, Throwable t);
     }
 

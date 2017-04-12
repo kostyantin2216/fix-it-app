@@ -6,24 +6,24 @@ package com.fixit.core.rest.requests.data;
 
 public class SearchResultRequestData {
 
-    private String searchId;
+    private String searchKey;
 
-    public SearchResultRequestData(String searchId) {
-        this.searchId = searchId;
+    public SearchResultRequestData(String searchKey) {
+        this.searchKey = searchKey;
     }
 
-    public String getSearchId() {
-        return searchId;
+    public String getSearchKey() {
+        return searchKey;
     }
 
-    public void setSearchId(String searchId) {
-        this.searchId = searchId;
+    public void setSearchKey(String searchKey) {
+        this.searchKey = searchKey;
     }
 
     @Override
     public String toString() {
         return "SearchResultRequestData{" +
-                "searchId='" + searchId + '\'' +
+                "searchKey='" + searchKey + '\'' +
                 '}';
     }
 }

@@ -7,7 +7,7 @@ import com.fixit.core.data.DataModelObject;
 import com.fixit.core.data.Profession;
 import com.fixit.core.database.CommonDAO;
 import com.fixit.core.factories.DAOFactory;
-import com.fixit.core.rest.apis.AppServiceAPI;
+import com.fixit.core.rest.apis.SynchronizationServiceAPI;
 import com.fixit.core.rest.requests.data.SynchronizationRequestData;
 import com.fixit.core.rest.responses.APIResponse;
 import com.fixit.core.rest.responses.APIResponseHeader;
@@ -31,10 +31,10 @@ public class SynchronizationTask extends Thread {
 
     private final SynchronizationCallback mCallback;
     private final SynchronizationHistory mHistory;
-    private final AppServiceAPI mServiceApi;
+    private final SynchronizationServiceAPI mServiceApi;
     private final DAOFactory mDaoFactory;
 
-    public SynchronizationTask(Context context, AppServiceAPI api, DAOFactory daoFactory, SynchronizationCallback callback) {
+    public SynchronizationTask(Context context, SynchronizationServiceAPI api, DAOFactory daoFactory, SynchronizationCallback callback) {
         this.mServiceApi = api;
         this.mCallback = callback;
         this.mDaoFactory = daoFactory;

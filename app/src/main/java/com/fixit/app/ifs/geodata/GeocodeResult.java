@@ -1,6 +1,8 @@
 package com.fixit.app.ifs.geodata;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by konstantin on 3/30/2017.

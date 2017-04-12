@@ -35,7 +35,7 @@ public class APIRequest<RD> {
     @Override
     public String toString() {
         return "APIRequest{" +
-                "header=" + header +
+                "mHeader=" + header +
                 '}';
     }
 }

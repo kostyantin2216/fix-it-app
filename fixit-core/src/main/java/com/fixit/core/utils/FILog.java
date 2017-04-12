@@ -1,10 +1,12 @@
 package com.fixit.core.utils;
 
+import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.fixit.core.config.AppConfig;
 import com.fixit.core.data.ServerLog;
+import com.fixit.core.general.ErrorReporter;
 import com.fixit.core.rest.apis.ServerLogDataAPI;
 import com.fixit.core.rest.callbacks.EmptyCallback;
 
@@ -26,44 +28,44 @@ public class FILog {
 
 
     public static void i(String message) {
-        log(Level.INFO, null, message, null, null, null);
+        log(Level.INFO, null, message, null, null);
     }
 
     public static void i(String tag, String message) {
-        log(Level.INFO, tag, message, null, null, null);
+        log(Level.INFO, tag, message, null, null);
     }
 
-    public static void i(String tag, String message, ServerLogDataAPI api, String userId) {
-        log(Level.INFO, tag, message, new Throwable(message), api, userId);
+    public static void i(String tag, String message, Context context) {
+        log(Level.INFO, tag, message, new Throwable(message), context);
     }
 
     public static void w(String message) {
-        log(Level.WARN, null, message, null, null, null);
+        log(Level.WARN, null, message, null, null);
     }
 
     public static void w(String tag, String message) {
-        log(Level.WARN, tag, message, null, null, null);
+        log(Level.WARN, tag, message, null, null);
     }
 
 
     public static void e(String message) {
-        log(Level.ERROR, null, message, new Throwable(message) ,null, null);
+        log(Level.ERROR, null, message, new Throwable(message) ,null);
     }
 
     public static void e(String tag, String message) {
-        log(Level.ERROR, tag, message, new Throwable(message), null, null);
+        log(Level.ERROR, tag, message, new Throwable(message), null);
     }
 
     public static void e(String tag, String message, Throwable cause) {
-        log(Level.ERROR, tag, message, cause, null, null);
+        log(Level.ERROR, tag, message, cause, null);
     }
 
-    public static void e(String tag, String message, Throwable cause, ServerLogDataAPI api, String userId) {
-        log(Level.ERROR, tag, message, cause, api, userId);
+    public static void e(String tag, String message, Throwable cause, Context context) {
+        log(Level.ERROR, tag, message, cause, context);
     }
 
 
-    private static void log(Level level, String tag, String message, Throwable cause, ServerLogDataAPI logApi, String userId) {
+    private static void log(Level level, String tag, String message, Throwable cause, Context context) {
         if(tag == null) {
             tag = "";
         }
@@ -73,23 +75,15 @@ public class FILog {
             case INFO:
                 Log.i(tag, message, cause);
                 break;
+            case WARN:
+                Log.w(tag, message, cause);
             case ERROR:
                 Log.e(tag, message, cause);
                 break;
         }
 
-        if(logApi != null) {
-            ServerLog serverLog = new ServerLog(
-                    userId,
-                    level.name(),
-                    tag,
-                    message, Log.getStackTraceString(cause),
-                    AppConfig.getDeviceInfo(),
-                    AppConfig.getVersionInfo(null),
-                    new Date()
-            );
-
-            logApi.create(serverLog).enqueue(new EmptyCallback<ServerLog>());
+        if(context != null) {
+            ErrorReporter.report(context, level.name(), tag, message, Log.getStackTraceString(cause));
         }
     }
 

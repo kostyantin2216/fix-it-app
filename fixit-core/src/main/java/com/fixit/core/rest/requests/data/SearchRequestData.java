@@ -1,5 +1,7 @@
 package com.fixit.core.rest.requests.data;
 
+import com.fixit.core.data.MutableLatLng;
+
 /**
  * Created by konstantin on 3/30/2017.
  */
@@ -7,13 +9,13 @@ package com.fixit.core.rest.requests.data;
 public class SearchRequestData {
 
     private int professionId;
-    private String address;
+    private MutableLatLng latLng;
 
     public SearchRequestData() { }
 
-    public SearchRequestData(int professionId, String address) {
+    public SearchRequestData(int professionId, MutableLatLng latLng) {
         this.professionId = professionId;
-        this.address = address;
+        this.latLng = latLng;
     }
 
     public int getProfessionId() {
@@ -24,19 +26,19 @@ public class SearchRequestData {
         this.professionId = professionId;
     }
 
-    public String getAddress() {
-        return address;
+    public MutableLatLng getLatLng() {
+        return latLng;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setLatLng(MutableLatLng latLng) {
+        this.latLng = latLng;
     }
 
     @Override
     public String toString() {
         return "SearchRequestData{" +
                 "professionId=" + professionId +
-                ", address='" + address + '\'' +
+                ", latLng=" + latLng +
                 '}';
     }
 }

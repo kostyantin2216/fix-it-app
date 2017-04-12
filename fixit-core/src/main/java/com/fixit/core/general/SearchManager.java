@@ -5,11 +5,12 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.fixit.core.config.AppConfig;
+import com.fixit.core.data.MutableLatLng;
 import com.fixit.core.data.Profession;
 import com.fixit.core.data.Tradesman;
 import com.fixit.core.rest.APIError;
+import com.fixit.core.rest.apis.SearchServiceAPI;
 import com.fixit.core.rest.callbacks.AppServiceErrorCallback;
-import com.fixit.core.rest.apis.AppServiceAPI;
 import com.fixit.core.rest.callbacks.AppServiceCallback;
 import com.fixit.core.rest.requests.data.SearchRequestData;
 import com.fixit.core.rest.requests.data.SearchResultRequestData;
@@ -30,27 +31,27 @@ import retrofit2.Call;
 
 public class SearchManager {
 
-    private final AppServiceAPI mApi;
+    private final SearchServiceAPI mApi;
 
-    public SearchManager(AppServiceAPI api) {
+    public SearchManager(SearchServiceAPI api) {
         this.mApi = api;
     }
 
-    public void sendSearch(Context context, Profession profession, String address, final SearchCallback searchCallback) {
-        SearchRequestData requestData = new SearchRequestData(profession.getId(), address);
+    public void sendSearch(Context context, Profession profession, MutableLatLng location, final SearchCallback searchCallback) {
+        SearchRequestData requestData = new SearchRequestData(profession.getId(), location);
         mApi.beginSearch(requestData, new AppServiceCallback<SearchResponseData>(context) {
             @Override
             public void onResponse(SearchResponseData responseData) {
-                if(responseData.isAddressSupported()) {
-                    searchCallback.onSearchStarted(responseData.getSearchId());
-                } else {
-                    searchCallback.invalidAddress();
-                }
+                searchCallback.onSearchStarted(responseData.getSearchKey());
             }
 
             @Override
             public void onAppServiceError(List<APIError> errors) {
-                searchCallback.onAppServiceError(errors);
+                if (APIError.contains(APIError.Error.UNSUPPORTED, errors)){
+                    searchCallback.invalidAddress();
+                } else {
+                    searchCallback.onAppServiceError(errors);
+                }
             }
 
             @Override
@@ -61,7 +62,7 @@ public class SearchManager {
     }
 
     public ResultsFetcher fetchResults(Context context, String searchId, ResultCallback resultCallback) {
-        ResultsFetcher resultsFetcher = new ResultsFetcher(context, searchId, resultCallback);
+        ResultsFetcher resultsFetcher = new ResultsFetcher(context, searchId, resultCallback, mApi);
         resultsFetcher.start();
         return resultsFetcher;
     }
@@ -76,10 +77,11 @@ public class SearchManager {
         void onResultsFetchTimeout();
     }
 
-    public class ResultsFetcher extends Thread {
+    public static class ResultsFetcher extends Thread {
 
         private final String searchId;
         private final ResultCallback resultCallback;
+        private final SearchServiceAPI searchApi;
 
         private final Handler handler;
 
@@ -94,8 +96,9 @@ public class SearchManager {
         private volatile boolean isCancelled = false;
         private boolean isFinished = false;
 
-        private ResultsFetcher(Context context, String searchId, ResultCallback resultCallback) {
+        private ResultsFetcher(Context context, String searchId, ResultCallback resultCallback, SearchServiceAPI searchApi) {
             this.searchId = searchId;
+            this.searchApi = searchApi;
             this.resultCallback = resultCallback;
             this.handler = new Handler(Looper.getMainLooper());
 
@@ -108,7 +111,7 @@ public class SearchManager {
         @Override
         public void run() {
             SearchResultRequestData requestData = new SearchResultRequestData(searchId);
-            execute(mApi.fetchResults(requestData));
+            execute(searchApi.fetchResults(requestData));
             isFinished = true;
         }
 

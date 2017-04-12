@@ -47,8 +47,8 @@ public class RetrofitFactory {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        String apiKey = AppConfig.getString(context, AppConfig.CONFIG_API_KEY, "");
-        String userAgent = AppConfig.getString(context, AppConfig.CONFIG_USER_AGENT, "");
+        String apiKey = AppConfig.getString(context, AppConfig.KEY_API_KEY, "");
+        String userAgent = AppConfig.getString(context, AppConfig.KEY_USER_AGENT, "");
 
         return new OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
