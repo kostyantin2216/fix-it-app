@@ -7,9 +7,19 @@
 
     <string name="error_default_display_msg">We apologize for any inconveniences but an unexpected error has occurred :(</string>
     <string name="error_no_network_msg">Please check your internet connection and try again!</string>
+    <string name="error_server_unavailable">Server is currently unavailable, please try again later.</string>
+
+    <string name="loading">Loading…</string>
+    <string name="please_wait">Please wait</string>
+
+    <string name="no_internet_browser">Could not find an internet browser application on device.</string>
 
     <string name="report_error">Report Error</string>
-    <string name="internet_settings">Internet Settings</string>
+    <string name="wifi_settings">Wifi Settings</string>
+    <string name="mobile_networks">Mobile Networks</string>
     <string name="continue_">Continue</string>
+    <string name="exit">Exit</string>
+
+    <string name="empty_list">Nothing to show</string>
 
 </resources>

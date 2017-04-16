@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * Created by konstantin on 4/3/2017.
  */
-
 public class TradesmenResultsFragment extends StaticRecyclerListFragment<ResultsController>
     implements TradesmenAdapter.TradesmanAdapterCallback {
 
@@ -31,6 +30,11 @@ public class TradesmenResultsFragment extends StaticRecyclerListFragment<Results
 
         mAdapter = new TradesmenAdapter(getContext(), this);
         setAdapter(mAdapter);
+    }
+
+    @Override
+    public String getEmptyListMessage() {
+        return getString(R.string.no_tradesmen_results);
     }
 
     @Override
@@ -60,11 +64,13 @@ public class TradesmenResultsFragment extends StaticRecyclerListFragment<Results
     }
 
     public void setTradesmen(List<Tradesman> tradesmen, Map<String, Integer> reviewCountForTradesmen) {
-        List<TradesmenAdapter.TradesmanHolder> adapterData = new ArrayList<>();
-        for(Tradesman tradesman : tradesmen) {
-            adapterData.add(new TradesmenAdapter.TradesmanHolder(tradesman, reviewCountForTradesmen.get(tradesman.get_id())));
+        if(tradesmen != null && !tradesmen.isEmpty()) {
+            List<TradesmenAdapter.TradesmanHolder> adapterData = new ArrayList<>();
+            for (Tradesman tradesman : tradesmen) {
+                adapterData.add(new TradesmenAdapter.TradesmanHolder(tradesman, reviewCountForTradesmen.get(tradesman.get_id())));
+            }
+            mAdapter.setTradesmen(adapterData);
         }
-        mAdapter.setTradesmen(adapterData);
     }
 
     public List<Tradesman> getSelectedTradesmen() {

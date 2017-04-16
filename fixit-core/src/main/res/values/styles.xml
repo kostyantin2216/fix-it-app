@@ -13,4 +13,20 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="emptyListText">
+        <item name="android:textSize">@dimen/large_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center|top</item>
+        <item name="android:padding">@dimen/empty_list_padding</item>
+    </style>
+
+    <style name="list">
+        <item name="android:padding">@dimen/list_padding</item>
+    </style>
+
+    <style name="listItem">
+        <item name="android:layout_margin">@dimen/list_padding</item>
+    </style>
+
 </resources>

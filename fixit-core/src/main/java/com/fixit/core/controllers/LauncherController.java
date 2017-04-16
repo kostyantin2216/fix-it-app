@@ -1,7 +1,6 @@
 package com.fixit.core.controllers;
 
 import com.fixit.core.BaseApplication;
-import com.fixit.core.factories.ServerAPIFactory;
 import com.fixit.core.general.AppInitializationTask;
 
 import org.greenrobot.eventbus.EventBus;
@@ -28,35 +27,21 @@ public class LauncherController extends BaseController implements AppInitializat
         }
     }
 
+    public boolean isInitialized() {
+        return isInitialized;
+    }
+
     @Override
     public void onInitializationComplete(Set<String> errors) {
         isInitializing = false;
         isInitialized = true;
-        EventBus.getDefault().post(new InitializationCompleteEvent(errors));
+        EventBus.getDefault().post(AppInitializationTask.createCompletionEvent(errors));
     }
 
     @Override
     public void onInitializationError(String error, boolean fatal) {
         isInitializing = false;
-        EventBus.getDefault().post(new InitializationErrorEvent(error, fatal));
-    }
-
-    public static class InitializationCompleteEvent {
-        public final Set<String> errors;
-
-        private InitializationCompleteEvent(Set<String> errors) {
-            this.errors = errors;
-        }
-    }
-
-    public static class InitializationErrorEvent {
-        public final String error;
-        public final boolean isFatal;
-
-        private InitializationErrorEvent(String error, boolean isFatal) {
-            this.error = error;
-            this.isFatal = isFatal;
-        }
+        EventBus.getDefault().post(AppInitializationTask.createErrorEvent(fatal, error));
     }
 
 }

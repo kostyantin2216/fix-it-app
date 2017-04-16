@@ -8,14 +8,13 @@ import java.util.Date;
 
 public class AppInstallation {
 
-    private String id;
+    private String _id;
     private String playStoreUrl;
     private DeviceInfo device;
     private VersionInfo version;
     private Date createdAt;
 
-    public AppInstallation(String id, String playStoreUrl, DeviceInfo device, VersionInfo version, Date createdAt) {
-        this.id = id;
+    public AppInstallation(String playStoreUrl, DeviceInfo device, VersionInfo version, Date createdAt) {
         this.playStoreUrl = playStoreUrl;
         this.device = device;
         this.version = version;
@@ -23,11 +22,11 @@ public class AppInstallation {
     }
 
     public String getId() {
-        return id;
+        return _id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(String _id) {
+        this._id = _id;
     }
 
     public String getPlayStoreUrl() {
@@ -65,7 +64,7 @@ public class AppInstallation {
     @Override
     public String toString() {
         return "AppInstallation{" +
-                "id='" + id + '\'' +
+                "_id='" + _id + '\'' +
                 ", playStoreUrl='" + playStoreUrl + '\'' +
                 ", device=" + device +
                 ", version=" + version +

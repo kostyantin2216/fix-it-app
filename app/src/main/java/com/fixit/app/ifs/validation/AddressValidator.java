@@ -3,11 +3,10 @@ package com.fixit.app.ifs.validation;
 import android.os.AsyncTask;
 
 import com.fixit.app.ifs.geodata.AddressComponent;
-import com.fixit.app.ifs.geodata.GeocodeGeometry;
 import com.fixit.app.ifs.geodata.GeocodeResponse;
 import com.fixit.app.ifs.geodata.GeocodeResult;
 import com.fixit.core.data.JobLocation;
-import com.google.android.gms.maps.model.LatLng;
+import com.fixit.core.data.MutableLatLng;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -15,7 +14,6 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -120,9 +118,9 @@ public class AddressValidator {
                         }
                     }
 
-                    LatLng latLng = result.getGeometry().getLocation();
-                    jobLocation.setLat(latLng.latitude);
-                    jobLocation.setLng(latLng.longitude);
+                    MutableLatLng latLng = result.getGeometry().getLocation();
+                    jobLocation.setLat(latLng.getLat());
+                    jobLocation.setLng(latLng.getLng());
                 } else {
                     jobLocation = null;
                 }

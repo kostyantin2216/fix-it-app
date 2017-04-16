@@ -22,13 +22,15 @@ public class PrefUtils {
     }
 
     public static String getInstallationId(Context context) {
-        return context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
+        String installationId = context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
                 .getString(PREF_INSTALLATION_ID, "");
+        return installationId;
     }
 
     public static void setInstallationId(Context context, String installationId) {
-        context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
-                .edit().putString(PREF_INSTALLATION_ID, installationId).apply();
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
+                .edit().putString(PREF_INSTALLATION_ID, installationId);
+        editor.apply();
     }
 
     public static void fillApiRequestHeader(Context context, APIRequestHeader header) {

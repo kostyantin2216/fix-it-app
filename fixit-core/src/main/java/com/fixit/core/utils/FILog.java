@@ -1,16 +1,9 @@
 package com.fixit.core.utils;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.fixit.core.config.AppConfig;
-import com.fixit.core.data.ServerLog;
 import com.fixit.core.general.ErrorReporter;
-import com.fixit.core.rest.apis.ServerLogDataAPI;
-import com.fixit.core.rest.callbacks.EmptyCallback;
-
-import java.util.Date;
 
 /**
  * Created by Kostyantin on 12/19/2016.
@@ -70,6 +63,7 @@ public class FILog {
             tag = "";
         }
         tag = LOG_PREFIX + tag;
+
 
         switch (level) {
             case INFO:

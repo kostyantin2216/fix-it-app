@@ -30,8 +30,6 @@ public class ErrorReporter {
         }
 
         ServerLog log = new ServerLog(
-                PrefUtils.getUserId(context),
-                PrefUtils.getInstallationId(context),
                 level,
                 tag,
                 msg,
@@ -40,6 +38,8 @@ public class ErrorReporter {
                 AppConfig.getVersionInfo(context),
                 new Date()
         );
+
+        PrefUtils.fillServerLog(context, log);
 
         mServerApi.create(log).enqueue(new EmptyCallback<ServerLog>());
     }

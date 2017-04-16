@@ -33,6 +33,17 @@ public class ServerLog {
         this.createdAt = createdAt;
     }
 
+    public ServerLog(String level, String tag, String message, String stackTrace,
+                     DeviceInfo deviceInfo, VersionInfo versionInfo, Date createdAt) {
+        this.level = level;
+        this.tag = tag;
+        this.message = message;
+        this.stackTrace = stackTrace;
+        this.deviceInfo = deviceInfo;
+        this.versionInfo = versionInfo;
+        this.createdAt = createdAt;
+    }
+
     public String getUserId() {
         return userId;
     }

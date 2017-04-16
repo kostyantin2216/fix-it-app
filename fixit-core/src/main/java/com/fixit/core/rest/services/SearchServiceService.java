@@ -18,10 +18,10 @@ import retrofit2.http.POST;
 
 public interface SearchServiceService {
 
-    @POST(SearchServiceAPI.API_NAME)
+    @POST(SearchServiceAPI.API_NAME + "/startTradesmanSearch")
     Call<APIResponse<SearchResponseData>> beginSearch(@Body APIRequest<SearchRequestData> request);
 
-    @POST(SearchServiceAPI.API_NAME)
+    @POST(SearchServiceAPI.API_NAME + "/fetchTradesmenResults")
     Call<APIResponse<SearchResultResponseData>> fetchResults(@Body APIRequest<SearchResultRequestData> request);
 
 }

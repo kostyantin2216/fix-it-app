@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="server_api_base_url">http://10.0.0.3/</string>
+    <string name="server_api_base_url">http://10.0.0.4/</string>
     <string name="api_key">TlKm7GFjtGVD2YoQruca9emGfSz9j323</string>
     <string name="user_agent">Fix-It-Android</string>
 
     <string name="email_for_support">kostya2216@gmail.com</string>
+    <string name="subject_for_error_report">Report error</string>
 
     <integer name="server_connection_retry_limit">5</integer>
     <integer name="server_connection_retry_interval_ms">800</integer>

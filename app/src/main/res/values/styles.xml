@@ -20,6 +20,10 @@
     </style>
 
     <!-- LISTS START -->
+    <style name="li_tradesman" parent="listItem">
+        <item name="android:background">@drawable/list_item_bg_transparent_white</item>
+    </style>
+    
     <style name="li_tradesman_company_name">
         <item name="android:textSize">@dimen/extra_large_text_size</item>
         <item name="android:gravity">center</item>

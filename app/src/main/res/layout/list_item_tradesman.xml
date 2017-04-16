@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="220dp"
-    android:background="@drawable/list_item_bg_transparent_white">
+    android:layout_height="@dimen/li_tradesman_height"
+    style="@style/li_tradesman">
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline_vertical"

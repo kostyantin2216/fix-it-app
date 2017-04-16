@@ -16,6 +16,8 @@
     <color name="transparentBlack_80">#80000000</color>
     <color name="transparentBlack_AA">#AA000000</color>
     <color name="transparentBlack_BB">#BB000000</color>
+    <color name="transparentBlack_CC">#CC000000</color>
+    <color name="transparentBlack_DD">#DD000000</color>
 
     <color name="grey_50">#FAFAFA</color>
     <color name="grey_100">#F5F5F5</color>

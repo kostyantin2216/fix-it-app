@@ -12,22 +12,22 @@ import java.util.Set;
 
 public class SynchronizationRequestData {
 
-    private Date firstSynchronization;
+    private Date lastSynchronization;
     private Map<String, Set<SynchronizationAction>> synchronizationHistory;
 
     public SynchronizationRequestData() { }
 
-    public SynchronizationRequestData(Date firstSynchronization, Map<String, Set<SynchronizationAction>> synchronizationHistory) {
-        this.firstSynchronization = firstSynchronization;
+    public SynchronizationRequestData(Date lastSynchronization, Map<String, Set<SynchronizationAction>> synchronizationHistory) {
+        this.lastSynchronization = lastSynchronization;
         this.synchronizationHistory = synchronizationHistory;
     }
 
     public Date setFirstSynchronization() {
-        return firstSynchronization;
+        return lastSynchronization;
     }
 
-    public void setFirstSynchronization(Date firstSynchronization) {
-        this.firstSynchronization = firstSynchronization;
+    public void setLastSynchronization(Date lastSynchronization) {
+        this.lastSynchronization = lastSynchronization;
     }
 
     public Map<String, Set<SynchronizationAction>> getSynchronizationHistory() {

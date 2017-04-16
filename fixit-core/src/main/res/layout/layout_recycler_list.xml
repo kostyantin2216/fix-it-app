@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
+    style="@style/list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -8,6 +9,13 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_empty_list"
+        style="@style/emptyListText"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

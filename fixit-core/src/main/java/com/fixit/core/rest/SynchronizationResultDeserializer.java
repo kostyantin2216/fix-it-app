@@ -6,7 +6,6 @@ import com.fixit.core.synchronization.SynchronizationAction;
 import com.fixit.core.synchronization.SynchronizationResult;
 import com.fixit.core.utils.FILog;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -15,12 +14,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -40,15 +35,18 @@ public class SynchronizationResultDeserializer implements JsonDeserializer<Synch
         String name = jsonObject.get("name").getAsString();
         JsonArray resultsJson = jsonObject.getAsJsonArray("results");
 
-        if(name.equalsIgnoreCase(Profession.class.getSimpleName())) {
-            return deserialize(name, resultsJson, Profession.class);
-        } else {
-            FILog.w(LOG_TAG, name + " is unsupported");
+        if(resultsJson != null && resultsJson.size() > 0) {
+            if (name.equalsIgnoreCase(Profession.class.getSimpleName())) {
+                return deserialize(name, resultsJson, Profession.class);
+            } else {
+                FILog.w(LOG_TAG, name + " is unsupported");
+            }
         }
 
         return new Gson().fromJson(json, SynchronizationResult.class);
     }
 
+    @SuppressWarnings("unchecked")
     private <T extends DataModelObject> SynchronizationResult<T> deserialize(String name, JsonArray resultsJson, Class<T> tClass) {
         Gson gson = new Gson();
         SynchronizationResult<T> synchronizationResult = new SynchronizationResult<>();

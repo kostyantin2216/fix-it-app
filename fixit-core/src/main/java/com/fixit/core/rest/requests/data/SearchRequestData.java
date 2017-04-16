@@ -9,13 +9,13 @@ import com.fixit.core.data.MutableLatLng;
 public class SearchRequestData {
 
     private int professionId;
-    private MutableLatLng latLng;
+    private MutableLatLng location;
 
     public SearchRequestData() { }
 
-    public SearchRequestData(int professionId, MutableLatLng latLng) {
+    public SearchRequestData(int professionId, MutableLatLng location) {
         this.professionId = professionId;
-        this.latLng = latLng;
+        this.location = location;
     }
 
     public int getProfessionId() {
@@ -26,19 +26,19 @@ public class SearchRequestData {
         this.professionId = professionId;
     }
 
-    public MutableLatLng getLatLng() {
-        return latLng;
+    public MutableLatLng getLocation() {
+        return location;
     }
 
-    public void setLatLng(MutableLatLng latLng) {
-        this.latLng = latLng;
+    public void setLocation(MutableLatLng location) {
+        this.location = location;
     }
 
     @Override
     public String toString() {
         return "SearchRequestData{" +
                 "professionId=" + professionId +
-                ", latLng=" + latLng +
+                ", location=" + location +
                 '}';
     }
 }

@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Fix It</string>
     
-    <string name="i_need_a">I need a...</string>
+    <string name="i_need_a">I need a…</string>
     <string name="search_professions">Search Professions</string>
     <string name="show_all_professions">Show All Professions</string>
-    <string name="at_location">At location...</string>
+    <string name="at_location">At location…</string>
     <string name="search_addresses">Search Addresses</string>
     <string name="show_map">Show Map</string>
 
@@ -13,7 +13,13 @@
     <string name="invalid_profession">Invalid profession, must select from predefined professions.</string>
     <string name="invalid_address">Invalid address, must pick a street address.</string>
 
+    <string name="no_tradesmen_results">Could not find any tradesmen for your location.</string>
+
     <string name="format_review_count">%1$d Reviews</string>
     <string name="tradesman_selection_limit_passed">Cannot select more then %1$d tradesmen</string>
+    
+    <string name="validating_address">Validating address…</string>
+    <string name="starting_search">Starting search…</string>
+    <string name="waiting_for_results">Waiting for search results…</string>
 
 </resources>

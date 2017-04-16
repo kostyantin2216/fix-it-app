@@ -1,8 +1,7 @@
 package com.fixit.app.ifs.geodata;
 
 import com.fixit.core.data.MutableLatLng;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
+import com.fixit.core.data.MutableLatLngBounds;
 
 /**
  * Created by konstantin on 3/30/2017.
@@ -10,24 +9,24 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 public class GeocodeGeometry {
 
-    private LatLngBounds bounds;
-    private LatLng location;
+    private MutableLatLngBounds bounds;
+    private MutableLatLng location;
     private String locationType;
-    private LatLngBounds viewport;
+    private MutableLatLngBounds viewport;
 
-    public LatLngBounds getBounds() {
+    public MutableLatLngBounds getBounds() {
         return bounds;
     }
 
-    public void setBounds(LatLngBounds bounds) {
+    public void setBounds(MutableLatLngBounds bounds) {
         this.bounds = bounds;
     }
 
-    public LatLng getLocation() {
+    public MutableLatLng getLocation() {
         return location;
     }
 
-    public void setLocation(LatLng location) {
+    public void setLocation(MutableLatLng location) {
         this.location = location;
     }
 
@@ -39,11 +38,11 @@ public class GeocodeGeometry {
         this.locationType = locationType;
     }
 
-    public LatLngBounds getViewport() {
+    public MutableLatLngBounds getViewport() {
         return viewport;
     }
 
-    public void setViewport(LatLngBounds viewport) {
+    public void setViewport(MutableLatLngBounds viewport) {
         this.viewport = viewport;
     }
 

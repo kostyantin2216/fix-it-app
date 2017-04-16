@@ -1,10 +1,8 @@
 package com.fixit.core.ui.activities;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-
 import com.fixit.core.BaseApplication;
 import com.fixit.core.controllers.LauncherController;
+import com.fixit.core.general.AppInitializationTask;
 import com.fixit.core.utils.FILog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -16,6 +14,8 @@ import org.greenrobot.eventbus.ThreadMode;
  */
 
 public abstract class LauncherActivity extends BaseActivity<LauncherController> {
+
+    private final static String LOG_TAG = "#" + LauncherActivity.class.getSimpleName();
 
     @Override
     public LauncherController createController() {
@@ -36,15 +36,25 @@ public abstract class LauncherActivity extends BaseActivity<LauncherController> 
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(getController().isInitialized()) {
+            onAppReady();
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onInitializationComplete(LauncherController.InitializationCompleteEvent completeEvent) {
+    @SuppressWarnings("unused")
+    public void onInitializationComplete(AppInitializationTask.InitializationCompleteEvent completeEvent) {
         onAppReady();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onInitializationError(LauncherController.InitializationErrorEvent errorEvent) {
+    @SuppressWarnings("unused")
+    public void onInitializationError(AppInitializationTask.InitializationErrorEvent errorEvent) {
         if(errorEvent.isFatal) {
-            FILog.e("FATAL ERROR during app initialization");
+            FILog.e(LOG_TAG, "FATAL ERROR during app initialization: " + errorEvent.error, null, getApplicationContext());
         }
     }
 

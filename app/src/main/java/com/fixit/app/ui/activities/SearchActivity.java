@@ -180,10 +180,12 @@ public class SearchActivity extends BaseActivity<SearchController>
     public void performSearch(String professionName, String address) {
         final Profession profession = getController().getProfession(professionName);
         if(profession != null) {
+            showLoader(getString(R.string.validating_address));
             mAddressValidator.validate(address, new AddressValidator.AddressValidationCallback() {
                 @Override
                 public void onAddressValidated(AddressValidator.AddressValidationResult result) {
-                    if(result.isValid && result.jobLocation != null) {
+                    if(result.jobLocation != null) {
+                        showLoader(getString(R.string.starting_search));
                         mJobLocation = result.jobLocation;
                         double lat = mJobLocation.getLat();
                         double lng = mJobLocation.getLng();
@@ -218,8 +220,10 @@ public class SearchActivity extends BaseActivity<SearchController>
     public void onSearchStarted(String searchId) {
         Intent intent = new Intent(this, ResultsActivity.class);
         intent.putExtra(Constants.ARG_SEARCH_ID, searchId);
+        intent.putExtra(Constants.ARG_JOB_LOCATION, mJobLocation);
         startActivity(intent);
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_out_left);
+        hideLoader();
     }
 
     public static class GoogleErrorDialogFragment extends DialogFragment {

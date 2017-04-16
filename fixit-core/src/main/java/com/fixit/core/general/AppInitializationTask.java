@@ -69,7 +69,7 @@ public class AppInitializationTask extends Thread {
             ServerAPIFactory serverAPIFactory = mCallback.getServerApiFactory();
             DAOFactory daoFactory = mCallback.getDaoFactory();
 
-            if(false/* TODO: change to: TextUtils.isEmpty(PrefUtils.getInstallationId(context))*/) {
+            if(TextUtils.isEmpty(PrefUtils.getInstallationId(context))) {
                 sendInstallation(context, serverAPIFactory.createAppInstallationApi());
             }
 
@@ -88,7 +88,6 @@ public class AppInitializationTask extends Thread {
         String installationId = createUniqueID(context);
 
         AppInstallation appInstallation = new AppInstallation(
-                installationId,
                 "", // TODO: get url from google play.
                 AppConfig.getDeviceInfo(),
                 AppConfig.getVersionInfo(context),
@@ -97,8 +96,10 @@ public class AppInitializationTask extends Thread {
 
         try {
             Response<AppInstallation> response = api.create(appInstallation).execute();
-            appInstallation = response.body();
-            PrefUtils.setInstallationId(context, appInstallation.getId());
+            if(response != null) {
+                appInstallation = response.body();
+                PrefUtils.setInstallationId(context, appInstallation.getId());
+            }
         } catch (IOException e) {
             // Do nothing, try again next time app opens.
             FILog.e(LOG_TAG, "Couldn't send app installation to server.", e);
@@ -141,6 +142,7 @@ public class AppInitializationTask extends Thread {
     }
 
     private void finish() {
+        FILog.i(LOG_TAG, "finished app synchronization");
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -168,5 +170,31 @@ public class AppInitializationTask extends Thread {
         DAOFactory getDaoFactory();
         void onInitializationComplete(Set<String> errors);
         void onInitializationError(String error, boolean fatal);
+    }
+
+    public static InitializationCompleteEvent createCompletionEvent(Set<String> errors) {
+        return new InitializationCompleteEvent(errors);
+    }
+
+    public static InitializationErrorEvent createErrorEvent(boolean isFatal, String error) {
+        return new InitializationErrorEvent(error, isFatal);
+    }
+
+    public static class InitializationCompleteEvent {
+        public final Set<String> errors;
+
+        private InitializationCompleteEvent(Set<String> errors) {
+            this.errors = errors;
+        }
+    }
+
+    public static class InitializationErrorEvent {
+        public final String error;
+        public final boolean isFatal;
+
+        private InitializationErrorEvent(String error, boolean isFatal) {
+            this.error = error;
+            this.isFatal = isFatal;
+        }
     }
 }

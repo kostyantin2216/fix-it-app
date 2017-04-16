@@ -1,12 +1,6 @@
 package com.fixit.app.ui;
 
 import com.fixit.core.BaseApplication;
-import com.fixit.core.data.Profession;
-import com.fixit.core.database.ProfessionDAO;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by konstantin on 3/29/2017.
@@ -18,7 +12,7 @@ public class FixItApplication extends BaseApplication {
     public void onCreate() {
         super.onCreate();
 
-        ProfessionDAO professionDAO = getDaoFactory().createProfessionDao();
+        /*ProfessionDAO professionDAO = getDaoFactory().createProfessionDao();
         if(professionDAO.count() == 0) {
             List<Profession> professions = new ArrayList<>();
             professions.add(new Profession(1, "Plumber", "All you plumbing needs", "", true, new Date()));
@@ -28,6 +22,6 @@ public class FixItApplication extends BaseApplication {
             professions.add(new Profession(5, "Air Con Repair Man", "All you plumbing needs", "", true, new Date()));
 
             professionDAO.insert(professions);
-        }
+        }*/
     }
 }

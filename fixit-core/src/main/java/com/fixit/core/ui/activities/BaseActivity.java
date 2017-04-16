@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.fixit.core.R;
 import com.fixit.core.config.AppConfig;
 import com.fixit.core.controllers.ActivityController;
@@ -25,6 +27,7 @@ import com.fixit.core.general.UnexpectedErrorCallback;
 import com.fixit.core.rest.APIError;
 import com.fixit.core.rest.callbacks.AppServiceErrorCallback;
 import com.fixit.core.ui.fragments.BaseFragment;
+import com.fixit.core.ui.fragments.ErrorFragment;
 
 import java.util.List;
 
@@ -39,11 +42,21 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
                    UnexpectedErrorCallback {
 
     private C mController;
+    private MaterialDialog mLoaderDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         mController = createController();
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(!isNetworkConnected()) {
+            showError(ErrorFragment.ErrorType.NO_NETWORK);
+        }
     }
 
     public C getController() {
@@ -66,7 +79,7 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
             } catch(ActivityNotFoundException innerEx) {
                 // No web browser apps installed.
 
-                showError("");
+                notifyUser(getString(R.string.no_internet_browser));
             }
         }
     }
@@ -75,6 +88,12 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
     public void hideKeyboard(IBinder windowToken) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(windowToken, 0);
+    }
+
+    public boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
     }
 
     /**
@@ -101,16 +120,61 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
 
     @Override
     public void onAppServiceError(List<APIError> errors) {
-        // TODO:
+        showError(ErrorFragment.ErrorType.GENERAL.createBuilder(this).apiError(errors).build());
     }
 
     @Override
     public void onUnexpectedErrorOccurred(String msg, Throwable t) {
-        // TODO:
+        showError(ErrorFragment.ErrorType.GENERAL.createBuilder(this).log(msg).cause(t).build());
+    }
+
+    public void showError() {
+        showError(ErrorFragment.ErrorType.GENERAL);
     }
 
     public void showError(String error) {
-        // TODO:
+        showError(ErrorFragment.ErrorType.GENERAL, error);
+    }
+
+    public void showError(ErrorFragment.ErrorType errorType) {
+        showError(errorType.createBuilder(this).build());
+    }
+
+    public void showError(ErrorFragment.ErrorType errorType, String msg) {
+        showError(errorType.createBuilder(msg).build());
+    }
+
+    public void showError(ErrorFragment.ErrorParams params) {
+        hideLoader();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(android.R.id.content, ErrorFragment.newInstance(params))
+                .commit();
+    }
+
+    public void showLoader() {
+        showLoader(getString(R.string.loading));
+    }
+
+    public void showLoader(String message) {
+        if(mLoaderDialog == null) {
+            mLoaderDialog = new MaterialDialog.Builder(this)
+                    .title(R.string.please_wait)
+                    .content(message)
+                    .progress(true, 0)
+                    .progressIndeterminateStyle(true)
+                    .show();
+        } else {
+            mLoaderDialog.setContent(message);
+            mLoaderDialog.show();
+        }
+    }
+
+    public void hideLoader() {
+        if(mLoaderDialog != null) {
+            mLoaderDialog.dismiss();
+            mLoaderDialog = null;
+        }
     }
 
     public abstract C createController();

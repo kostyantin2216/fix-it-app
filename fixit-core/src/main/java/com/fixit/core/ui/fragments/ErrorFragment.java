@@ -1,9 +1,13 @@
 package com.fixit.core.ui.fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,15 +19,15 @@ import android.widget.TextView;
 import com.fixit.core.R;
 import com.fixit.core.config.AppConfig;
 import com.fixit.core.controllers.ActivityController;
-import com.fixit.core.data.DeviceInfo;
-import com.fixit.core.data.ServerLog;
-import com.fixit.core.data.VersionInfo;
-import com.fixit.core.rest.apis.ServerLogDataAPI;
-import com.fixit.core.rest.callbacks.EmptyCallback;
+import com.fixit.core.general.ErrorReporter;
+import com.fixit.core.rest.APIError;
 import com.fixit.core.utils.Constants;
+import com.fixit.core.utils.ErrorUtils;
+import com.fixit.core.utils.FILog;
 import com.fixit.core.utils.PrefUtils;
 
-import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by konstantin on 4/3/2017.
@@ -31,42 +35,11 @@ import java.util.Date;
 
 public class ErrorFragment extends BaseFragment<ActivityController> implements View.OnClickListener {
 
+    private final static String LOG_TAG = "#" + ErrorFragment.class.getSimpleName();
+
     private ErrorParams mParams;
-    private DeviceInfo mDeviceInfo;
-    private VersionInfo mVersionInfo;
 
     private ViewHolder mView;
-
-    private static class ViewHolder {
-
-        final TextView tvDisplayMessage;
-        final Button btnReport;
-        final Button btnInternetSettings;
-        final Button btnContinue;
-
-        ViewHolder(View v, View.OnClickListener onClickListener) {
-            tvDisplayMessage = (TextView) v.findViewById(R.id.tv_display_msg);
-            btnReport = (Button) v.findViewById(R.id.btn_report_error);
-            btnInternetSettings = (Button) v.findViewById(R.id.btn_internet_settings);
-            btnContinue = (Button) v.findViewById(R.id.btn_continue);
-
-            btnReport.setOnClickListener(onClickListener);
-            btnInternetSettings.setOnClickListener(onClickListener);
-            btnContinue.setOnClickListener(onClickListener);
-        }
-
-        void setState(ErrorType errorType) {
-            switch (errorType) {
-                case GENERAL:
-                    btnInternetSettings.setVisibility(View.GONE);
-                    break;
-                case NO_NETWORK:
-                    btnReport.setVisibility(View.GONE);
-                    break;
-            }
-        }
-
-    }
 
     public static ErrorFragment newInstance(ErrorParams params) {
         ErrorFragment errorFragment = new ErrorFragment();
@@ -81,8 +54,13 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
         super.onCreate(savedInstanceState);
 
         mParams = getArguments().getParcelable(Constants.ARG_ERROR_PARAMS);
-        mDeviceInfo = AppConfig.getDeviceInfo();
-        mVersionInfo = AppConfig.getVersionInfo(getContext());
+
+        if(mParams == null) {
+            throw ErrorUtils.missingArguments(
+                    new ErrorUtils.MissingValuesArgument(getClass(), 1)
+                        .add(Constants.ARG_ERROR_PARAMS, ErrorParams.class)
+            );
+        }
     }
 
     @Nullable
@@ -92,30 +70,15 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
 
         mView = new ViewHolder(v, this);
         mView.setState(mParams.errorType);
+        mView.tvDisplayMessage.setText(mParams.userMsg);
 
         return v;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        sendLog();
-    }
-
-    private void sendLog() {
-        Context context = getContext();
-
-        ServerLog log = new ServerLog();
-        PrefUtils.fillServerLog(context, log);
-        log.setDeviceInfo(mDeviceInfo);
-        log.setVersionInfo(mVersionInfo);
-        log.setLevel(mParams.errorType.name());
-        log.setTag(ErrorFragment.class.getSimpleName());
-        log.setMessage(mParams.logMsg);
-        log.setStackTrace(Log.getStackTraceString(mParams.cause));
-        log.setCreatedAt(new Date());
-
-        ServerLogDataAPI logApi = getController().getServerApiFactory().createServerLogApi();
-        logApi.create(log).enqueue(new EmptyCallback<ServerLog>());
+        ErrorReporter.report(getContext(), mParams.errorType.name(), LOG_TAG, mParams.logMsg, Log.getStackTraceString(mParams.cause));
+        FILog.e(LOG_TAG, mParams.logMsg, mParams.cause);
     }
 
     @Override
@@ -125,51 +88,134 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
             continueApp();
         } else if(resId == R.id.btn_report_error) {
             reportError();
-        } else if(resId == R.id.btn_internet_settings) {
-            showInternetSettings();
+        } else if(resId == R.id.btn_wifi_settings) {
+            showWifiSettings();
+        } else if(resId == R.id.btn_mobile_networks) {
+            showMobileNetworkSettings();
+        } else if(resId == R.id.btn_exit_app) {
+            exitApp();
         }
     }
 
-    private void continueApp() {
+    // ACTIONS
 
+    private void exitApp() {
+        getActivity().finishAffinity();;
+    }
+
+    private void continueApp() {
+        Context context = getContext().getApplicationContext();
+        PackageManager pm = context.getPackageManager();
+        Intent intent = pm.getLaunchIntentForPackage(context.getPackageName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+        getActivity().finishAffinity();
     }
 
     private void reportError() {
-
+        Context context = getContext();
+        Intent intent = new Intent(
+                Intent.ACTION_SENDTO,
+                Uri.fromParts("mailto", AppConfig.getString(context, AppConfig.KEY_EMAIL_FOR_SUPPORT, "kostya2216@gmail.com"), null)
+        );
+        intent.putExtra(Intent.EXTRA_SUBJECT, AppConfig.getString(context, AppConfig.KEY_SUBJECT_FOR_ERROR_REPORT, "Error Report"));
+        intent.putExtra(Intent.EXTRA_TEXT, generateReportMessage());
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
-    private void showInternetSettings() {
+    private String generateReportMessage() {
+        Context context = getContext();
+        return AppConfig.getVersionInfo(context).toString() + "\n\n"
+                + AppConfig.getDeviceInfo().toString() + "\n\n"
+                + "UserId = " + PrefUtils.getUserId(context) + ", InstallationId = " + PrefUtils.getInstallationId(context) + "\n\n"
+                + "logMessage = " + mParams.logMsg + "\n"
+                + "StackTrace = \n" + Log.getStackTraceString(mParams.cause);
+    }
+
+    private void showWifiSettings() {
+        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+    }
+
+    private void showMobileNetworkSettings() {
+        startActivity(new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS));
+    }
+
+    // VIEW
+
+    private static class ViewHolder {
+
+        final TextView tvDisplayMessage;
+        final Button btnReport;
+        final Button btnWifiSettings;
+        final Button btnMobileNetworks;
+        final Button btnContinue;
+        final Button btnExitApp;
+
+        ViewHolder(View v, View.OnClickListener onClickListener) {
+            tvDisplayMessage = (TextView) v.findViewById(R.id.tv_display_msg);
+            btnReport = (Button) v.findViewById(R.id.btn_report_error);
+            btnWifiSettings = (Button) v.findViewById(R.id.btn_wifi_settings);
+            btnMobileNetworks = (Button) v.findViewById(R.id.btn_mobile_networks);
+            btnContinue = (Button) v.findViewById(R.id.btn_continue);
+            btnExitApp = (Button) v.findViewById(R.id.btn_exit_app);
+
+            btnReport.setOnClickListener(onClickListener);
+            btnWifiSettings.setOnClickListener(onClickListener);
+            btnMobileNetworks.setOnClickListener(onClickListener);
+            btnContinue.setOnClickListener(onClickListener);
+            btnExitApp.setOnClickListener(onClickListener);
+        }
+
+        void setState(ErrorType errorType) {
+            switch (errorType) {
+                case GENERAL:
+                    btnWifiSettings.setVisibility(View.GONE);
+                    btnMobileNetworks.setVisibility(View.GONE);
+                    btnExitApp.setVisibility(View.GONE);
+                    break;
+                case NO_NETWORK:
+                    btnReport.setVisibility(View.GONE);
+                    btnExitApp.setVisibility(View.GONE);
+                    break;
+                case SERVER_UNAVAILABLE:
+                    btnWifiSettings.setVisibility(View.GONE);
+                    btnMobileNetworks.setVisibility(View.GONE);
+                    btnContinue.setVisibility(View.GONE);
+                    break;
+            }
+        }
 
     }
 
     // ERROR TYPES, PARAMS, BUILDERS
 
     public enum ErrorType {
-        GENERAL,
-        NO_NETWORK
-    }
+        GENERAL(R.string.error_default_display_msg),
+        NO_NETWORK(R.string.error_no_network_msg),
+        SERVER_UNAVAILABLE(R.string.error_server_unavailable);
 
-    public static ErrorParamsBuilder getGeneralBuilder(String userMsg) {
-        return new ErrorParamsBuilder(ErrorType.GENERAL, userMsg);
-    }
+        final int defaultDisplayMsgResId;
 
-    public static ErrorParamsBuilder getGeneralBuilder(Context context) {
-        return new ErrorParamsBuilder(ErrorType.GENERAL, context);
-    }
+        ErrorType(int defaultDisplayMsgResId) {
+            this.defaultDisplayMsgResId = defaultDisplayMsgResId;
+        }
 
-    public static ErrorParamsBuilder getBuilder(ErrorType type, String userMsg) {
-        return new ErrorParamsBuilder(type, userMsg);
-    }
+        public ErrorParamsBuilder createBuilder(String userMsg) {
+            return new ErrorParamsBuilder(this, userMsg);
+        }
 
-    public static ErrorParamsBuilder getBuilder(ErrorType type, Context context) {
-        return new ErrorParamsBuilder(type, context);
+        public ErrorParamsBuilder createBuilder(Context context) {
+            return new ErrorParamsBuilder(this, context);
+        }
     }
 
     public static class ErrorParams implements Parcelable {
-        public final ErrorType errorType;
-        public final String userMsg;
-        public final String logMsg;
-        public final Throwable cause;
+        final ErrorType errorType;
+        final String userMsg;
+        final String logMsg;
+        final Throwable cause;
 
         private ErrorParams(ErrorParamsBuilder builder) {
             this.errorType = builder.errorType;
@@ -191,7 +237,7 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
             dest.writeSerializable(this.cause);
         }
 
-        protected ErrorParams(Parcel in) {
+        ErrorParams(Parcel in) {
             int tmpErrorType = in.readInt();
             this.errorType = tmpErrorType == -1 ? null : ErrorType.values()[tmpErrorType];
             this.userMsg = in.readString();
@@ -225,7 +271,7 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
 
         private ErrorParamsBuilder(ErrorType errorType, Context context) {
             this.errorType = errorType;
-            this.userMsg = AppConfig.getString(context, AppConfig.KEY_ERROR_DEFAULT_DISPLAY_MSG, "");
+            this.userMsg = context.getString(errorType.defaultDisplayMsgResId);
         }
 
         public ErrorParamsBuilder display(String text) {
@@ -243,6 +289,19 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
             return this;
         }
 
+        public ErrorParamsBuilder apiError(List<APIError> errors) {
+            StringBuilder sb = new StringBuilder();
+            Iterator<APIError> itr = errors.iterator();
+            while(itr.hasNext()) {
+                sb.append(itr.next().toString());
+                if(itr.hasNext()) {
+                    sb.append("\n");
+                }
+            }
+            this.logMsg = sb.toString();
+            return this;
+        }
+
         public ErrorParams build() {
             if(cause == null) {
                 cause = new Throwable(logMsg);
@@ -251,4 +310,5 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
         }
 
     }
+
 }

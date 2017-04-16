@@ -3,7 +3,6 @@ package com.fixit.app.ui.adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import com.fixit.app.R;
 import com.fixit.core.config.AppConfig;
 import com.fixit.core.data.Tradesman;
-import com.fixit.core.utils.CommonUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -71,8 +69,8 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
         notifyItemRangeRemoved(0, oldCount);
         for (int i = 0, count = tradesmen.size(); i < count; i++) {
             mTradesmen.add(tradesmen.get(i));
-            notifyItemInserted(i);
         }
+        notifyItemRangeInserted(0, tradesmen.size());
     }
 
     @Override

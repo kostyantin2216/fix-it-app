@@ -39,6 +39,7 @@ public class AppConfig {
     public final static String KEY_API_KEY = "api_key";
     public final static String KEY_USER_AGENT = "user_agent";
     public final static String KEY_EMAIL_FOR_SUPPORT = "email_for_support";
+    public final static String KEY_SUBJECT_FOR_ERROR_REPORT = "subject_for_error_report";
 
     private final static String KEY_DEVICE_INFO = "device_info";
     private final static String KEY_APP_INFO ="app_info";

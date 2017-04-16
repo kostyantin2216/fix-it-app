@@ -2,14 +2,14 @@ package com.fixit.core.ui.components;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 
 /**
  * Created by konstantin on 3/30/2017.
  */
-public class InstantAutoComplete extends AutoCompleteTextView implements View.OnClickListener {
+public class InstantAutoComplete extends AppCompatAutoCompleteTextView implements View.OnClickListener {
 
     public InstantAutoComplete(Context context) {
         super(context);

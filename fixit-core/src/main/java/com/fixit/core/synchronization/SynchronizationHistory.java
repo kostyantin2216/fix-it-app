@@ -1,5 +1,6 @@
 package com.fixit.core.synchronization;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -41,7 +42,7 @@ public class SynchronizationHistory {
         isReadyForSync = System.currentTimeMillis() > syncAfter;
 
         if(isReadyForSync) {
-            load(context);
+            load();
         }
     }
 
@@ -49,7 +50,7 @@ public class SynchronizationHistory {
         return synchronizationHistory;
     }
 
-    private boolean load(Context context) {
+    private void load() {
         Set<String> tables = preferences.getStringSet(PREF_TABLE_NAMES, null);
 
         if (tables != null) {
@@ -67,9 +68,9 @@ public class SynchronizationHistory {
                 }
             }
         }
-        return true;
     }
 
+    @SuppressLint("ApplySharedPref")
     public void update(List<SynchronizationResult> results) {
         SharedPreferences.Editor editor = preferences.edit();
 
@@ -80,7 +81,12 @@ public class SynchronizationHistory {
                 tables.add(table);
 
                 SynchronizationResult.Result[] resultData = result.getResults();
-                Set<String> actions = new HashSet<>(resultData.length);
+                Set<String> actions = preferences.getStringSet(PREF_PREFIX_SYNC_ACTIONS + table, null);
+
+                // only initialize actions when needed.
+                if(actions == null) {
+                    actions = new HashSet<>(resultData.length);
+                }
 
                 for (SynchronizationResult.Result data : resultData) {
                     SynchronizationAction action = data.getAction();
@@ -93,7 +99,9 @@ public class SynchronizationHistory {
         }
         editor.putStringSet(PREF_TABLE_NAMES, tables);
 
-        editor.apply();
+        editor.putLong(PREF_LAST_SYNC, new Date().getTime());
+        // should already be in background thread so just commit.
+        editor.commit();
     }
 
     public Date getLastUpdate() {

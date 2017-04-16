@@ -11,4 +11,8 @@
     <dimen name="error_fragment_padding">12dp</dimen>
     <dimen name="error_fragment_item_spacing">6dp</dimen>
 
+    <dimen name="empty_list_padding">12dp</dimen>
+    
+    <dimen name="list_padding">4dp</dimen>
+
 </resources>

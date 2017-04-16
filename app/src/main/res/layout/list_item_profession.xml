@@ -3,10 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:layout_marginTop="@dimen/list_item_vertical_padding"
-    android:layout_marginBottom="@dimen/list_item_vertical_padding"
-    android:layout_marginLeft="@dimen/list_item_horizontal_padding"
-    android:layout_marginRight="@dimen/list_item_horizontal_padding">
+    style="@style/listItem">
 
     <ImageView
         android:id="@+id/iv_profession_bg"
