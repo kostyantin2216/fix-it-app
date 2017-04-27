@@ -3,6 +3,7 @@ package com.fixit.app.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +46,8 @@ public class SearchFragment extends BaseFragment<SearchController> implements Vi
         v.findViewById(R.id.btn_show_professions).setOnClickListener(this);
         v.findViewById(R.id.btn_show_map).setOnClickListener(this);
         v.findViewById(R.id.fab_search).setOnClickListener(this);
+
+        setToolbar((Toolbar) v.findViewById(R.id.toolbar));
 
         return v;
     }

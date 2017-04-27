@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_100">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/layout_toolbar" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:id="@+id/sv_profile_scroller"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.2" />
+
+            <ImageView
+                android:id="@+id/iv_clock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_clock_accent_24dp"
+                android:padding="@dimen/tradesman_profile_icon_padding"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/working_days"
+                app:layout_constraintEnd_toStartOf="@id/guideline_vertical"/>
+
+            <com.fixit.core.ui.components.WorkingDaysView
+                android:id="@+id/working_days"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/tradesman_profile_working_hours_min_height"
+                android:animateLayoutChanges="true"
+                android:gravity="center"
+                app:layout_constraintStart_toEndOf="@id/guideline_vertical"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <View android:id="@+id/horizontal_divider_1"
+                style="@style/horizontal_divider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/working_days"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:id="@+id/iv_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_star_accent_24dp"
+                android:padding="@dimen/tradesman_profile_icon_padding"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/horizontal_divider_1"
+                app:layout_constraintEnd_toStartOf="@id/guideline_vertical"/>
+
+            <com.fixit.core.ui.components.SimpleRatingView
+                android:id="@+id/tradesman_rating"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/rating_container"
+                app:layout_constraintTop_toBottomOf="@id/horizontal_divider_1"
+                app:layout_constraintBottom_toBottomOf="@id/iv_star"
+                app:layout_constraintHorizontal_weight="0.6"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <LinearLayout
+                android:id="@+id/rating_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintStart_toEndOf="@id/guideline_vertical"
+                app:layout_constraintTop_toBottomOf="@id/horizontal_divider_1"
+                app:layout_constraintBottom_toBottomOf="@id/iv_star"
+                app:layout_constraintHorizontal_weight="0.4"
+                app:layout_constraintEnd_toStartOf="@id/tradesman_rating">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rating"/>
+
+                <TextView
+                    android:id="@+id/tv_raters_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_500"
+                    tools:text="234 Raters"/>
+
+            </LinearLayout>
+
+
+            <View android:id="@+id/horizontal_divider_2"
+                style="@style/horizontal_divider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_star"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

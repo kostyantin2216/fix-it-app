@@ -1,12 +1,15 @@
 package com.fixit.core.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Arrays;
 
 /**
  * Created by konstantin on 4/2/2017.
  */
 
-public class Tradesman {
+public class Tradesman implements Parcelable {
 
     private String _id;
     private int professionId;
@@ -20,6 +23,8 @@ public class Tradesman {
     private MutableLatLng lastKnownLocation;
     private String[] workingAreas;
     private WorkingDay[] workingDays;
+
+    public Tradesman() { }
 
     public String get_id() {
         return _id;
@@ -135,5 +140,51 @@ public class Tradesman {
                 '}';
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this._id);
+        dest.writeInt(this.professionId);
+        dest.writeString(this.contactName);
+        dest.writeString(this.companyName);
+        dest.writeString(this.email);
+        dest.writeString(this.telephone);
+        dest.writeString(this.password);
+        dest.writeString(this.logoUrl);
+        dest.writeFloat(this.rating);
+        dest.writeParcelable(this.lastKnownLocation, flags);
+        dest.writeStringArray(this.workingAreas);
+        dest.writeTypedArray(this.workingDays, flags);
+    }
+
+    protected Tradesman(Parcel in) {
+        this._id = in.readString();
+        this.professionId = in.readInt();
+        this.contactName = in.readString();
+        this.companyName = in.readString();
+        this.email = in.readString();
+        this.telephone = in.readString();
+        this.password = in.readString();
+        this.logoUrl = in.readString();
+        this.rating = in.readFloat();
+        this.lastKnownLocation = in.readParcelable(MutableLatLng.class.getClassLoader());
+        this.workingAreas = in.createStringArray();
+        this.workingDays = in.createTypedArray(WorkingDay.CREATOR);
+    }
+
+    public static final Creator<Tradesman> CREATOR = new Creator<Tradesman>() {
+        @Override
+        public Tradesman createFromParcel(Parcel source) {
+            return new Tradesman(source);
+        }
+
+        @Override
+        public Tradesman[] newArray(int size) {
+            return new Tradesman[size];
+        }
+    };
 }

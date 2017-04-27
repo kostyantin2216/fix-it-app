@@ -7,4 +7,7 @@
     <dimen name="li_tradesman_height">200dp</dimen>
     <dimen name="li_tradesman_item_spacing">8dp</dimen>
 
+    <dimen name="tradesman_profile_icon_padding">24dp</dimen>
+    <dimen name="tradesman_profile_working_hours_min_height">72dp</dimen>
+
 </resources>

@@ -2,6 +2,7 @@ package com.fixit.core.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -38,6 +39,11 @@ public class DateUtils {
             return sdf.format(date);
         }
         return "";
+    }
+
+    public static int getCurrentDayOfWeek() {
+        Calendar cal = Calendar.getInstance();
+        return cal.get(Calendar.DAY_OF_WEEK);
     }
 
 }

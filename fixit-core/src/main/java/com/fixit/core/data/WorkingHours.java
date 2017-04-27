@@ -1,13 +1,23 @@
 package com.fixit.core.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by konstantin on 4/2/2017.
  */
 
-public class WorkingHours {
+public class WorkingHours implements Parcelable {
 
     private double open;
     private double close;
+
+    public WorkingHours() { }
+
+    public WorkingHours(double open, double close) {
+        this.open = open;
+        this.close = close;
+    }
 
     public double getOpen() {
         return open;
@@ -55,4 +65,32 @@ public class WorkingHours {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(this.open);
+        dest.writeDouble(this.close);
+    }
+
+    protected WorkingHours(Parcel in) {
+        this.open = in.readDouble();
+        this.close = in.readDouble();
+    }
+
+    public static final Creator<WorkingHours> CREATOR = new Creator<WorkingHours>() {
+        @Override
+        public WorkingHours createFromParcel(Parcel source) {
+            return new WorkingHours(source);
+        }
+
+        @Override
+        public WorkingHours[] newArray(int size) {
+            return new WorkingHours[size];
+        }
+    };
 }

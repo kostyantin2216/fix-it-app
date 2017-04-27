@@ -1,10 +1,13 @@
 package com.fixit.core.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by konstantin on 4/2/2017.
  */
 
-public class MutableLatLng {
+public class MutableLatLng implements Parcelable {
 
     private double lat;
     private double lng;
@@ -37,4 +40,32 @@ public class MutableLatLng {
                 ", lng=" + lng +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(this.lat);
+        dest.writeDouble(this.lng);
+    }
+
+    protected MutableLatLng(Parcel in) {
+        this.lat = in.readDouble();
+        this.lng = in.readDouble();
+    }
+
+    public static final Creator<MutableLatLng> CREATOR = new Creator<MutableLatLng>() {
+        @Override
+        public MutableLatLng createFromParcel(Parcel source) {
+            return new MutableLatLng(source);
+        }
+
+        @Override
+        public MutableLatLng[] newArray(int size) {
+            return new MutableLatLng[size];
+        }
+    };
 }

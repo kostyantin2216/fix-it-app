@@ -3,6 +3,7 @@ package com.fixit.core.ui.fragments;
 import android.content.Context;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 
 import com.fixit.core.controllers.ActivityController;
 
@@ -40,6 +41,12 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         }
     }
 
+    public void setToolbar(Toolbar toolbar) {
+        if(mListener != null) {
+            mListener.setToolbar(toolbar);
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -61,6 +68,7 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
 
     public interface BaseFragmentInteractionsListener<C> {
         public C getController();
+        public void setToolbar(Toolbar toolbar);
         public void startChrome(String url);
         public void notifyUser(String msg);
         public void hideKeyboard(IBinder windowToken);

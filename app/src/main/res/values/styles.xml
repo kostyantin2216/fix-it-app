@@ -2,10 +2,26 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/grey_500</item>
+        <item name="colorControlActivated">@color/gold</item>
+    </style>
+
+    <!-- COMPONENTS START -->
+
+    <style name="toolbar_title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/large_text_size</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="button">
@@ -14,10 +30,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="RatingBar" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/grey_500</item>
-        <item name="colorControlActivated">@color/gold</item>
-    </style>
+    <!-- COMPONENTS END -->
 
     <!-- LISTS START -->
     <style name="li_tradesman" parent="listItem">

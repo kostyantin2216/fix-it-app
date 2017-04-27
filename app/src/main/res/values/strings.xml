@@ -22,4 +22,6 @@
     <string name="starting_search">Starting search…</string>
     <string name="waiting_for_results">Waiting for search results…</string>
 
+    <string name="rating">Rating</string>
+
 </resources>

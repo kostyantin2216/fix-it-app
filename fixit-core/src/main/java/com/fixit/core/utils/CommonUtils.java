@@ -1,5 +1,8 @@
 package com.fixit.core.utils;
 
+import android.text.TextUtils;
+
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
@@ -53,6 +56,26 @@ public class CommonUtils {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1).toLowerCase();
     }
 
+    public static String capitalizeAllWords(String string) {
+        if(!TextUtils.isEmpty(string)) {
+            String[] arr = string.split(" ");
+            StringBuffer sb = new StringBuffer();
+
+            for (int i = 0; i < arr.length; i++) {
+                String word = arr[i];
+                if(!TextUtils.isEmpty(word)) {
+                    sb.append(Character.toUpperCase(arr[i].charAt(0)));
+                    if(word.length() > 1) {
+                        sb.append(arr[i].substring(1).toLowerCase()).append(" ");
+                    }
+                }
+            }
+
+            return sb.toString().trim();
+        }
+        return "";
+    }
+
     public static boolean isNumber(String string) {
         if(string != null) {
             String regexStr = "^[0-9]*$";
@@ -75,6 +98,18 @@ public class CommonUtils {
         return string != null && (string.equalsIgnoreCase("true") || string.equalsIgnoreCase("false"));
     }
 
+    public static int getPercentage(int value, int percentage) {
+        return (int)(value * (percentage / 100.0f));
+    }
 
+    public static String hundredthsToTimeDisplay(double hundredths) {
+        if(hundredths > 0) {
+            int hours = (int) Math.floor(hundredths);
+            int minutes = (int) ((hundredths - (long) hundredths) * 60);
+
+            return String.format("%02d:%02d", hours, minutes);
+        }
+        return "";
+    }
 
 }

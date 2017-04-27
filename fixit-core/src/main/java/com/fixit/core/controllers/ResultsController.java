@@ -7,7 +7,7 @@ import com.fixit.core.general.SearchManager;
  * Created by konstantin on 4/3/2017.
  */
 
-public class ResultsController extends BaseController {
+public class ResultsController extends TradesmenController {
 
     private final SearchManager mSearchManager;
 

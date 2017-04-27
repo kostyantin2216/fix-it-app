@@ -2,9 +2,13 @@ package com.fixit.core.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +65,23 @@ public abstract class StaticRecyclerListFragment<C extends ActivityController> e
 
     public void setBackground(@DrawableRes int resId) {
         mViewManager.root.setBackgroundResource(resId);
+    }
+
+    public void setAppBarToolBar(@LayoutRes int appBarToolBarRes, @IdRes int toolbarResId) {
+        AppBarLayout appBar = (AppBarLayout) LayoutInflater.from(getContext()).inflate(appBarToolBarRes, mViewManager.root, false);
+        mViewManager.setAppBarToolBar(appBar);
+        super.setToolbar((Toolbar) appBar.findViewById(toolbarResId));
+    }
+
+    public void setToolbar(@LayoutRes int toolbarRes) {
+        Toolbar toolbar = (Toolbar) LayoutInflater.from(getContext()).inflate(toolbarRes, mViewManager.root, false);
+        mViewManager.setToolbar(toolbar);
+        super.setToolbar(toolbar);
+    }
+
+    public void setToolbar(Toolbar toolbar) {
+        mViewManager.setToolbar(toolbar);
+        super.setToolbar(toolbar);
     }
 
     private static class ViewManager extends RecyclerView.AdapterDataObserver {
@@ -125,6 +146,14 @@ public abstract class StaticRecyclerListFragment<C extends ActivityController> e
                 recyclerView.setVisibility(View.GONE);
                 tvEmptyList.setVisibility(View.VISIBLE);
             }
+        }
+
+        void setToolbar(Toolbar toolbar) {
+            root.addView(toolbar, 0);
+        }
+
+        void setAppBarToolBar(AppBarLayout appBarToolBar) {
+            root.addView(appBarToolBar, 0);
         }
     }
 

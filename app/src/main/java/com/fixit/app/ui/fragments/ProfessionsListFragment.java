@@ -3,6 +3,7 @@ package com.fixit.app.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.fixit.app.R;
@@ -30,6 +31,7 @@ public class ProfessionsListFragment extends StaticRecyclerListFragment<SearchCo
         ProfessionRecyclerAdapter adapter = new ProfessionRecyclerAdapter(professions, this);
         setAdapter(adapter);
 
+        setAppBarToolBar(R.layout.layout_appbar_toolbar, R.id.toolbar);
         setBackground(R.drawable.bg_corner_nuts);
     }
 

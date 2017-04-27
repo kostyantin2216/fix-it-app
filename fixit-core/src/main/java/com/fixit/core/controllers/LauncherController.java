@@ -21,10 +21,11 @@ public class LauncherController extends BaseController implements AppInitializat
     }
 
     public void initializeApp() {
-        if(!isInitializing && !isInitialized) {
+        // TODO: remove
+        /*if(!isInitializing && !isInitialized) {
             isInitializing = true;
             new AppInitializationTask(getApplicationContext(), this).start();
-        }
+        }*/
     }
 
     public boolean isInitialized() {

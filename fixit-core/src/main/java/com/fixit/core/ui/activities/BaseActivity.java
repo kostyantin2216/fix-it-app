@@ -14,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -61,6 +62,11 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
 
     public C getController() {
         return mController;
+    }
+
+    @Override
+    public void setToolbar(Toolbar toolbar) {
+        setSupportActionBar(toolbar);
     }
 
     @Override
