@@ -42,8 +42,12 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
     }
 
     public void setToolbar(Toolbar toolbar) {
+        setToolbar(toolbar, false);
+    }
+
+    public void setToolbar(Toolbar toolbar, boolean homeAsUpEnabled) {
         if(mListener != null) {
-            mListener.setToolbar(toolbar);
+            mListener.setToolbar(toolbar, homeAsUpEnabled);
         }
     }
 
@@ -68,7 +72,7 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
 
     public interface BaseFragmentInteractionsListener<C> {
         public C getController();
-        public void setToolbar(Toolbar toolbar);
+        public void setToolbar(Toolbar toolbar, boolean homeAsUpEnabled);
         public void startChrome(String url);
         public void notifyUser(String msg);
         public void hideKeyboard(IBinder windowToken);

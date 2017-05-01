@@ -65,8 +65,9 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
     }
 
     @Override
-    public void setToolbar(Toolbar toolbar) {
+    public void setToolbar(Toolbar toolbar, boolean homeAsUpEnabled) {
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(homeAsUpEnabled);
     }
 
     @Override

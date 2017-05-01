@@ -9,13 +9,51 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="250dp">
 
-        <include layout="@layout/layout_toolbar" />
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentScrim="?colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:expandedTitleTextAppearance="@style/expandedAppBar"
+            app:collapsedTitleTextAppearance="@style/collapsedAppBar">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:id="@+id/iv_tradesman_feature"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/plumber_feature"
+                    android:scaleType="fitCenter"
+                    app:layout_collapseMode="parallax"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/sheet_text_scrim_height_bottom"
+                    android:background="@drawable/scrim_bottom"
+                    android:layout_gravity="bottom"/>
+
+            </FrameLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/sv_profile_scroller"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -47,12 +85,14 @@
                 android:id="@+id/working_days"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/tradesman_profile_working_hours_min_height"
+                android:layout_marginTop="0dp"
                 android:animateLayoutChanges="true"
                 android:gravity="center"
+                android:minHeight="@dimen/tradesman_profile_working_hours_min_height"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/guideline_vertical"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                tools:layout_editor_absoluteX="75dp" />
 
             <View android:id="@+id/horizontal_divider_1"
                 style="@style/horizontal_divider"
@@ -112,8 +152,36 @@
                 app:layout_constraintTop_toBottomOf="@id/iv_star"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <ImageView
+                android:id="@+id/iv_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search_accent_24dp"
+                android:padding="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/horizontal_divider_2"
+                app:layout_constraintEnd_toStartOf="@id/guideline_vertical"/>
+
+            <EditText
+                android:id="@+id/tv_review_search"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                app:layout_constraintStart_toEndOf="@id/guideline_vertical"
+                app:layout_constraintTop_toBottomOf="@id/horizontal_divider_2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/iv_search"/>
+
+            <View android:id="@+id/horizontal_divider_3"
+                style="@style/horizontal_divider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_search"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+
+
         </android.support.constraint.ConstraintLayout>
 
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -2,6 +2,7 @@ package com.fixit.app.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +46,10 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController> 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_tradesman_profile, container, false);
 
-        setToolbar((Toolbar) v.findViewById(R.id.toolbar));
+        setToolbar((Toolbar) v.findViewById(R.id.toolbar), true);
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setTitle(mTradesman.getCompanyName());
 
         WorkingDaysView workingDaysView = (WorkingDaysView) v.findViewById(R.id.working_days);
         workingDaysView.setWorkingDays(mTradesman.getWorkingDays());

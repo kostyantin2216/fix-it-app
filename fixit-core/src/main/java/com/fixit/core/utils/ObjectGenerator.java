@@ -12,6 +12,7 @@ public class ObjectGenerator {
 
     public static Tradesman createTradesman() {
         Tradesman tradesman = new Tradesman();
+        tradesman.setCompanyName("Professional Plumbing");
         tradesman.setWorkingDays(createWorkingDays());
         tradesman.setRating(3.5f);
         return tradesman;
