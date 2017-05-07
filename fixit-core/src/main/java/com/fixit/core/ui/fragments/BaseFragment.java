@@ -6,13 +6,20 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 
 import com.fixit.core.controllers.ActivityController;
+import com.fixit.core.general.UnexpectedErrorCallback;
+import com.fixit.core.rest.APIError;
+import com.fixit.core.rest.callbacks.AppServiceErrorCallback;
+
+import java.util.List;
 
 
 /**
  * Created by konstantin on 2/20/2017.
  */
 
-public abstract class BaseFragment<C extends ActivityController> extends Fragment {
+public abstract class BaseFragment<C extends ActivityController> extends Fragment
+    implements UnexpectedErrorCallback,
+               AppServiceErrorCallback {
 
     private BaseFragmentInteractionsListener<C> mListener;
 
@@ -38,6 +45,20 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
     public void hideKeyboard() {
         if(mListener != null) {
             mListener.hideKeyboard(getView().getRootView().getWindowToken());
+        }
+    }
+
+    @Override
+    public void onUnexpectedErrorOccurred(String msg, Throwable t) {
+        if(mListener != null) {
+            mListener.onUnexpectedErrorOccurred(msg, t);
+        }
+    }
+
+    @Override
+    public void onAppServiceError(List<APIError> errors) {
+        if(mListener != null) {
+            mListener.onAppServiceError(errors);
         }
     }
 
@@ -70,7 +91,7 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         mListener = null;
     }
 
-    public interface BaseFragmentInteractionsListener<C> {
+    public interface BaseFragmentInteractionsListener<C> extends UnexpectedErrorCallback, AppServiceErrorCallback {
         public C getController();
         public void setToolbar(Toolbar toolbar, boolean homeAsUpEnabled);
         public void startChrome(String url);

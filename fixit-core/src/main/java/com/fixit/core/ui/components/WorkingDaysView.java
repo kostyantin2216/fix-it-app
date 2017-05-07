@@ -76,7 +76,7 @@ public class WorkingDaysView extends LinearLayout implements View.OnClickListene
                 addView(dayView, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             }
         }
-        isExpanded = true;
+        isExpanded = false;
         toggleWorkingDaysVisibility();
     }
 

@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -96,6 +97,14 @@ public class CommonUtils {
 
     public static boolean isBoolean(String string) {
         return string != null && (string.equalsIgnoreCase("true") || string.equalsIgnoreCase("false"));
+    }
+
+    public static boolean isEmpty(List<?> l) {
+        return l == null || l.size() == 0;
+    }
+
+    public static boolean notEmpty(List<?> l) {
+        return l != null && l.size() > 0;
     }
 
     public static int getPercentage(int value, int percentage) {

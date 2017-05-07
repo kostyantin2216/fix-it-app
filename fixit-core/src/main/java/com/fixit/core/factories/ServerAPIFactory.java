@@ -5,6 +5,7 @@ import android.content.Context;
 import com.fixit.core.config.AppConfig;
 import com.fixit.core.rest.ServerDataAPI;
 import com.fixit.core.rest.apis.AppInstallationAPI;
+import com.fixit.core.rest.apis.DataServiceAPI;
 import com.fixit.core.rest.apis.MapAreaDataAPI;
 import com.fixit.core.rest.apis.ProfessionDataAPI;
 import com.fixit.core.rest.apis.SearchServiceAPI;
@@ -12,6 +13,7 @@ import com.fixit.core.rest.apis.ServerLogDataAPI;
 import com.fixit.core.rest.apis.SynchronizationServiceAPI;
 import com.fixit.core.rest.requests.APIRequestHeader;
 import com.fixit.core.rest.services.AppInstallationService;
+import com.fixit.core.rest.services.DataServiceService;
 import com.fixit.core.rest.services.MapAreaService;
 import com.fixit.core.rest.services.ProfessionService;
 import com.fixit.core.rest.services.SearchServiceService;
@@ -42,6 +44,7 @@ public class ServerAPIFactory {
 
     public enum API {
         APP_INSTALLATION,
+        DATA_SERVICE,
         MAP_AREA,
         PROFESSION,
         SEARCH_SERVICE,
@@ -55,6 +58,8 @@ public class ServerAPIFactory {
         switch (api) {
             case APP_INSTALLATION:
                 return (T) new AppInstallationAPI(mClient.create(AppInstallationService.class));
+            case DATA_SERVICE:
+                return (T) new DataServiceAPI(mHeader, mClient.create(DataServiceService.class));
             case MAP_AREA:
                 return (T) new MapAreaDataAPI(mClient.create(MapAreaService.class));
             case PROFESSION:
@@ -72,6 +77,10 @@ public class ServerAPIFactory {
 
     public AppInstallationAPI createAppInstallationApi() {
         return new AppInstallationAPI(mClient.create(AppInstallationService.class));
+    }
+
+    public DataServiceAPI createDataServiceApi() {
+        return new DataServiceAPI(mHeader, mClient.create(DataServiceService.class));
     }
 
     public MapAreaDataAPI createMapAreaApi() {

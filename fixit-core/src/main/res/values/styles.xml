@@ -30,8 +30,6 @@
     </style>
 
     <style name="horizontal_divider">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">2dp</item>
         <item name="android:background">@color/grey_400</item>
     </style>
 

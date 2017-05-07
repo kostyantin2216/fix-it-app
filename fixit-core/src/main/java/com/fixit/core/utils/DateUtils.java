@@ -13,6 +13,7 @@ import java.util.TimeZone;
 public class DateUtils {
 
     public final static String FORMAT_REST_DATE = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    public final static String FORMAT_DMY = "dd/MM/yyyy";
 
     public static Date stringToDate(String format, String dateString) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);

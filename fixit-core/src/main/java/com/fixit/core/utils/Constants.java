@@ -11,4 +11,7 @@ public class Constants {
     public final static String ARG_JOB_LOCATION = "job_location";
     public final static String ARG_TRADESMAN = "tradesman";
 
+    public final static String KEY_USER_AVATAR = "userAvatar";
+    public final static String KEY_USER_NAME = "userName";
+
 }
