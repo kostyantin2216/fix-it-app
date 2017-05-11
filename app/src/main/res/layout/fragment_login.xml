@@ -42,7 +42,7 @@
         android:layout_height="45dp"
         android:layout_margin="4dp"
         android:drawableStart="@drawable/ic_edit_white_24dp"
-        android:drawablePadding="10dp"
+        android:drawablePadding="-5dp"
         android:padding="8dp"
         android:text="@string/register" />
 
