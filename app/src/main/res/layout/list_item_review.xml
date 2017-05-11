@@ -4,22 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_margin="@dimen/li_review_item_spacing"
+    >
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="100dp">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_user_avatar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:paddingEnd="8dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:src="@drawable/user_avatar"
+            app:civ_border_width="1dp"
+            app:civ_border_color="@color/grey_700"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/rb_review_rating"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
 
         <TextView
             android:id="@+id/tv_user_name"
@@ -27,6 +34,7 @@
             android:layout_height="wrap_content"
             android:gravity="center|start"
             android:textSize="@dimen/large_text_size"
+            android:layout_marginStart="@dimen/li_review_item_spacing"
             app:layout_constraintBottom_toTopOf="@+id/rb_review_rating"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_user_avatar"
@@ -45,6 +53,7 @@
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
             android:rating="5"
+            android:layout_marginStart="@dimen/li_review_item_spacing"
             app:layout_constraintBottom_toTopOf="@+id/tv_review_title"
             app:layout_constraintEnd_toStartOf="@+id/tv_review_create_date"
             app:layout_constraintStart_toEndOf="@id/iv_user_avatar"
@@ -70,6 +79,7 @@
             android:gravity="center|start"
             android:textStyle="bold|italic"
             android:textSize="@dimen/standard_text_size"
+            android:layout_marginStart="@dimen/li_review_item_spacing"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_user_avatar"
@@ -83,7 +93,7 @@
         android:id="@+id/tv_review_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
+        android:paddingTop="@dimen/li_review_item_spacing"
         android:ellipsize="end"
         android:maxLines="3"
         tools:text="vkjbns kduhc l ibcsrlchbli bncbrli bcrlnb lnc lriu nljn liucr liun lcl ruh" />

@@ -17,6 +17,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by konstantin on 5/7/2017.
  */
@@ -36,7 +38,7 @@ public class ReviewRecyclerAdapter extends CommonRecyclerAdapter<ReviewData, Rev
 
     static class ReviewViewHolder extends CommonRecyclerAdapter.CommonViewHolder<ReviewData> implements View.OnClickListener {
 
-        final ImageView ivReviewerAvatar;
+        final CircleImageView ivReviewerAvatar;
         final TextView tvReviewerName;
         final TextView tvReviewDate;
         final TextView tvReviewTitle;
@@ -48,7 +50,7 @@ public class ReviewRecyclerAdapter extends CommonRecyclerAdapter<ReviewData, Rev
         public ReviewViewHolder(View itemView) {
             super(itemView);
 
-            this.ivReviewerAvatar = (ImageView) itemView.findViewById(R.id.iv_user_avatar);
+            this.ivReviewerAvatar = (CircleImageView) itemView.findViewById(R.id.iv_user_avatar);
             this.tvReviewerName = (TextView) itemView.findViewById(R.id.tv_user_name);
             this.tvReviewDate = (TextView) itemView.findViewById(R.id.tv_review_create_date);
             this.tvReviewTitle = (TextView) itemView.findViewById(R.id.tv_review_title);
@@ -60,7 +62,7 @@ public class ReviewRecyclerAdapter extends CommonRecyclerAdapter<ReviewData, Rev
 
         @Override
         public void populate(ReviewData entity) {
-            Picasso.with(itemView.getContext()).load(entity.reviewerAvatar).into(ivReviewerAvatar);
+            Picasso.with(itemView.getContext()).load(entity.reviewerAvatar).noFade().into(ivReviewerAvatar);
             tvReviewerName.setText(entity.reviewerName);
             tvReviewDate.setText(DateUtils.dateToString(DateUtils.FORMAT_DMY, entity.review.getCreatedAt()));
             tvReviewTitle.setText("\"" + entity.review.getTitle() + "\"");

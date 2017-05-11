@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "255078666095",
+    "project_id": "fix-it-1490789073165"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255078666095:android:945c1578d3df45f7",
+        "android_client_info": {
+          "package_name": "com.fixit.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255078666095-b39rcbn3uiqtiganmk8haae2sdktedi3.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "255078666095-3m206dl14ikld82pr4arhfu66suii04u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fixit.app",
+            "certificate_hash": "ef40768ebcb8f57b5c1567a480e343a365d4837f"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnmRTLGEiyAV8-Iche4V4pRWRgbXrsO4Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

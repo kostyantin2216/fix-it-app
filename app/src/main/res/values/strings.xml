@@ -14,6 +14,7 @@
     <string name="invalid_address">Invalid address, must pick a street address.</string>
 
     <string name="no_tradesmen_results">Could not find any tradesmen for your location.</string>
+    <string name="no_tradesman_reviews">There are currently no reviews for this tradesman.</string>
 
     <string name="format_review_count">%1$d Reviews</string>
     <string name="tradesman_selection_limit_passed">Cannot select more then %1$d tradesmen</string>
@@ -23,5 +24,9 @@
     <string name="waiting_for_results">Waiting for search results…</string>
 
     <string name="rating">Rating</string>
+    <string name="register">Register</string>
+
+    <string name="login_text">We need your help!\nWithout your reviews and experiences with the tradesmen we won\'t be able to keep providing you with top quality tradesmen, so in order to help out  please create an account with us and leave a review of the tradesman you have ordered!</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
 
 </resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:background="@drawable/bg_transparent_black">
+
+    <TextView
+        style="@style/login_text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/login_text" />
+
+    <Button
+        android:id="@+id/btn_fb_login"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:drawableStart="@drawable/ic_fb_logo_white"
+        android:padding="8dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/fb_button"
+        android:textColor="@color/grey_100"
+        android:text="@string/com_facebook_loginview_log_in_button_long"/>
+
+    <Button
+        android:id="@+id/btn_google_login"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/btn_google_sign_in"
+        android:padding="8dp"
+        android:text="@string/common_signin_button_text_long"
+        android:paddingStart="32dp"
+        android:textColor="@color/grey_800"/>
+
+    <Button
+        android:id="@+id/btn_register"
+        style="@style/button"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="4dp"
+        android:drawableStart="@drawable/ic_edit_white_24dp"
+        android:drawablePadding="10dp"
+        android:padding="8dp"
+        android:text="@string/register" />
+
+</LinearLayout>

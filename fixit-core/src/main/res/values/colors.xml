@@ -5,6 +5,8 @@
 
     <color name="gold">#ffd700</color>
 
+    <color name="dark_slate_blue">#3b5998</color>
+
     <color name="transparentWhite_20">#20FFFFFF</color>
     <color name="transparentWhite_40">#40FFFFFF</color>
     <color name="transparentWhite_60">#60FFFFFF</color>

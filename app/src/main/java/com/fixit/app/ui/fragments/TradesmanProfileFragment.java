@@ -1,5 +1,6 @@
 package com.fixit.app.ui.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -10,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.fixit.app.R;
 import com.fixit.app.ui.adapters.ReviewRecyclerAdapter;
@@ -34,8 +37,70 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
 
     private Tradesman mTradesman;
 
-    private NestedScrollView svProfileScroller;
-    private RecyclerView rvReviews;
+    private ViewHolder mView;
+
+    private static class ViewHolder {
+
+        private enum ListState {
+            LOADING,
+            EMPTY,
+            SHOWING
+        }
+
+        final NestedScrollView svProfileScroller;
+        final RecyclerView rvReviews;
+        final TextView tvNoReviews;
+        final ProgressBar pbLoader;
+
+        public ViewHolder(Context context, View v, Tradesman tradesman) {
+            svProfileScroller = (NestedScrollView) v.findViewById(R.id.sv_profile_scroller);
+            rvReviews = (RecyclerView) v.findViewById(R.id.review_list);
+            tvNoReviews = (TextView) v.findViewById(R.id.tv_empty_list);
+            pbLoader = (ProgressBar) v.findViewById(R.id.loader);
+
+            rvReviews.setNestedScrollingEnabled(false);
+            rvReviews.setLayoutManager(new LinearLayoutManager(context));
+
+            CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
+            collapsingToolbarLayout.setTitle(tradesman.getCompanyName());
+
+            WorkingDaysView workingDaysView = (WorkingDaysView) v.findViewById(R.id.working_days);
+            workingDaysView.setWorkingDays(tradesman.getWorkingDays());
+
+            SimpleRatingView ratingView = (SimpleRatingView) v.findViewById(R.id.tradesman_rating);
+            ratingView.setRating(tradesman.getRating());
+
+            changeListState(ListState.LOADING);
+        }
+
+        void setRecyclerAdapter(RecyclerView.Adapter adapter) {
+            if(adapter.getItemCount() > 0) {
+                rvReviews.setAdapter(adapter);
+                changeListState(ListState.SHOWING);
+            } else {
+                changeListState(ListState.EMPTY);
+            }
+        }
+
+        void changeListState(ListState state) {
+            switch (state) {
+                case LOADING:
+                    tvNoReviews.setVisibility(View.GONE);
+                    rvReviews.setVisibility(View.GONE);
+                    pbLoader.setVisibility(View.VISIBLE);
+                    break;
+                case EMPTY:
+                    rvReviews.setVisibility(View.GONE);
+                    pbLoader.setVisibility(View.GONE);
+                    tvNoReviews.setVisibility(View.VISIBLE);
+                    break;
+                case SHOWING:
+                    tvNoReviews.setVisibility(View.GONE);
+                    pbLoader.setVisibility(View.GONE);
+                    rvReviews.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
     public static TradesmanProfileFragment newInstance(Tradesman tradesman) {
         TradesmanProfileFragment fragment = new TradesmanProfileFragment();
@@ -59,20 +124,7 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
 
         setToolbar((Toolbar) v.findViewById(R.id.toolbar), true);
 
-        svProfileScroller = (NestedScrollView) v.findViewById(R.id.sv_profile_scroller);
-
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setTitle(mTradesman.getCompanyName());
-
-        WorkingDaysView workingDaysView = (WorkingDaysView) v.findViewById(R.id.working_days);
-        workingDaysView.setWorkingDays(mTradesman.getWorkingDays());
-
-        SimpleRatingView ratingView = (SimpleRatingView) v.findViewById(R.id.tradesman_rating);
-        ratingView.setRating(mTradesman.getRating());
-
-        rvReviews = (RecyclerView) v.findViewById(R.id.review_list);
-        rvReviews.setNestedScrollingEnabled(false);
-        rvReviews.setLayoutManager(new LinearLayoutManager(getContext()));
+        mView = new ViewHolder(getContext(), v, mTradesman);
 
         return v;
     }
@@ -81,19 +133,18 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mView.rvReviews.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+               onReviewsLoaded(ObjectGenerator.createReviewData(10));
+            }
+        }, 4000);
         //getController().getReviews(mTradesman.get_id(), this);
-        onReviewsLoaded(ObjectGenerator.createReviewData(5));
     }
 
     @Override
     public void onReviewsLoaded(List<ReviewData> reviewData) {
         ReviewRecyclerAdapter adapter = new ReviewRecyclerAdapter(getContext(), reviewData);
-        rvReviews.setAdapter(adapter);
-        svProfileScroller.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                svProfileScroller.scrollTo(0, 0);
-            }
-        }, 500);
+        mView.setRecyclerAdapter(adapter);
     }
 }

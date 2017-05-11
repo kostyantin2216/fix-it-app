@@ -1,5 +1,6 @@
 package com.fixit.app.ui.activities;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 
 import com.fixit.app.R;
+import com.fixit.app.ifs.external.google.GoogleClientManager;
 import com.fixit.app.ifs.validation.AddressValidator;
 import com.fixit.app.ui.fragments.ProfessionsListFragment;
 import com.fixit.app.ui.fragments.SearchFragment;
@@ -35,22 +37,18 @@ import com.google.android.gms.location.places.ui.PlacePicker;
  */
 
 public class SearchActivity extends BaseActivity<SearchController>
-        implements GoogleApiClient.OnConnectionFailedListener,
-                   SearchFragment.SearchFragmentInteractionListener,
+        implements SearchFragment.SearchFragmentInteractionListener,
                    SearchManager.SearchCallback,
-                   ProfessionsListFragment.ProfessionSelectionListener {
+                   ProfessionsListFragment.ProfessionSelectionListener, GoogleClientManager.GoogleManagerCallback {
 
     private static final String LOG_TAG = "#" + SearchActivity.class.getSimpleName();
     private static final String FRAG_TAG_SEARCH = "searchFrag";
     private static final String FRAG_TAG_PROFESSIONS = "professionsFrag";
 
-    private static final int REQUEST_RESOLVE_ERROR = 1001;
     private static final int REQUEST_PLACE_PICKER = 1002;
-    private static final String DIALOG_ERROR = "dialog_error";
 
-    private GoogleApiClient mGoogleApiClient;
+    private GoogleClientManager mGoogleClientManager;
     private AddressValidator mAddressValidator;
-    private boolean mResolvingError = false;
 
     private JobLocation mJobLocation;
 
@@ -67,12 +65,13 @@ public class SearchActivity extends BaseActivity<SearchController>
                     .commit();
         }
 
-        mGoogleApiClient = new GoogleApiClient
+        mGoogleClientManager = new GoogleClientManager(new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(this, this)
-                .build();
+                .addApi(Places.PLACE_DETECTION_API),
+                this,
+                this
+        );
 
         mAddressValidator = new AddressValidator();
     }
@@ -81,22 +80,14 @@ public class SearchActivity extends BaseActivity<SearchController>
     protected void onStart() {
         super.onStart();
 
-        getSearchFragment().setGoogleApiClient(mGoogleApiClient);
+        getSearchFragment().setGoogleApiClient(mGoogleClientManager.mClient);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mGoogleClientManager.onActivityResult(requestCode, resultCode);
         switch (requestCode) {
-            case REQUEST_RESOLVE_ERROR:
-                mResolvingError = false;
-                if (resultCode == RESULT_OK) {
-                    // Make sure the app is not already connected or attempting to connect
-                    if (!mGoogleApiClient.isConnecting() &&
-                            !mGoogleApiClient.isConnected()) {
-                        mGoogleApiClient.connect();
-                    }
-                }
-                break;
             case REQUEST_PLACE_PICKER:
                 if(resultCode == RESULT_OK) {
                     getSearchFragment().onPlaceChosen(PlacePicker.getPlace(this, data));
@@ -108,39 +99,6 @@ public class SearchActivity extends BaseActivity<SearchController>
     @Override
     public SearchController createController() {
         return new SearchController((BaseApplication) getApplication());
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult result) {
-        if (!mResolvingError) {
-            if (result.hasResolution()) {
-                try {
-                    mResolvingError = true;
-                    result.startResolutionForResult(this, REQUEST_RESOLVE_ERROR);
-                } catch (IntentSender.SendIntentException e) {
-                    // There was an error with the resolution intent. Try again.
-                    mGoogleApiClient.connect();
-                }
-            } else {
-                // Show dialog using GoogleApiAvailability.getErrorDialog()
-                showErrorDialog(result.getErrorCode());
-                mResolvingError = true;
-            }
-        }
-    }
-
-    private void showErrorDialog(int errorCode) {
-        // Create a fragment for the error dialog
-        GoogleErrorDialogFragment dialogFragment = new GoogleErrorDialogFragment();
-        // Pass the error that should be displayed
-        Bundle args = new Bundle();
-        args.putInt(DIALOG_ERROR, errorCode);
-        dialogFragment.setArguments(args);
-        dialogFragment.show(getSupportFragmentManager(), "errordialog");
-    }
-
-    public void onDialogDismissed() {
-        mResolvingError = false;
     }
 
     private SearchFragment getSearchFragment() {
@@ -226,22 +184,14 @@ public class SearchActivity extends BaseActivity<SearchController>
         hideLoader();
     }
 
-    public static class GoogleErrorDialogFragment extends DialogFragment {
-        public GoogleErrorDialogFragment() { }
+    @Override
+    public void showDialogFragment(DialogFragment dialogFragment, String tag) {
+        dialogFragment.show(getSupportFragmentManager(), tag);
+    }
 
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Get the error code and retrieve the appropriate dialog
-            int errorCode = this.getArguments().getInt(DIALOG_ERROR);
-            return GoogleApiAvailability.getInstance().getErrorDialog(
-                    this.getActivity(), errorCode, REQUEST_RESOLVE_ERROR);
-        }
-
-        @Override
-        public void onDismiss(DialogInterface dialog) {
-            ((SearchActivity) getActivity()).onDialogDismissed();
-        }
+    @Override
+    public Activity getActivityForResult() {
+        return this;
     }
 
 }

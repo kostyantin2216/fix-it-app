@@ -1,5 +1,7 @@
 package com.fixit.app.ui;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.fixit.core.BaseApplication;
 import com.fixit.core.data.Profession;
 import com.fixit.core.database.ProfessionDAO;
@@ -17,6 +19,8 @@ public class FixItApplication extends BaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
 
         // TODO: remove
         ProfessionDAO professionDAO = getDaoFactory().createProfessionDao();
