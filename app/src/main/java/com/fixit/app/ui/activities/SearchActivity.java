@@ -24,6 +24,7 @@ import com.fixit.core.general.SearchManager;
 import com.fixit.core.ui.activities.BaseActivity;
 import com.fixit.core.utils.Constants;
 import com.fixit.core.utils.FILog;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -39,7 +40,8 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 public class SearchActivity extends BaseActivity<SearchController>
         implements SearchFragment.SearchFragmentInteractionListener,
                    SearchManager.SearchCallback,
-                   ProfessionsListFragment.ProfessionSelectionListener, GoogleClientManager.GoogleManagerCallback {
+                   ProfessionsListFragment.ProfessionSelectionListener,
+                   GoogleClientManager.GoogleManagerCallback {
 
     private static final String LOG_TAG = "#" + SearchActivity.class.getSimpleName();
     private static final String FRAG_TAG_SEARCH = "searchFrag";
@@ -86,7 +88,7 @@ public class SearchActivity extends BaseActivity<SearchController>
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mGoogleClientManager.onActivityResult(requestCode, resultCode);
+        mGoogleClientManager.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_PLACE_PICKER:
                 if(resultCode == RESULT_OK) {

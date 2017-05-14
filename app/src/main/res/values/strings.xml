@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Fix It</string>
+
+    <string name="done">Done</string>
     
     <string name="i_need_a">I need a…</string>
     <string name="search_professions">Search Professions</string>
@@ -28,5 +30,11 @@
 
     <string name="login_text">We need your help!\nWithout your reviews and experiences with the tradesmen we won\'t be able to keep providing you with top quality tradesmen, so in order to help out  please create an account with us and leave a review of the tradesman you have ordered!</string>
     <string name="sign_in_with_google">Sign in with Google</string>
+
+    <string name="registration">Registration</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="telephone">Telephone</string>
 
 </resources>

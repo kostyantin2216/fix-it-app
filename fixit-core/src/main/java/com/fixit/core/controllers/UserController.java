@@ -19,4 +19,8 @@ public class UserController extends BaseController {
         return !TextUtils.isEmpty(PrefUtils.getUserId(getApplicationContext()));
     }
 
+    public void registerUser(String firstName, String lastName, String email, String telephone, String avatarUrl) {
+
+    }
+
 }
