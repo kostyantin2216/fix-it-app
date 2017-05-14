@@ -2,6 +2,6 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@android:color/black">
 
-    <item android:drawable="@drawable/btn_google_signin_light_normal" />
+    <item android:drawable="@drawable/btn_google_sign_in_states" />
 
 </ripple>

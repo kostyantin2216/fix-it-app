@@ -22,5 +22,6 @@
 
     <string name="empty_list">Nothing to show</string>
     <string name="closed_today">Closed Today</string>
+    <string name="close">Close</string>
 
 </resources>

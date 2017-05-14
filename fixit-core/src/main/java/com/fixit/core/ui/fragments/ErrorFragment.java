@@ -86,6 +86,8 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
         int resId = v.getId();
         if(resId == R.id.btn_continue) {
             continueApp();
+        } else if(resId == R.id.btn_close) {
+            hideSelf();
         } else if(resId == R.id.btn_report_error) {
             reportError();
         } else if(resId == R.id.btn_wifi_settings) {
@@ -110,6 +112,10 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
         getActivity().finishAffinity();
+    }
+
+    private void hideSelf() {
+        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
     }
 
     private void reportError() {
@@ -150,6 +156,7 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
         final Button btnReport;
         final Button btnWifiSettings;
         final Button btnMobileNetworks;
+        final Button btnClose;
         final Button btnContinue;
         final Button btnExitApp;
 
@@ -158,31 +165,34 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
             btnReport = (Button) v.findViewById(R.id.btn_report_error);
             btnWifiSettings = (Button) v.findViewById(R.id.btn_wifi_settings);
             btnMobileNetworks = (Button) v.findViewById(R.id.btn_mobile_networks);
+            btnClose = (Button) v.findViewById(R.id.btn_close);
             btnContinue = (Button) v.findViewById(R.id.btn_continue);
             btnExitApp = (Button) v.findViewById(R.id.btn_exit_app);
 
             btnReport.setOnClickListener(onClickListener);
             btnWifiSettings.setOnClickListener(onClickListener);
             btnMobileNetworks.setOnClickListener(onClickListener);
+            btnClose.setOnClickListener(onClickListener);
             btnContinue.setOnClickListener(onClickListener);
             btnExitApp.setOnClickListener(onClickListener);
         }
 
         void setState(ErrorType errorType) {
             switch (errorType) {
-                case GENERAL:
-                    btnWifiSettings.setVisibility(View.GONE);
-                    btnMobileNetworks.setVisibility(View.GONE);
-                    btnExitApp.setVisibility(View.GONE);
-                    break;
                 case NO_NETWORK:
-                    btnReport.setVisibility(View.GONE);
-                    btnExitApp.setVisibility(View.GONE);
+                    btnWifiSettings.setVisibility(View.VISIBLE);
+                    btnMobileNetworks.setVisibility(View.VISIBLE);
+                    btnContinue.setVisibility(View.VISIBLE);
+                    break;
+                case GENERAL:
+                    btnReport.setVisibility(View.VISIBLE);
+                    btnContinue.setVisibility(View.VISIBLE);
                     break;
                 case SERVER_UNAVAILABLE:
-                    btnWifiSettings.setVisibility(View.GONE);
-                    btnMobileNetworks.setVisibility(View.GONE);
-                    btnContinue.setVisibility(View.GONE);
+                    btnExitApp.setVisibility(View.VISIBLE);
+                    break;
+                case PROMPT:
+                    btnClose.setVisibility(View.VISIBLE);
                     break;
             }
         }
@@ -192,6 +202,7 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
     // ERROR TYPES, PARAMS, BUILDERS
 
     public enum ErrorType {
+        PROMPT(R.string.error_default_display_msg),
         GENERAL(R.string.error_default_display_msg),
         NO_NETWORK(R.string.error_no_network_msg),
         SERVER_UNAVAILABLE(R.string.error_server_unavailable);

@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparentBlack_DD"
+    android:background="@color/transparent_black_DD"
     android:clickable="true"
     android:padding="@dimen/error_fragment_padding">
 
@@ -59,6 +59,13 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/error_fragment_item_spacing"
             android:text="@string/mobile_networks" />
+
+        <Button
+            android:id="@+id/btn_close"
+            style="@style/errorFragmentButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/close"/>s
 
         <Button
             android:id="@+id/btn_continue"

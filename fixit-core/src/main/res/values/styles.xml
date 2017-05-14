@@ -11,6 +11,7 @@
     <style name="errorFragmentButton">
         <item name="android:background">@drawable/button</item>
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:visibility">gone</item>
     </style>
 
     <style name="emptyListText">

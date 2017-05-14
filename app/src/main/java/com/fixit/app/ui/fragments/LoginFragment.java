@@ -10,14 +10,11 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.Button;
 
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.fixit.app.R;
 import com.fixit.app.ifs.external.google.FacebookClientManager;
 import com.fixit.app.ifs.external.google.GoogleClientManager;
@@ -27,8 +24,6 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
-
-import java.util.Arrays;
 
 /**
  * Created by konstantin on 5/8/2017.
@@ -44,6 +39,9 @@ public class LoginFragment extends BaseFragment<UserController>
 
     private FacebookClientManager mFacebookClient;
     private GoogleClientManager mGoogleClient;
+
+    private Button btnFacebookLogin;
+    private Button btnGoogleLogin;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -71,8 +69,12 @@ public class LoginFragment extends BaseFragment<UserController>
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
-        v.findViewById(R.id.btn_fb_login).setOnClickListener(this);
-        v.findViewById(R.id.btn_google_login).setOnClickListener(this);
+        btnFacebookLogin = (Button) v.findViewById(R.id.btn_fb_login);
+        btnFacebookLogin.setOnClickListener(this);
+
+        btnGoogleLogin = (Button) v.findViewById(R.id.btn_google_login);
+        btnGoogleLogin.setOnClickListener(this);
+
         v.findViewById(R.id.btn_register).setOnClickListener(this);
 
         return v;
@@ -80,7 +82,6 @@ public class LoginFragment extends BaseFragment<UserController>
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         mFacebookClient.onActivityResult(requestCode, resultCode, data);
         mGoogleClient.onActivityResult(requestCode, resultCode, data);
     }
@@ -133,23 +134,38 @@ public class LoginFragment extends BaseFragment<UserController>
         }
     }
 
-    // GOOGLE LOGIN CALLBACKS
-    @Override
-    public void onSignInSuccess(GoogleSignInAccount account) {
+    private void completeLogin(String firstName, String lastName, String email, Uri avatarUrl) {
         if(mCallbacks != null) {
-            Uri photoUrl = account.getPhotoUrl();
             mCallbacks.onLoggedIn(
-                    account.getGivenName(),
-                    account.getFamilyName(),
-                    account.getEmail(),
-                    photoUrl != null ? photoUrl.toString() : null
+                    firstName,
+                    lastName,
+                    email,
+                    avatarUrl != null ? avatarUrl.toString() : null
             );
         }
     }
 
+    private void loginError(String forClient) {
+        String error = getString(R.string.login_failed_for, forClient);
+        showPrompt(error);
+    }
+
+    // GOOGLE LOGIN CALLBACKS
+
+    @Override
+    public void onSignInSuccess(GoogleSignInAccount account) {
+        completeLogin(
+                account.getGivenName(),
+                account.getFamilyName(),
+                account.getEmail(),
+                account.getPhotoUrl()
+        );
+    }
+
     @Override
     public void onSignInError() {
-        onUnexpectedErrorOccurred("cannot login with google", null);
+        btnGoogleLogin.setEnabled(false);
+        loginError(getString(R.string.google));
     }
 
     @Override
@@ -163,17 +179,16 @@ public class LoginFragment extends BaseFragment<UserController>
     }
 
     // FACEBOOK LOGIN CALLBACKS
+
     @Override
     public void onLogInSuccess(Profile profile, String email) {
-        if(mCallbacks != null) {
-            Uri photoUri =  profile.getProfilePictureUri(200, 200);
-            mCallbacks.onLoggedIn(
-                    profile.getFirstName(),
-                    profile.getLastName(),
-                    email,
-                    photoUri != null ? photoUri.toString() : null
-            );
-        }
+        /*completeLogin(
+                profile.getFirstName(),
+                profile.getLastName(),
+                email,
+                profile.getProfilePictureUri(200, 200)
+        );*/
+        onLogInError();
     }
 
     @Override
@@ -183,7 +198,8 @@ public class LoginFragment extends BaseFragment<UserController>
 
     @Override
     public void onLogInError() {
-        onUnexpectedErrorOccurred("cannot login with facebook", null);
+        btnFacebookLogin.setEnabled(false);
+        loginError(getString(R.string.facebook));
     }
 
     public interface LoginFragmentCallbacks {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.fixit.core.controllers.ActivityController;
 import com.fixit.core.general.UnexpectedErrorCallback;
@@ -15,8 +16,10 @@ import java.util.List;
 
 /**
  * Created by konstantin on 2/20/2017.
+ *
+ * Delegates common interactions to {@link com.fixit.core.ui.activities.BaseActivity}
+ *
  */
-
 public abstract class BaseFragment<C extends ActivityController> extends Fragment
     implements UnexpectedErrorCallback,
                AppServiceErrorCallback {
@@ -42,9 +45,9 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         }
     }
 
-    public void hideKeyboard() {
+    public void hideKeyboard(View rootView) {
         if(mListener != null) {
-            mListener.hideKeyboard(getView().getRootView().getWindowToken());
+            mListener.hideKeyboard(rootView.getWindowToken());
         }
     }
 
@@ -59,6 +62,18 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
     public void onAppServiceError(List<APIError> errors) {
         if(mListener != null) {
             mListener.onAppServiceError(errors);
+        }
+    }
+
+    public void showError(String error) {
+        if(mListener != null) {
+            mListener.showError(error);
+        }
+    }
+
+    public void showPrompt(String prompt) {
+        if(mListener != null) {
+            mListener.showPrompt(prompt);
         }
     }
 
@@ -92,11 +107,13 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
     }
 
     public interface BaseFragmentInteractionsListener<C> extends UnexpectedErrorCallback, AppServiceErrorCallback {
-        public C getController();
-        public void setToolbar(Toolbar toolbar, boolean homeAsUpEnabled);
-        public void startChrome(String url);
-        public void notifyUser(String msg);
-        public void hideKeyboard(IBinder windowToken);
+        C getController();
+        void showError(String displayMsg);
+        void showPrompt(String displayMsg);
+        void setToolbar(Toolbar toolbar, boolean homeAsUpEnabled);
+        void startChrome(String url);
+        void notifyUser(String msg);
+        void hideKeyboard(IBinder windowToken);
     }
 
 }

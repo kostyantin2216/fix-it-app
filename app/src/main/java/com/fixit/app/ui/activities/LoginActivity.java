@@ -24,6 +24,8 @@ public class LoginActivity extends BaseActivity<UserController>
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        mLoginDetails = new LoginDetails();
+
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left, R.anim.enter_from_left, R.anim.exit_out_right)
                 .add(R.id.fragment_container, LoginFragment.newInstance())

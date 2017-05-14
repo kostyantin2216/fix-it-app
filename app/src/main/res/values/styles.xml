@@ -22,7 +22,7 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold</item>
 
-        <item name="android:background">@color/transparentBlack_40</item>
+        <item name="android:background">@color/transparent_black_40</item>
     </style>
 
     <style name="collapsedAppBar" parent="@android:style/TextAppearance.Medium">

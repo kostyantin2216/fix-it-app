@@ -2,6 +2,6 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@android:color/white">
 
-    <item android:drawable="@drawable/fb_button_shape" />
+    <item android:drawable="@drawable/btn_facebook_states" />
 
 </ripple>

@@ -139,6 +139,7 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         showError(ErrorFragment.ErrorType.GENERAL);
     }
 
+    @Override
     public void showError(String error) {
         showError(ErrorFragment.ErrorType.GENERAL, error);
     }
@@ -157,6 +158,11 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
                 .beginTransaction()
                 .add(android.R.id.content, ErrorFragment.newInstance(params))
                 .commit();
+    }
+
+    @Override
+    public void showPrompt(String message) {
+        showError(ErrorFragment.ErrorType.PROMPT.createBuilder(message).build());
     }
 
     public void showLoader() {

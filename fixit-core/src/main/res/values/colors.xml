@@ -5,21 +5,23 @@
 
     <color name="gold">#ffd700</color>
 
-    <color name="dark_slate_blue">#3b5998</color>
+    <color name="slate_blue">#39558e</color>
+    <color name="dark_slate_blue">#283b63</color>
+    <color name="transparent_dark_slate_blue_50">#503b5998</color>
 
-    <color name="transparentWhite_20">#20FFFFFF</color>
-    <color name="transparentWhite_40">#40FFFFFF</color>
-    <color name="transparentWhite_60">#60FFFFFF</color>
-    <color name="transparentWhite_80">#80FFFFFF</color>
+    <color name="transparent_white_20">#20FFFFFF</color>
+    <color name="transparent_white_40">#40FFFFFF</color>
+    <color name="transparent_white_60">#60FFFFFF</color>
+    <color name="transparent_white_80">#80FFFFFF</color>
 
-    <color name="transparentBlack_20">#20000000</color>
-    <color name="transparentBlack_40">#40000000</color>
-    <color name="transparentBlack_60">#60000000</color>
-    <color name="transparentBlack_80">#80000000</color>
-    <color name="transparentBlack_AA">#AA000000</color>
-    <color name="transparentBlack_BB">#BB000000</color>
-    <color name="transparentBlack_CC">#CC000000</color>
-    <color name="transparentBlack_DD">#DD000000</color>
+    <color name="transparent_black_20">#20000000</color>
+    <color name="transparent_black_40">#40000000</color>
+    <color name="transparent_black_60">#60000000</color>
+    <color name="transparent_black_80">#80000000</color>
+    <color name="transparent_black_AA">#AA000000</color>
+    <color name="transparent_black_BB">#BB000000</color>
+    <color name="transparent_black_CC">#CC000000</color>
+    <color name="transparent_black_DD">#DD000000</color>
 
     <color name="grey_50">#FAFAFA</color>
     <color name="grey_100">#F5F5F5</color>
