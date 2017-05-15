@@ -19,6 +19,7 @@
     <string name="mobile_networks">Mobile Networks</string>
     <string name="continue_">Continue</string>
     <string name="exit">Exit</string>
+    <string name="done">Done</string>
 
     <string name="empty_list">Nothing to show</string>
     <string name="closed_today">Closed Today</string>

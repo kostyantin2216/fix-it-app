@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.facebook.Profile;
@@ -40,8 +42,45 @@ public class LoginFragment extends BaseFragment<UserController>
     private FacebookClientManager mFacebookClient;
     private GoogleClientManager mGoogleClient;
 
-    private Button btnFacebookLogin;
-    private Button btnGoogleLogin;
+    private ViewHolder mView;
+
+    private static class ViewHolder {
+        final TextView tvText;
+        final ProgressBar pbLoader;
+        final Button btnFacebookLogin;
+        final Button btnGoogleLogin;
+        final Button btnRegister;
+
+        ViewHolder(View v, View.OnClickListener buttonClickListener) {
+            tvText = (TextView) v.findViewById(R.id.tv_login_text);
+            pbLoader = (ProgressBar) v.findViewById(R.id.loader);
+            btnFacebookLogin = (Button) v.findViewById(R.id.btn_fb_login);
+            btnGoogleLogin = (Button) v.findViewById(R.id.btn_google_login);
+            btnRegister = (Button) v.findViewById(R.id.btn_register);
+
+            btnFacebookLogin.setOnClickListener(buttonClickListener);
+            btnGoogleLogin.setOnClickListener(buttonClickListener);
+            btnRegister.setOnClickListener(buttonClickListener);
+        }
+
+        void showLoader() {
+            tvText.setVisibility(View.GONE);
+            pbLoader.setVisibility(View.VISIBLE);
+            setClickable(false);
+        }
+
+        void hideLoader() {
+            tvText.setVisibility(View.VISIBLE);
+            pbLoader.setVisibility(View.GONE);
+            setClickable(true);
+        }
+
+        void setClickable(boolean clickable) {
+            btnFacebookLogin.setClickable(clickable);
+            btnGoogleLogin.setClickable(clickable);
+            btnRegister.setClickable(clickable);
+        }
+    }
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -69,15 +108,19 @@ public class LoginFragment extends BaseFragment<UserController>
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
-        btnFacebookLogin = (Button) v.findViewById(R.id.btn_fb_login);
-        btnFacebookLogin.setOnClickListener(this);
-
-        btnGoogleLogin = (Button) v.findViewById(R.id.btn_google_login);
-        btnGoogleLogin.setOnClickListener(this);
-
-        v.findViewById(R.id.btn_register).setOnClickListener(this);
+        mView = new ViewHolder(v, this);
 
         return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if(mCallbacks != null) {
+            mView.btnFacebookLogin.setEnabled(mCallbacks.isFacebookLoginEnabled());
+            mView.btnGoogleLogin.setEnabled(mCallbacks.isGoogleLoginEnabled());
+        }
     }
 
     @Override
@@ -121,10 +164,12 @@ public class LoginFragment extends BaseFragment<UserController>
     }
 
     private void loginWithFacebook() {
+        mView.showLoader();
         mFacebookClient.login(this, this);
     }
 
     private void loginWithGoogle() {
+        mView.showLoader();
         mGoogleClient.login(this, this);
     }
 
@@ -134,18 +179,22 @@ public class LoginFragment extends BaseFragment<UserController>
         }
     }
 
-    private void completeLogin(String firstName, String lastName, String email, Uri avatarUrl) {
+    private void completeLogin(String firstName, String lastName, String email, Uri avatarUrl, String googleId, String facebookId) {
+        mView.hideLoader();
         if(mCallbacks != null) {
             mCallbacks.onLoggedIn(
                     firstName,
                     lastName,
                     email,
-                    avatarUrl != null ? avatarUrl.toString() : null
+                    avatarUrl != null ? avatarUrl.toString() : null,
+                    googleId,
+                    facebookId
             );
         }
     }
 
     private void loginError(String forClient) {
+        mView.hideLoader();
         String error = getString(R.string.login_failed_for, forClient);
         showPrompt(error);
     }
@@ -158,14 +207,21 @@ public class LoginFragment extends BaseFragment<UserController>
                 account.getGivenName(),
                 account.getFamilyName(),
                 account.getEmail(),
-                account.getPhotoUrl()
+                account.getPhotoUrl(),
+                account.getId(),
+                null
         );
     }
 
     @Override
-    public void onSignInError() {
-        btnGoogleLogin.setEnabled(false);
-        loginError(getString(R.string.google));
+    public void onSignInError(boolean wasCancelled) {
+        if(!wasCancelled) {
+            mView.btnGoogleLogin.setEnabled(false);
+            if (mCallbacks != null) {
+                mCallbacks.setGoogleLoginEnabled(false);
+            }
+            loginError(getString(R.string.google));
+        }
     }
 
     @Override
@@ -182,28 +238,37 @@ public class LoginFragment extends BaseFragment<UserController>
 
     @Override
     public void onLogInSuccess(Profile profile, String email) {
-        /*completeLogin(
+        completeLogin(
                 profile.getFirstName(),
                 profile.getLastName(),
                 email,
-                profile.getProfilePictureUri(200, 200)
-        );*/
-        onLogInError();
+                profile.getProfilePictureUri(200, 200),
+                null,
+                profile.getId()
+        );
     }
 
     @Override
     public void onLogInCanceled() {
+        mView.hideLoader();
         // do nothing, user needs to login or register.
     }
 
     @Override
     public void onLogInError() {
-        btnFacebookLogin.setEnabled(false);
+        mView.btnFacebookLogin.setEnabled(false);
+        if(mCallbacks != null) {
+            mCallbacks.setFacebookLoginEnabled(false);
+        }
         loginError(getString(R.string.facebook));
     }
 
     public interface LoginFragmentCallbacks {
-        void onLoggedIn(String firstName, String lastName, String email, String avatarUrl);
+        void onLoggedIn(String firstName, String lastName, String email, String avatarUrl, String googleId, String facebookId);
         void beginRegistration();
+        void setGoogleLoginEnabled(boolean enabled);
+        void setFacebookLoginEnabled(boolean enabled);
+        boolean isGoogleLoginEnabled();
+        boolean isFacebookLoginEnabled();
     }
 }

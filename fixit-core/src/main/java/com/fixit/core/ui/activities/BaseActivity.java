@@ -26,11 +26,14 @@ import com.fixit.core.config.AppConfig;
 import com.fixit.core.controllers.ActivityController;
 import com.fixit.core.general.UnexpectedErrorCallback;
 import com.fixit.core.rest.APIError;
-import com.fixit.core.rest.callbacks.AppServiceErrorCallback;
+import com.fixit.core.rest.callbacks.GeneralServiceErrorCallback;
+import com.fixit.core.rest.callbacks.ServiceErrorCallback;
 import com.fixit.core.ui.fragments.BaseFragment;
 import com.fixit.core.ui.fragments.ErrorFragment;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -39,11 +42,12 @@ import java.util.List;
 
 public abstract class BaseActivity<C extends ActivityController> extends AppCompatActivity
         implements BaseFragment.BaseFragmentInteractionsListener,
-                   AppServiceErrorCallback,
-                   UnexpectedErrorCallback {
+                   GeneralServiceErrorCallback {
 
     private C mController;
     private MaterialDialog mLoaderDialog;
+
+    private Set<OnBackPressListener> mBackPressListeners;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -192,7 +196,53 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
 
     public abstract C createController();
 
+    @Override
+    public void onBackPressed() {
+        boolean handled = false;
+
+        if(mBackPressListeners != null) {
+            for(OnBackPressListener backPressListener : mBackPressListeners) {
+                if(backPressListener.onBackPressed()) {
+                    handled = true;
+                }
+            }
+        }
+
+        if(!handled) {
+            super.onBackPressed();
+        }
+    }
+
+    public void registerOnBackPressListener(OnBackPressListener listener) {
+        if(mBackPressListeners == null) {
+            mBackPressListeners = new HashSet<>();
+        }
+        mBackPressListeners.add(listener);
+    }
+
+    public void unregisterOnBackPressListener(OnBackPressListener listener) {
+        if(mBackPressListeners != null) {
+            mBackPressListeners.remove(listener);
+
+            if(mBackPressListeners.size() == 0) {
+                mBackPressListeners = null;
+            }
+        }
+    }
+
+    public void clearOnBackPressListeners() {
+        mBackPressListeners = null;
+    }
+
     // Fragments
+
+    public void clearFragmentBackStack() {
+        FragmentManager fm = getSupportFragmentManager();
+        int backStackEntryCount = fm.getBackStackEntryCount();
+        for(int i = 0; i < backStackEntryCount; ++i) {
+            fm.popBackStack();
+        }
+    }
 
     @Nullable
     public <T extends Fragment> T getFragment(String tag, Class<T> fragmentClass) {
@@ -219,6 +269,10 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         }
 
         return fragment;
+    }
+
+    public interface OnBackPressListener {
+        boolean onBackPressed();
     }
 
 }

@@ -9,7 +9,8 @@ import android.view.View;
 import com.fixit.core.controllers.ActivityController;
 import com.fixit.core.general.UnexpectedErrorCallback;
 import com.fixit.core.rest.APIError;
-import com.fixit.core.rest.callbacks.AppServiceErrorCallback;
+import com.fixit.core.rest.callbacks.GeneralServiceErrorCallback;
+import com.fixit.core.rest.callbacks.ServiceErrorCallback;
 
 import java.util.List;
 
@@ -21,8 +22,7 @@ import java.util.List;
  *
  */
 public abstract class BaseFragment<C extends ActivityController> extends Fragment
-    implements UnexpectedErrorCallback,
-               AppServiceErrorCallback {
+    implements GeneralServiceErrorCallback {
 
     private BaseFragmentInteractionsListener<C> mListener;
 
@@ -106,7 +106,7 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         mListener = null;
     }
 
-    public interface BaseFragmentInteractionsListener<C> extends UnexpectedErrorCallback, AppServiceErrorCallback {
+    public interface BaseFragmentInteractionsListener<C> extends GeneralServiceErrorCallback {
         C getController();
         void showError(String displayMsg);
         void showPrompt(String displayMsg);

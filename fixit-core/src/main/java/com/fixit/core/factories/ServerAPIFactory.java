@@ -11,6 +11,7 @@ import com.fixit.core.rest.apis.ProfessionDataAPI;
 import com.fixit.core.rest.apis.SearchServiceAPI;
 import com.fixit.core.rest.apis.ServerLogDataAPI;
 import com.fixit.core.rest.apis.SynchronizationServiceAPI;
+import com.fixit.core.rest.apis.UserServiceAPI;
 import com.fixit.core.rest.requests.APIRequestHeader;
 import com.fixit.core.rest.services.AppInstallationService;
 import com.fixit.core.rest.services.DataServiceService;
@@ -19,6 +20,7 @@ import com.fixit.core.rest.services.ProfessionService;
 import com.fixit.core.rest.services.SearchServiceService;
 import com.fixit.core.rest.services.ServerLogService;
 import com.fixit.core.rest.services.SynchronizationServiceService;
+import com.fixit.core.rest.services.UserServiceService;
 import com.fixit.core.utils.FILog;
 import com.fixit.core.utils.PrefUtils;
 
@@ -49,7 +51,8 @@ public class ServerAPIFactory {
         PROFESSION,
         SEARCH_SERVICE,
         SERVER_LOG,
-        SYNCHRONIZATION_SERVICE
+        SYNCHRONIZATION_SERVICE,
+        USER_SERVICE
     }
 
     @SuppressWarnings("unchecked")
@@ -70,6 +73,8 @@ public class ServerAPIFactory {
                 return (T) new ServerLogDataAPI(mClient.create(ServerLogService.class));
             case SYNCHRONIZATION_SERVICE:
                 return (T) new SynchronizationServiceAPI(mHeader, mClient.create(SynchronizationServiceService.class));
+            case USER_SERVICE:
+                return (T) new UserServiceAPI(mHeader, mClient.create(UserServiceService.class));
             default:
                 return null;
         }
@@ -101,6 +106,10 @@ public class ServerAPIFactory {
 
     public SynchronizationServiceAPI createSynchronizationApi() {
         return new SynchronizationServiceAPI(mHeader, mClient.create(SynchronizationServiceService.class));
+    }
+
+    public UserServiceAPI createUserServiceApi() {
+        return new UserServiceAPI(mHeader, mClient.create(UserServiceService.class));
     }
 
 }

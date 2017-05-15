@@ -21,6 +21,12 @@ public class PrefUtils {
                 .getString(PREF_USER_ID, "");
     }
 
+    public static void setUserId(Context context, String userId) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
+                .edit().putString(PREF_USER_ID, userId);
+        editor.apply();
+    }
+
     public static String getInstallationId(Context context) {
         String installationId = context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
                 .getString(PREF_INSTALLATION_ID, "");

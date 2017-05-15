@@ -3,11 +3,15 @@
 
     <color name="colorButton">#8BC34A</color>
 
+    <color name="light_text">@color/grey_100</color>
+    <color name="dark_text">@color/grey_900</color>
+    <color name="text_disabled">@color/grey_500</color>
+
     <color name="gold">#ffd700</color>
 
     <color name="slate_blue">#39558e</color>
     <color name="dark_slate_blue">#283b63</color>
-    <color name="transparent_dark_slate_blue_50">#503b5998</color>
+    <color name="transparent_dark_slate_blue_40">#403b5998</color>
 
     <color name="transparent_white_20">#20FFFFFF</color>
     <color name="transparent_white_40">#40FFFFFF</color>

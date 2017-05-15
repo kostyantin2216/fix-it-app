@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Fix It</string>
 
-    <string name="done">Done</string>
+    <string name="verify">Verify</string>
     
     <string name="i_need_a">I need a…</string>
     <string name="search_professions">Search Professions</string>
@@ -35,9 +35,18 @@
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>
-    <string name="telephone">Telephone</string>
+    <string name="telephone_number">Telephone Number</string>
     <string name="login_failed_for">Could not login with %1$s, please try a different method.</string>
     <string name="facebook">Facebook</string>
     <string name="google">Google</string>
+    <string name="error_empty_field">Cannot be left empty.</string>
+    <string name="invalid_email">Email is invalid.</string>
+    <string name="invalid_telephone">Telephone Number is invalid.</string>
+    <string name="invalid_verification_code">Verification code is invalid.</string>
+    <string name="verification">Verification</string>
+    <string name="number_verification_desc">We need your telephone number so that we know what contact number to send to your requested tradesmen.</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="verification_code_desc">You will shortly receive an SMS with a verification code, please enter the verification code below.</string>
+    <string name="email_already_exists">Email already exists.</string>
 
 </resources>

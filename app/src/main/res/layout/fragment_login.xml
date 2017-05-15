@@ -8,21 +8,31 @@
     tools:background="@drawable/bg_transparent_black">
 
     <TextView
+        android:id="@+id/tv_login_text"
         style="@style/login_text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="@string/login_text" />
+        android:text="@string/login_text"/>
+
+    <ProgressBar
+        android:id="@+id/loader"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/btn_fb_login"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:drawableStart="@drawable/ic_fb_logo_white"
+        android:drawableStart="@drawable/ic_fb_logo"
         android:padding="8dp"
         android:layout_margin="4dp"
         android:background="@drawable/btn_facebook"
-        android:textColor="@color/grey_100"
+        android:textColor="@color/light_text_color"
         android:text="@string/com_facebook_loginview_log_in_button_long"/>
 
     <Button
@@ -33,7 +43,7 @@
         android:padding="8dp"
         android:text="@string/common_signin_button_text_long"
         android:paddingStart="32dp"
-        android:textColor="@color/grey_800"/>
+        android:textColor="@color/dark_text_color"/>
 
     <Button
         android:id="@+id/btn_register"

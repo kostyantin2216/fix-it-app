@@ -1,6 +1,7 @@
 package com.fixit.core.utils;
 
 import android.text.TextUtils;
+import android.util.Patterns;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -97,6 +98,15 @@ public class CommonUtils {
 
     public static boolean isBoolean(String string) {
         return string != null && (string.equalsIgnoreCase("true") || string.equalsIgnoreCase("false"));
+    }
+
+    public static boolean isValidEmail(String email) {
+        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+
+    public final static boolean isValidPhoneNumber(CharSequence phone) {
+        return phone != null && !(phone.length() < 6 || phone.length() > 13) && android.util.Patterns.PHONE.matcher(phone).matches();
     }
 
     public static boolean isEmpty(List<?> l) {

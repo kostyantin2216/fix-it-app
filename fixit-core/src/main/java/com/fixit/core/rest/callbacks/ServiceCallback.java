@@ -12,13 +12,13 @@ import retrofit2.Response;
  * Created by konstantin on 3/30/2017.
  */
 
-public abstract class AppServiceCallback<RD> extends RetryingCallback<APIResponse<RD>> implements AppServiceErrorCallback {
+public abstract class ServiceCallback<RD> extends RetryingCallback<APIResponse<RD>> implements ServiceErrorCallback {
 
-    public AppServiceCallback(Context context) {
+    public ServiceCallback(Context context) {
         super(context);
     }
 
-    public AppServiceCallback(int retryLimit, int retryIntervalMs) {
+    public ServiceCallback(int retryLimit, int retryIntervalMs) {
         super(retryLimit, retryIntervalMs);
     }
 

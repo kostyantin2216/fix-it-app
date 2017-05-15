@@ -35,7 +35,7 @@
 
         <Button
             android:id="@+id/btn_show_professions"
-            style="@style/button"
+            style="@style/rounded_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
@@ -64,7 +64,7 @@
 
         <Button
             android:id="@+id/btn_show_map"
-            style="@style/button"
+            style="@style/rounded_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/search_activity_item_spacing"

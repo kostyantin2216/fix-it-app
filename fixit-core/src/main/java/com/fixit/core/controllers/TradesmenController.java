@@ -5,13 +5,13 @@ import android.text.TextUtils;
 import com.fixit.core.BaseApplication;
 import com.fixit.core.data.Review;
 import com.fixit.core.data.ReviewData;
-import com.fixit.core.factories.DAOFactory;
-import com.fixit.core.factories.ServerAPIFactory;
 import com.fixit.core.general.UnexpectedErrorCallback;
 import com.fixit.core.rest.APIError;
 import com.fixit.core.rest.apis.DataServiceAPI;
-import com.fixit.core.rest.callbacks.AppServiceCallback;
-import com.fixit.core.rest.callbacks.AppServiceErrorCallback;
+import com.fixit.core.rest.callbacks.GeneralServiceErrorCallback;
+import com.fixit.core.rest.callbacks.ManagedServiceCallback;
+import com.fixit.core.rest.callbacks.ServiceCallback;
+import com.fixit.core.rest.callbacks.ServiceErrorCallback;
 import com.fixit.core.rest.requests.data.TradesmanReviewsRequestData;
 import com.fixit.core.rest.responses.APIResponse;
 import com.fixit.core.rest.responses.data.TradesmanReviewResponseData;
@@ -39,22 +39,13 @@ public class TradesmenController extends BaseController {
         mDataApi = baseApplication.getServerApiFactory().createDataServiceApi();
     }
 
-    public void getReviews(final String tradesmanId, final TradesmanReviewsCallback callback) {
-        mDataApi.getReviewsForTradesman(new TradesmanReviewsRequestData(tradesmanId)).enqueue(new AppServiceCallback<TradesmanReviewResponseData>(getApplicationContext()) {
-            @Override
-            public void onResponse(TradesmanReviewResponseData responseData) {
-                callback.onReviewsLoaded(parseReviews(responseData));
-            }
-
-            @Override
-            public void onAppServiceError(List<APIError> errors) {
-                callback.onAppServiceError(errors);
-            }
-
-            @Override
-            public void onRetryFailure(Call<APIResponse<TradesmanReviewResponseData>> call, Throwable t) {
-                callback.onUnexpectedErrorOccurred("Error while fetching reviews for tradesman " + tradesmanId, t);
-            }
+    public void getReviews(String tradesmanId, final TradesmanReviewsCallback callback) {
+        mDataApi.getReviewsForTradesman(new TradesmanReviewsRequestData(tradesmanId),
+                new ManagedServiceCallback<TradesmanReviewResponseData>(getApplicationContext(), callback, "Error while fetching reviews for tradesman " + tradesmanId) {
+                    @Override
+                    public void onResponse(TradesmanReviewResponseData responseData) {
+                        callback.onReviewsLoaded(parseReviews(responseData));
+                    }
         });
     }
 
@@ -84,7 +75,7 @@ public class TradesmenController extends BaseController {
     }
 
 
-    public interface TradesmanReviewsCallback extends UnexpectedErrorCallback, AppServiceErrorCallback {
+    public interface TradesmanReviewsCallback extends GeneralServiceErrorCallback {
         void onReviewsLoaded(List<ReviewData> reviewData);
     }
 

@@ -8,6 +8,6 @@ import java.util.List;
  * Created by konstantin on 3/30/2017.
  */
 
-public interface AppServiceErrorCallback {
+public interface ServiceErrorCallback {
     public void onAppServiceError(List<APIError> errors);
 }

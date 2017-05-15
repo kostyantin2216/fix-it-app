@@ -10,8 +10,9 @@ import com.fixit.core.data.Profession;
 import com.fixit.core.data.Tradesman;
 import com.fixit.core.rest.APIError;
 import com.fixit.core.rest.apis.SearchServiceAPI;
-import com.fixit.core.rest.callbacks.AppServiceErrorCallback;
-import com.fixit.core.rest.callbacks.AppServiceCallback;
+import com.fixit.core.rest.callbacks.GeneralServiceErrorCallback;
+import com.fixit.core.rest.callbacks.ServiceErrorCallback;
+import com.fixit.core.rest.callbacks.ServiceCallback;
 import com.fixit.core.rest.requests.data.SearchRequestData;
 import com.fixit.core.rest.requests.data.SearchResultRequestData;
 import com.fixit.core.rest.responses.APIResponse;
@@ -39,7 +40,7 @@ public class SearchManager {
 
     public void sendSearch(Context context, Profession profession, MutableLatLng location, final SearchCallback searchCallback) {
         SearchRequestData requestData = new SearchRequestData(profession.getId(), location);
-        mApi.beginSearch(requestData, new AppServiceCallback<SearchResponseData>(context) {
+        mApi.beginSearch(requestData, new ServiceCallback<SearchResponseData>(context) {
             @Override
             public void onResponse(SearchResponseData responseData) {
                 searchCallback.onSearchStarted(responseData.getSearchKey());
@@ -67,12 +68,12 @@ public class SearchManager {
         return resultsFetcher;
     }
 
-    public interface SearchCallback extends UnexpectedErrorCallback, AppServiceErrorCallback {
+    public interface SearchCallback extends GeneralServiceErrorCallback {
         void invalidAddress();
         void onSearchStarted(String searchId);
     }
 
-    public interface ResultCallback extends UnexpectedErrorCallback, AppServiceErrorCallback {
+    public interface ResultCallback extends GeneralServiceErrorCallback {
         void onResultsReceived(List<Tradesman> tradesmen, Map<String, Integer> reviewCountForTradesmen);
         void onResultsFetchTimeout();
     }

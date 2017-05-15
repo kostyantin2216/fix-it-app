@@ -14,9 +14,11 @@ import android.support.v4.app.FragmentActivity;
 
 import com.fixit.core.ui.listeners.DialogListener;
 import com.fixit.core.utils.Constants;
+import com.fixit.core.utils.FILog;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -88,10 +90,11 @@ public class GoogleClientManager implements GoogleApiClient.OnConnectionFailedLi
                 break;
             case REQUEST_LOGIN:
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                FILog.i("google sign in result status = " + result.getStatus());
                 if(result.isSuccess()) {
                     mSignInCallback.onSignInSuccess(result.getSignInAccount());
                 } else {
-                    mSignInCallback.onSignInError();
+                    mSignInCallback.onSignInError(result.getStatus().getStatusCode() == GoogleSignInStatusCodes.SIGN_IN_CANCELLED);
                 }
                 mSignInCallback = null;
                 break;
@@ -156,7 +159,7 @@ public class GoogleClientManager implements GoogleApiClient.OnConnectionFailedLi
 
     public interface GoogleSignInCallback {
         void onSignInSuccess(GoogleSignInAccount account);
-        void onSignInError();
+        void onSignInError(boolean wasCancelled);
     }
 
     public interface GoogleManagerCallback {

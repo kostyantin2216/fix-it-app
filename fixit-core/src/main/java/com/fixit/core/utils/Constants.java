@@ -10,7 +10,9 @@ public class Constants {
     public final static String ARG_ERROR_PARAMS = "error_params";
     public final static String ARG_JOB_LOCATION = "job_location";
     public final static String ARG_TRADESMAN = "tradesman";
-    public static final String ARG_LISTENER = "listener";
+    public final static String ARG_LOGIN_DETAILS = "login_details";
+    public final static String ARG_LISTENER = "listener";
+    public final static String ARG_EMAIL_EXISTS = "email_exists";
 
     public final static String KEY_USER_AVATAR = "userAvatar";
     public final static String KEY_USER_NAME = "userName";

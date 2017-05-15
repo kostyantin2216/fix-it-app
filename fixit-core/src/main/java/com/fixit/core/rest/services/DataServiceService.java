@@ -2,8 +2,10 @@ package com.fixit.core.rest.services;
 
 import com.fixit.core.rest.apis.DataServiceAPI;
 import com.fixit.core.rest.requests.APIRequest;
+import com.fixit.core.rest.requests.data.TelephoneVerificationRequestData;
 import com.fixit.core.rest.requests.data.TradesmanReviewsRequestData;
 import com.fixit.core.rest.responses.APIResponse;
+import com.fixit.core.rest.responses.data.TelephoneVerificationResponseData;
 import com.fixit.core.rest.responses.data.TradesmanReviewResponseData;
 
 import retrofit2.Call;
