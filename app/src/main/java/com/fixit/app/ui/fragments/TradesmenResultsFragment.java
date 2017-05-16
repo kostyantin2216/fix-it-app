@@ -9,6 +9,7 @@ import com.fixit.app.R;
 import com.fixit.app.ui.adapters.TradesmenAdapter;
 import com.fixit.core.controllers.ResultsController;
 import com.fixit.core.data.Tradesman;
+import com.fixit.core.data.TradesmanWrapper;
 import com.fixit.core.ui.fragments.StaticRecyclerListFragment;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class TradesmenResultsFragment extends StaticRecyclerListFragment<Results
     }
 
     @Override
-    public void onTradesmanSelected(Tradesman tradesman) {
+    public void onTradesmanSelected(TradesmanWrapper tradesman) {
         if(mListener != null) {
             mListener.onTradesmanSelected(tradesman);
         }
@@ -65,9 +66,9 @@ public class TradesmenResultsFragment extends StaticRecyclerListFragment<Results
 
     public void setTradesmen(List<Tradesman> tradesmen, Map<String, Integer> reviewCountForTradesmen) {
         if(tradesmen != null && !tradesmen.isEmpty()) {
-            List<TradesmenAdapter.TradesmanHolder> adapterData = new ArrayList<>();
+            List<TradesmanWrapper> adapterData = new ArrayList<>();
             for (Tradesman tradesman : tradesmen) {
-                adapterData.add(new TradesmenAdapter.TradesmanHolder(tradesman, reviewCountForTradesmen.get(tradesman.get_id())));
+                adapterData.add(new TradesmanWrapper(tradesman, reviewCountForTradesmen.get(tradesman.get_id())));
             }
             mAdapter.setTradesmen(adapterData);
         }
@@ -78,6 +79,6 @@ public class TradesmenResultsFragment extends StaticRecyclerListFragment<Results
     }
 
     public interface TradesmenResultsInteractionListener {
-        void onTradesmanSelected(Tradesman tradesman);
+        void onTradesmanSelected(TradesmanWrapper tradesman);
     }
 }

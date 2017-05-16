@@ -3,16 +3,15 @@ package com.fixit.core.factories;
 import android.content.Context;
 
 import com.fixit.core.config.AppConfig;
-import com.fixit.core.rest.SynchronizationResultDeserializer;
+import com.fixit.core.rest.adapters.SynchronizationResultDeserializer;
 import com.fixit.core.synchronization.SynchronizationResult;
-import com.fixit.core.utils.Constants;
 import com.fixit.core.utils.DateUtils;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -26,15 +25,30 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitFactory {
 
-    public static Retrofit createRetrofitClient(Context context, String url) {
+    public static Retrofit createRetrofitClient(Context context, String baseUrl, String user, String password) {
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .client(createGeneralHttpClient(context, user, password))
+                .addConverterFactory(createGeneralGsonConverterFactory())
+                .build();
+    }
+    public static Retrofit createServerRetrofitClient(Context context, String url) {
         return new Retrofit.Builder()
                 .baseUrl(url)
-                .client(createHttpClient(context))
-                .addConverterFactory(createGsonConverterFactory())
+                .client(createServerHttpClient(context))
+                .addConverterFactory(createServerGsonConverterFactory())
                 .build();
     }
 
-    private static GsonConverterFactory createGsonConverterFactory() {
+    public static GsonConverterFactory createGeneralGsonConverterFactory() {
+        return GsonConverterFactory.create(
+                new GsonBuilder()
+                        .setDateFormat(DateUtils.FORMAT_RFC_2822)
+                        .create()
+        );
+    }
+
+    private static GsonConverterFactory createServerGsonConverterFactory() {
         return GsonConverterFactory.create(
                 new GsonBuilder()
                         .setDateFormat(DateUtils.FORMAT_REST_DATE)
@@ -43,16 +57,23 @@ public class RetrofitFactory {
         );
     }
 
-    private static OkHttpClient createHttpClient(Context context) {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+    private static OkHttpClient createGeneralHttpClient(Context context, String user, String password) {
+        return initHttpClientBuilder(context)
+                .addInterceptor(new BasicAuthorizationInterceptor(user, password))
+                .build();
+    }
 
+    private static OkHttpClient createServerHttpClient(Context context) {
         String apiKey = AppConfig.getString(context, AppConfig.KEY_API_KEY, "");
         String userAgent = AppConfig.getString(context, AppConfig.KEY_USER_AGENT, "");
 
-        return new OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .addInterceptor(new AuthorizationInterceptor(userAgent, apiKey))
+        return initHttpClientBuilder(context)
+                .addInterceptor(new ServerAuthorizationInterceptor(userAgent, apiKey))
+                .build();
+    }
+
+    private static OkHttpClient.Builder initHttpClientBuilder(Context context) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(
                         AppConfig.getInt(context, AppConfig.KEY_RETROFIT_C_TO, 30).longValue(),
                         TimeUnit.SECONDS
@@ -64,15 +85,44 @@ public class RetrofitFactory {
                 .writeTimeout(
                         AppConfig.getInt(context, AppConfig.KEY_RETROFIT_W_TO, 30).longValue(),
                         TimeUnit.SECONDS
-                ).build();
+                );
+
+        if(!AppConfig.isProduction(context)) {
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(loggingInterceptor);
+        }
+
+        return builder;
     }
 
-    private static class AuthorizationInterceptor implements Interceptor {
+    private static class BasicAuthorizationInterceptor implements Interceptor {
+
+        private final String credentials;
+
+        public BasicAuthorizationInterceptor(String userName, String password) {
+            this.credentials = Credentials.basic(userName, password);
+        }
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request original = chain.request();
+
+            Request.Builder requestBuilder = original.newBuilder()
+                    .header("Authorization", credentials);
+            requestBuilder.method(original.method(),original.body());
+
+            Request request = requestBuilder.build();
+            return chain.proceed(request);
+        }
+    }
+
+    private static class ServerAuthorizationInterceptor implements Interceptor {
 
         private final String userAgent;
         private final String apiKey;
 
-        public AuthorizationInterceptor(String userAgent, String apiKey) {
+        public ServerAuthorizationInterceptor(String userAgent, String apiKey) {
             this.userAgent = userAgent;
             this.apiKey = apiKey;
         }

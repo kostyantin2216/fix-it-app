@@ -2,6 +2,7 @@ package com.fixit.core.ui.activities;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -9,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -20,6 +22,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fixit.core.R;
 import com.fixit.core.config.AppConfig;
@@ -48,6 +51,8 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
     private MaterialDialog mLoaderDialog;
 
     private Set<OnBackPressListener> mBackPressListeners;
+
+    private ActivityBackPressPrompt backPressPrompt = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,6 +98,10 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
                 notifyUser(getString(R.string.no_internet_browser));
             }
         }
+    }
+
+    public void setActivityBackPressPrompt(ActivityBackPressPrompt prompt) {
+        this.backPressPrompt = prompt;
     }
 
     @Override
@@ -169,6 +178,36 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         showError(ErrorFragment.ErrorType.PROMPT.createBuilder(message).build());
     }
 
+    public void askQuestion(String question, QuestionResult result) {
+        askQuestion(question, getString(R.string.yes), getString(R.string.no), result);
+    }
+
+    public void askQuestion(String question, String yesText, String noText, final QuestionResult result) {
+        new MaterialDialog.Builder(this)
+                .content(question)
+                .positiveText(yesText)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        result.onQuestionAnswered(true);
+                    }
+                })
+                .negativeText(noText)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        result.onQuestionAnswered(false);
+                    }
+                })
+                .cancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        result.onQuestionCancelled();
+                    }
+                })
+                .show();
+    }
+
     public void showLoader() {
         showLoader(getString(R.string.loading));
     }
@@ -209,7 +248,21 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         }
 
         if(!handled) {
-            super.onBackPressed();
+            if(backPressPrompt == null) {
+                super.onBackPressed();
+            } else {
+                askQuestion(backPressPrompt.content, backPressPrompt.yesText, backPressPrompt.noText, new QuestionResult() {
+                    @Override
+                    public void onQuestionAnswered(boolean answeredYes) {
+                        if(answeredYes) {
+                            BaseActivity.super.onBackPressed();
+                        }
+                    }
+
+                    @Override
+                    public void onQuestionCancelled() { }
+                });
+            }
         }
     }
 
@@ -232,6 +285,10 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
 
     public void clearOnBackPressListeners() {
         mBackPressListeners = null;
+    }
+
+    public boolean hasBackPressListeners() {
+        return mBackPressListeners != null && !mBackPressListeners.isEmpty();
     }
 
     // Fragments
@@ -273,6 +330,23 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
 
     public interface OnBackPressListener {
         boolean onBackPressed();
+    }
+
+    public interface QuestionResult {
+        void onQuestionAnswered(boolean answeredYes);
+        void onQuestionCancelled();
+    }
+
+    public static class ActivityBackPressPrompt {
+        private final String content;
+        private final String yesText;
+        private final String noText;
+
+        public ActivityBackPressPrompt(String content, String yesText, String noText) {
+            this.content = content;
+            this.yesText = yesText;
+            this.noText = noText;
+        }
     }
 
 }

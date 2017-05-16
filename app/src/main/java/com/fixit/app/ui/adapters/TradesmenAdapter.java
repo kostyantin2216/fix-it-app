@@ -1,6 +1,9 @@
 package com.fixit.app.ui.adapters;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,6 +16,7 @@ import android.widget.TextView;
 import com.fixit.app.R;
 import com.fixit.core.config.AppConfig;
 import com.fixit.core.data.Tradesman;
+import com.fixit.core.data.TradesmanWrapper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -28,12 +32,12 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
 
     private final TradesmanAdapterCallback mCallback;
 
-    private final List<TradesmanHolder> mTradesmen = new ArrayList<>();
+    private final List<TradesmanWrapper> mTradesmen = new ArrayList<>();
     private final Set<Integer> mSelectedTradesmenPositions;
 
     private final int mMaxTradesmenSelection;
 
-    public TradesmenAdapter(Context context, TradesmanAdapterCallback callback) {
+    public TradesmenAdapter(Context context, @Nullable  TradesmanAdapterCallback callback) {
         mCallback = callback;
         mMaxTradesmenSelection = AppConfig.getInt(context, AppConfig.KEY_MAX_TRADESMEN_SELECTION, 3);
         mSelectedTradesmenPositions = new HashSet<>(mMaxTradesmenSelection);
@@ -47,8 +51,10 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
         vh.itemView.setTag(vh);
         vh.containerLogo.setTag(vh);
 
-        vh.itemView.setOnClickListener(this);
-        vh.containerLogo.setOnClickListener(this);
+        if(mCallback != null) {
+            vh.itemView.setOnClickListener(this);
+            vh.containerLogo.setOnClickListener(this);
+        }
 
         return vh;
     }
@@ -63,7 +69,7 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
         return mTradesmen.size();
     }
 
-    public void setTradesmen(List<TradesmanHolder> tradesmen) {
+    public void setTradesmen(List<TradesmanWrapper> tradesmen) {
         int oldCount = mTradesmen.size();
         mTradesmen.clear();
         notifyItemRangeRemoved(0, oldCount);
@@ -90,7 +96,7 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
                     mCallback.notifyUser(v.getContext().getString(R.string.tradesman_selection_limit_passed, mMaxTradesmenSelection));
                 }
             } else {
-                mCallback.onTradesmanSelected(mTradesmen.get(position).tradesman);
+                mCallback.onTradesmanSelected(mTradesmen.get(position));
             }
         }
     }
@@ -105,7 +111,7 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
 
     public interface TradesmanAdapterCallback {
         void notifyUser(String msg);
-        void onTradesmanSelected(Tradesman tradesman);
+        void onTradesmanSelected(TradesmanWrapper tradesman);
     }
 
     static class TradesmanViewHolder extends RecyclerView.ViewHolder {
@@ -128,7 +134,7 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
             this.tvReviewCount = (TextView) itemView.findViewById(R.id.tv_tradesman_review_count);
         }
 
-        public void populate(TradesmanHolder dateHolder) {
+        public void populate(TradesmanWrapper dateHolder) {
             String logoUrl = dateHolder.tradesman.getLogoUrl();
             if(!TextUtils.isEmpty(logoUrl)) {
                 Picasso.with(itemView.getContext()).load(logoUrl).into(ivLogo);
@@ -155,16 +161,6 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
             itemView.setBackgroundResource(R.drawable.list_item_bg_transparent_white);
         }
 
-    }
-
-    public static class TradesmanHolder {
-        public final Tradesman tradesman;
-        public final int reviewCount;
-
-        public TradesmanHolder(Tradesman tradesman, int reviewCount) {
-            this.tradesman = tradesman;
-            this.reviewCount = reviewCount;
-        }
     }
 
 

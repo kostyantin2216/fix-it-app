@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.fixit.core.general.ErrorReporter;
 
+import java.io.IOException;
+
 /**
  * Created by Kostyantin on 12/19/2016.
  */
@@ -36,13 +38,20 @@ public class FILog {
         log(Level.WARN, null, message, null, null);
     }
 
+    public static void w(String message, Context context) {
+        log(Level.WARN, null, message, null, context);
+    }
+
     public static void w(String tag, String message) {
         log(Level.WARN, tag, message, null, null);
     }
 
+    public static void w(String tag, String message, Context context) {
+        log(Level.WARN, tag, message, null, context);
+    }
 
-    public static void e(String message) {
-        log(Level.ERROR, null, message, new Throwable(message) ,null);
+    public static void e(String message, Throwable t) {
+        log(Level.ERROR, null, message, t , null);
     }
 
     public static void e(String tag, String message) {

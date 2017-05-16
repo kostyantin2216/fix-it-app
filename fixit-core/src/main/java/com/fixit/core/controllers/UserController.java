@@ -53,23 +53,9 @@ public class UserController extends BaseController {
         });
     }
 
-    public void verifyTelephone(String telephone, final TelephoneVerificationCallback callback) {
-        mUserApi.verifyTelephone(new TelephoneVerificationRequestData(telephone),
-                new ManagedServiceCallback<TelephoneVerificationResponseData>(getApplicationContext(), callback, "could not request telephone verification") {
-                    @Override
-                    public void onResponse(TelephoneVerificationResponseData responseData) {
-                        callback.onVerificationCodeSent(responseData.isValidTelephoneNumber(), responseData.getVerificationCode());
-                    }
-        });
-    }
-
     public interface UserRegistrationCallback extends GeneralServiceErrorCallback {
         void onRegistrationSuccess(String userId);
         void emailAlreadyExists();
-    }
-
-    public interface TelephoneVerificationCallback extends GeneralServiceErrorCallback {
-        void onVerificationCodeSent(boolean isValidTelephone, int verificationCode);
     }
 
 }

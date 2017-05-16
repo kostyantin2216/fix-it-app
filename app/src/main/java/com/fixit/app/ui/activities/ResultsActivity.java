@@ -10,6 +10,7 @@ import com.fixit.core.BaseApplication;
 import com.fixit.core.controllers.ResultsController;
 import com.fixit.core.data.JobLocation;
 import com.fixit.core.data.Tradesman;
+import com.fixit.core.data.TradesmanWrapper;
 import com.fixit.core.general.SearchManager;
 import com.fixit.core.ui.activities.BaseActivity;
 import com.fixit.core.utils.Constants;
@@ -56,7 +57,7 @@ public class ResultsActivity extends BaseActivity<ResultsController>
 
 
     @Override
-    public void onTradesmanSelected(Tradesman tradesman) {
+    public void onTradesmanSelected(TradesmanWrapper tradesman) {
 
     }
 

@@ -1,8 +1,7 @@
 package com.fixit.core.controllers;
 
-import com.fixit.core.database.DatabaseManager;
 import com.fixit.core.factories.DAOFactory;
-import com.fixit.core.factories.ServerAPIFactory;
+import com.fixit.core.factories.APIFactory;
 
 /**
  * Created by Kostyantin on 3/12/2017.
@@ -10,5 +9,5 @@ import com.fixit.core.factories.ServerAPIFactory;
 
 public interface ActivityController {
     public DAOFactory getDaoFactory();
-    public ServerAPIFactory getServerApiFactory();
+    public APIFactory getServerApiFactory();
 }

@@ -40,7 +40,12 @@ public class AppConfig {
     public final static String KEY_USER_AGENT = "user_agent";
     public final static String KEY_EMAIL_FOR_SUPPORT = "email_for_support";
     public final static String KEY_SUBJECT_FOR_ERROR_REPORT = "subject_for_error_report";
+    public final static String KEY_TWILIO_BASE_URL = "twilio_base_url";
+    public final static String KEY_TWILIO_ACCOUNT_SID = "twilio_account_sid";
+    public final static String KEY_TWILIO_AUTH_TOKEN = "twilio_auth_token";
+    public final static String KEY_VERIFICATION_FROM_TELEPHONE = "verification_from_number";
 
+    private final static String KEY_IS_PRODUCTION = "is_production";
     private final static String KEY_DEVICE_INFO = "device_info";
     private final static String KEY_APP_INFO ="app_info";
 
@@ -168,6 +173,10 @@ public class AppConfig {
         }
 
         return deviceInfo;
+    }
+
+    public static boolean isProduction(Context context) {
+        return getBoolean(context, KEY_IS_PRODUCTION, true);
     }
 
 }

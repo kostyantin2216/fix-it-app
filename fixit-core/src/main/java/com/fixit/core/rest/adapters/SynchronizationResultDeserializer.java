@@ -1,4 +1,4 @@
-package com.fixit.core.rest;
+package com.fixit.core.rest.adapters;
 
 import com.fixit.core.data.DataModelObject;
 import com.fixit.core.data.Profession;

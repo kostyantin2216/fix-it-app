@@ -3,6 +3,7 @@ package com.fixit.core.utils;
 import com.fixit.core.data.Review;
 import com.fixit.core.data.ReviewData;
 import com.fixit.core.data.Tradesman;
+import com.fixit.core.data.TradesmanWrapper;
 import com.fixit.core.data.WorkingDay;
 import com.fixit.core.data.WorkingHours;
 
@@ -15,6 +16,14 @@ import java.util.List;
  */
 
 public class ObjectGenerator {
+
+    public static ArrayList<TradesmanWrapper> createTradesmenWrappers(int count) {
+        ArrayList<TradesmanWrapper> result = new ArrayList<>();
+        for(int i = 0; i < count; i++) {
+            result.add(new TradesmanWrapper(createTradesman(), 123));
+        }
+        return result;
+    }
 
     public static Tradesman createTradesman() {
         Tradesman tradesman = new Tradesman();

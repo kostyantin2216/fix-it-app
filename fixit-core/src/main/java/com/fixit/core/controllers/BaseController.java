@@ -3,9 +3,8 @@ package com.fixit.core.controllers;
 import android.content.Context;
 
 import com.fixit.core.BaseApplication;
-import com.fixit.core.database.DatabaseManager;
 import com.fixit.core.factories.DAOFactory;
-import com.fixit.core.factories.ServerAPIFactory;
+import com.fixit.core.factories.APIFactory;
 
 /**
  * Created by konstantin on 2/20/2017.
@@ -29,7 +28,7 @@ abstract class BaseController implements ActivityController {
     }
 
     @Override
-    public ServerAPIFactory getServerApiFactory() {
+    public APIFactory getServerApiFactory() {
         return mBaseApplication.getServerApiFactory();
     }
 }

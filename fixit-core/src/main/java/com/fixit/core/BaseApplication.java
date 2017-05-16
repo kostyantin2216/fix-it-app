@@ -2,9 +2,8 @@ package com.fixit.core;
 
 import android.app.Application;
 
-import com.fixit.core.database.DatabaseManager;
 import com.fixit.core.factories.DAOFactory;
-import com.fixit.core.factories.ServerAPIFactory;
+import com.fixit.core.factories.APIFactory;
 
 /**
  * Created by Kostyantin on 12/21/2016.
@@ -12,9 +11,7 @@ import com.fixit.core.factories.ServerAPIFactory;
 
 public class BaseApplication extends Application {
 
-
-
-    private ServerAPIFactory mServerApiFactory;
+    private APIFactory mServerApiFactory;
     private DAOFactory mDaoFactory;
 
     @Override
@@ -22,9 +19,9 @@ public class BaseApplication extends Application {
         super.onCreate();
     }
 
-    public ServerAPIFactory getServerApiFactory() {
+    public APIFactory getServerApiFactory() {
         if(mServerApiFactory == null) {
-            mServerApiFactory = new ServerAPIFactory(this);
+            mServerApiFactory = new APIFactory(this);
         }
 
         return mServerApiFactory;

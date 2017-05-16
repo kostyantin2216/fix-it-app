@@ -25,7 +25,7 @@ public class ErrorReporter {
     public static void report(Context context, String level, String tag, String msg, String stackTrace) {
         if(mServerApi == null) {
             String baseUrl = AppConfig.getString(context, AppConfig.KEY_SERVER_API_BASE_URL, "");
-            Retrofit retrofit = RetrofitFactory.createRetrofitClient(context, baseUrl);
+            Retrofit retrofit = RetrofitFactory.createServerRetrofitClient(context, baseUrl);
             mServerApi = new ServerLogDataAPI(retrofit.create(ServerLogService.class));
         }
 

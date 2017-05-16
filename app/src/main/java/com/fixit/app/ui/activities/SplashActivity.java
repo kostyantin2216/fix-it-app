@@ -7,6 +7,7 @@ import com.fixit.app.R;
 import com.fixit.app.ui.fragments.LoginFragment;
 import com.fixit.app.ui.fragments.TradesmanProfileFragment;
 import com.fixit.core.ui.activities.*;
+import com.fixit.core.utils.Constants;
 import com.fixit.core.utils.ObjectGenerator;
 
 public class SplashActivity extends LauncherActivity {
@@ -19,7 +20,14 @@ public class SplashActivity extends LauncherActivity {
         // TODO: remove.
         // onAppReady();
 
-        startActivity(new Intent(this, LoginActivity.class));
+
+        Bundle extras = new Bundle();
+        extras.putParcelableArrayList(Constants.ARG_TRADESMEN, ObjectGenerator.createTradesmenWrappers(3));
+
+        Intent intent = new Intent(this, OrderActivity.class);
+        intent.putExtras(extras);
+
+        startActivity(intent);
     }
 
     @Override

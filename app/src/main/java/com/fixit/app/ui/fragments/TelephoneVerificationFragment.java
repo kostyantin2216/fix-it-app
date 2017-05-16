@@ -15,7 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fixit.app.R;
-import com.fixit.core.controllers.UserController;
+import com.fixit.core.controllers.RegistrationController;
 import com.fixit.core.ui.activities.BaseActivity;
 import com.fixit.core.ui.fragments.BaseFragment;
 import com.fixit.core.utils.CommonUtils;
@@ -24,9 +24,9 @@ import com.fixit.core.utils.CommonUtils;
  * Created by konstantin on 5/15/2017.
  */
 
-public class TelephoneVerificationFragment extends BaseFragment<UserController>
+public class TelephoneVerificationFragment extends BaseFragment<RegistrationController>
         implements View.OnClickListener,
-                   UserController.TelephoneVerificationCallback,
+                   RegistrationController.TelephoneVerificationCallback,
                    BaseActivity.OnBackPressListener {
 
     private TelephoneVerificationListener mListener;
@@ -183,13 +183,7 @@ public class TelephoneVerificationFragment extends BaseFragment<UserController>
 
     private void verifyPhoneNumber() {
         mView.showLoader();
-        // getController().verifyTelephone(mView.getTelephone(), this);
-        mView.etTelephone.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                onVerificationCodeSent(true, 123);
-            }
-        }, 2000);
+        getController().verifyTelephone(mView.getTelephone(), this);
     }
 
     private void completeVerification() {
@@ -200,14 +194,16 @@ public class TelephoneVerificationFragment extends BaseFragment<UserController>
     }
 
     @Override
-    public void onVerificationCodeSent(boolean validTelephoneNumber, int verificationCode) {
+    public void onVerificationCodeSent(int verificationCode) {
         mView.hideLoader();
-        if(validTelephoneNumber) {
-            mVerificationCode = verificationCode;
-            mView.setState(ViewState.CODE_INPUT);
-        } else {
-            mView.etTelephone.setError(getString(R.string.invalid_telephone));
-        }
+        mVerificationCode = verificationCode;
+        mView.setState(ViewState.CODE_INPUT);
+    }
+
+    @Override
+    public void onVerificationError(int code, String error) {
+        mView.hideLoader();
+        mView.etTelephone.setError(error);
     }
 
     public interface TelephoneVerificationListener {

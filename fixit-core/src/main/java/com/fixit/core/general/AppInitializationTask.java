@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import com.fixit.core.config.AppConfig;
 import com.fixit.core.data.AppInstallation;
 import com.fixit.core.factories.DAOFactory;
-import com.fixit.core.factories.ServerAPIFactory;
+import com.fixit.core.factories.APIFactory;
 import com.fixit.core.rest.apis.AppInstallationAPI;
 import com.fixit.core.rest.apis.SynchronizationServiceAPI;
 import com.fixit.core.synchronization.SynchronizationTask;
@@ -66,7 +66,7 @@ public class AppInitializationTask extends Thread {
 
         Context context = getContext();
         if(context != null) {
-            ServerAPIFactory serverAPIFactory = mCallback.getServerApiFactory();
+            APIFactory serverAPIFactory = mCallback.getServerApiFactory();
             DAOFactory daoFactory = mCallback.getDaoFactory();
 
             if(TextUtils.isEmpty(PrefUtils.getInstallationId(context))) {
@@ -166,7 +166,7 @@ public class AppInitializationTask extends Thread {
 
     public interface AppInitializationCallback {
         Context getApplicationContext();
-        ServerAPIFactory getServerApiFactory();
+        APIFactory getServerApiFactory();
         DAOFactory getDaoFactory();
         void onInitializationComplete(Set<String> errors);
         void onInitializationError(String error, boolean fatal);
