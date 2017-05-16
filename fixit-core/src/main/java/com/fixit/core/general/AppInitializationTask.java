@@ -3,13 +3,12 @@ package com.fixit.core.general;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Process;
-import android.provider.Settings;
 import android.text.TextUtils;
 
 import com.fixit.core.config.AppConfig;
 import com.fixit.core.data.AppInstallation;
-import com.fixit.core.factories.DAOFactory;
 import com.fixit.core.factories.APIFactory;
+import com.fixit.core.factories.DAOFactory;
 import com.fixit.core.rest.apis.AppInstallationAPI;
 import com.fixit.core.rest.apis.SynchronizationServiceAPI;
 import com.fixit.core.synchronization.SynchronizationTask;
@@ -21,7 +20,6 @@ import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import retrofit2.Response;
 
@@ -85,11 +83,9 @@ public class AppInitializationTask extends Thread {
     }
 
     private void sendInstallation(Context context, AppInstallationAPI api) {
-        String installationId = createUniqueID(context);
-
         AppInstallation appInstallation = new AppInstallation(
                 "", // TODO: get url from google play.
-                AppConfig.getDeviceInfo(),
+                AppConfig.getDeviceInfo(context),
                 AppConfig.getVersionInfo(context),
                 new Date()
         );
@@ -150,18 +146,6 @@ public class AppInitializationTask extends Thread {
                 mErrors.clear();
             }
         });
-    }
-
-    private String createUniqueID(Context context) {
-        String uniqueId = "";
-        uniqueId = Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-
-        if(TextUtils.isEmpty(uniqueId)
-                || uniqueId.toLowerCase().contains("android")){
-            uniqueId = UUID.randomUUID().toString().replace("-","");
-        }
-        return uniqueId;
     }
 
     public interface AppInitializationCallback {

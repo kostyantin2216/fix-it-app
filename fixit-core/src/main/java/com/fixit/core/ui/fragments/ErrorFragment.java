@@ -134,7 +134,7 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
     private String generateReportMessage() {
         Context context = getContext();
         return AppConfig.getVersionInfo(context).toString() + "\n\n"
-                + AppConfig.getDeviceInfo().toString() + "\n\n"
+                + AppConfig.getDeviceInfo(context).toString() + "\n\n"
                 + "UserId = " + PrefUtils.getUserId(context) + ", InstallationId = " + PrefUtils.getInstallationId(context) + "\n\n"
                 + "logMessage = " + mParams.logMsg + "\n"
                 + "StackTrace = \n" + Log.getStackTraceString(mParams.cause);

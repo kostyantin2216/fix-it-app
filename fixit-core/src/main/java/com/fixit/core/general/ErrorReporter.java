@@ -34,7 +34,7 @@ public class ErrorReporter {
                 tag,
                 msg,
                 stackTrace,
-                AppConfig.getDeviceInfo(),
+                AppConfig.getDeviceInfo(context),
                 AppConfig.getVersionInfo(context),
                 new Date()
         );

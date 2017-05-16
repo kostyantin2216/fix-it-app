@@ -9,6 +9,7 @@ import android.os.Build;
 import com.fixit.core.data.DeviceInfo;
 import com.fixit.core.data.VersionInfo;
 import com.fixit.core.utils.FILog;
+import com.fixit.core.utils.PrefUtils;
 import com.google.gson.Gson;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -151,11 +152,12 @@ public class AppConfig {
         return versionInfo;
     }
 
-    public static DeviceInfo getDeviceInfo() {
+    public static DeviceInfo getDeviceInfo(Context context) {
         DeviceInfo deviceInfo;
         String deviceInformation = (String) configurations.get(KEY_DEVICE_INFO);
         if(deviceInformation == null) {
             deviceInfo = new DeviceInfo(
+                    PrefUtils.getDeviceId(context),
                     Build.BRAND,
                     Build.MODEL,
                     Build.MANUFACTURER,
