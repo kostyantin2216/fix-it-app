@@ -1,4 +1,7 @@
-package com.fixit.core.rest;
+package com.fixit.core.rest.apis;
+
+import com.fixit.core.rest.queries.DataApiQuery;
+import com.fixit.core.rest.queries.DataQueryCriteria;
 
 import java.util.List;
 
@@ -14,4 +17,6 @@ public interface ServerDataAPI<E> extends ServerAPI {
     Call<E> create(E obj);
     Call<E> update(E obj);
     Call<E> delete(Integer id);
+    Call<List<E>> query(DataQueryCriteria criteria);
+    Call<List<E>> query(DataApiQuery query);
 }

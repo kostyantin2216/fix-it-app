@@ -1,9 +1,8 @@
 package com.fixit.core.rest.services;
 
 import com.fixit.core.data.AppInstallation;
-import com.fixit.core.data.MapArea;
-import com.fixit.core.rest.apis.AppInstallationAPI;
-import com.fixit.core.rest.apis.MapAreaDataAPI;
+import com.fixit.core.rest.apis.AppInstallationDataAPI;
+import com.fixit.core.rest.queries.DataQueryRequest;
 
 import java.util.List;
 
@@ -19,21 +18,24 @@ import retrofit2.http.Path;
  * Created by konstantin on 4/3/2017.
  */
 
-public interface AppInstallationService {
+public interface AppInstallationDataService {
 
-    @GET(AppInstallationAPI.API_NAME + "/{id}")
+    @GET(AppInstallationDataAPI.API_NAME + "/{id}")
     Call<AppInstallation> find(@Path("id") Integer id);
 
-    @GET(AppInstallationAPI.API_NAME)
+    @GET(AppInstallationDataAPI.API_NAME)
     Call<List<AppInstallation>> findAll();
 
-    @POST(AppInstallationAPI.API_NAME)
+    @POST(AppInstallationDataAPI.API_NAME)
     Call<AppInstallation> create(@Body AppInstallation signal);
 
-    @PUT(AppInstallationAPI.API_NAME)
+    @PUT(AppInstallationDataAPI.API_NAME)
     Call<AppInstallation> update(@Body AppInstallation signal);
 
-    @DELETE(AppInstallationAPI.API_NAME + "/{id}")
+    @DELETE(AppInstallationDataAPI.API_NAME + "/{id}")
     Call<AppInstallation> delete(@Path("id") Integer id);
+
+    @POST(AppInstallationDataAPI.API_NAME + "/query")
+    Call<List<AppInstallation>> query(@Body DataQueryRequest req);
 
 }

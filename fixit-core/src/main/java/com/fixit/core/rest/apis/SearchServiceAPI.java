@@ -7,7 +7,7 @@ import com.fixit.core.rest.requests.data.SearchResultRequestData;
 import com.fixit.core.rest.responses.APIResponse;
 import com.fixit.core.rest.responses.data.SearchResponseData;
 import com.fixit.core.rest.responses.data.SearchResultResponseData;
-import com.fixit.core.rest.services.SearchServiceService;
+import com.fixit.core.rest.services.SearchService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,9 +20,9 @@ public class SearchServiceAPI extends BaseServiceAPI {
 
     public final static String API_NAME = "services/search";
 
-    private final SearchServiceService mService;
+    private final SearchService mService;
 
-    public SearchServiceAPI(APIRequestHeader header, SearchServiceService service) {
+    public SearchServiceAPI(APIRequestHeader header, SearchService service) {
         super(header);
         mService = service;
     }

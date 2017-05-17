@@ -17,7 +17,7 @@ import retrofit2.http.Path;
  * Created by konstantin on 5/16/2017.
  */
 
-public interface TwilioService {
+public interface TwilioExternalService {
 
     @FormUrlEncoded
     @POST("Accounts/{accountSid}/Messages.json")

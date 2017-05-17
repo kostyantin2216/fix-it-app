@@ -1,6 +1,5 @@
 package com.fixit.core.rest.apis;
 
-import com.fixit.core.rest.ServerAPI;
 import com.fixit.core.rest.requests.APIRequestHeader;
 
 /**

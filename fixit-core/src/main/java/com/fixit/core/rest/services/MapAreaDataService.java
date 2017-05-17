@@ -2,6 +2,7 @@ package com.fixit.core.rest.services;
 
 import com.fixit.core.data.MapArea;
 import com.fixit.core.rest.apis.MapAreaDataAPI;
+import com.fixit.core.rest.queries.DataQueryRequest;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import retrofit2.http.Path;
  * Created by Kostyantin on 12/20/2016.
  */
 
-public interface MapAreaService {
+public interface MapAreaDataService {
 
     @GET(MapAreaDataAPI.API_NAME + "/{id}")
     Call<MapArea> find(@Path("id") Integer id);
@@ -33,5 +34,8 @@ public interface MapAreaService {
 
     @DELETE(MapAreaDataAPI.API_NAME + "/{id}")
     Call<MapArea> delete(@Path("id") Integer id);
+
+    @POST(MapAreaDataAPI.API_NAME + "/query")
+    Call<List<MapArea>> query(@Body DataQueryRequest req);
 
 }

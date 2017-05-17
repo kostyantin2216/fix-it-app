@@ -1,8 +1,10 @@
 package com.fixit.core.rest.apis;
 
 import com.fixit.core.data.ServerLog;
-import com.fixit.core.rest.ServerDataAPI;
-import com.fixit.core.rest.services.ServerLogService;
+import com.fixit.core.rest.queries.DataApiQuery;
+import com.fixit.core.rest.queries.DataQueryCriteria;
+import com.fixit.core.rest.queries.DataQueryRequest;
+import com.fixit.core.rest.services.ServerLogDataService;
 
 import java.util.List;
 
@@ -16,9 +18,9 @@ public class ServerLogDataAPI implements ServerDataAPI<ServerLog> {
 
     public final static String API_NAME = "data/AppLogs";
 
-    private final ServerLogService mService;
+    private final ServerLogDataService mService;
 
-    public ServerLogDataAPI(ServerLogService service) {
+    public ServerLogDataAPI(ServerLogDataService service) {
         mService = service;
     }
 
@@ -45,6 +47,16 @@ public class ServerLogDataAPI implements ServerDataAPI<ServerLog> {
     @Override
     public Call<ServerLog> delete(Integer id) {
         return mService.delete(id);
+    }
+
+    @Override
+    public Call<List<ServerLog>> query(DataQueryCriteria criteria) {
+        return mService.query(criteria.build());
+    }
+
+    @Override
+    public Call<List<ServerLog>> query(DataApiQuery query) {
+        return mService.query(new DataQueryRequest(query));
     }
 
     @Override

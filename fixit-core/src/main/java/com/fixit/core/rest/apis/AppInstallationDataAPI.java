@@ -1,8 +1,10 @@
 package com.fixit.core.rest.apis;
 
 import com.fixit.core.data.AppInstallation;
-import com.fixit.core.rest.ServerDataAPI;
-import com.fixit.core.rest.services.AppInstallationService;
+import com.fixit.core.rest.queries.DataApiQuery;
+import com.fixit.core.rest.queries.DataQueryCriteria;
+import com.fixit.core.rest.queries.DataQueryRequest;
+import com.fixit.core.rest.services.AppInstallationDataService;
 
 import java.util.List;
 
@@ -12,13 +14,13 @@ import retrofit2.Call;
  * Created by konstantin on 4/3/2017.
  */
 
-public class AppInstallationAPI implements ServerDataAPI<AppInstallation> {
+public class AppInstallationDataAPI implements ServerDataAPI<AppInstallation> {
 
     public final static String API_NAME = "data/AppInstallations";
 
-    private final AppInstallationService service;
+    private final AppInstallationDataService service;
 
-    public AppInstallationAPI(AppInstallationService service) {
+    public AppInstallationDataAPI(AppInstallationDataService service) {
         this.service = service;
     }
 
@@ -45,6 +47,16 @@ public class AppInstallationAPI implements ServerDataAPI<AppInstallation> {
     @Override
     public Call<AppInstallation> delete(Integer id) {
         return service.delete(id);
+    }
+
+    @Override
+    public Call<List<AppInstallation>> query(DataQueryCriteria criteria) {
+        return service.query(criteria.build());
+    }
+
+    @Override
+    public Call<List<AppInstallation>> query(DataApiQuery query) {
+        return service.query(new DataQueryRequest(query));
     }
 
     @Override

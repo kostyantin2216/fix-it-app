@@ -16,7 +16,7 @@ import retrofit2.http.POST;
  * Created by konstantin on 5/15/2017.
  */
 
-public interface UserServiceService {
+public interface UserService {
 
     @POST(UserServiceAPI.API_NAME + "/verifyTelephone")
     Call<APIResponse<TelephoneVerificationResponseData>> verifyTelephone(@Body APIRequest<TelephoneVerificationRequestData> request);

@@ -16,7 +16,7 @@ import retrofit2.http.POST;
  * Created by Kostyantin on 4/12/2017.
  */
 
-public interface SearchServiceService {
+public interface SearchService {
 
     @POST(SearchServiceAPI.API_NAME + "/startTradesmanSearch")
     Call<APIResponse<SearchResponseData>> beginSearch(@Body APIRequest<SearchRequestData> request);

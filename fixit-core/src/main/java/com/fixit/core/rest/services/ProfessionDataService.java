@@ -2,6 +2,7 @@ package com.fixit.core.rest.services;
 
 import com.fixit.core.data.Profession;
 import com.fixit.core.rest.apis.ProfessionDataAPI;
+import com.fixit.core.rest.queries.DataQueryRequest;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import retrofit2.http.Path;
  * Created by Kostyantin on 12/23/2016.
  */
 
-public interface ProfessionService {
+public interface ProfessionDataService {
 
     @GET(ProfessionDataAPI.API_NAME + "/{id}")
     Call<Profession> find(@Path("id") Integer id);
@@ -33,5 +34,8 @@ public interface ProfessionService {
 
     @DELETE(ProfessionDataAPI.API_NAME + "/{id}")
     Call<Profession> delete(@Path("id") Integer id);
+
+    @POST(ProfessionDataAPI.API_NAME + "/query")
+    Call<List<Profession>> query(@Body DataQueryRequest req);
 
 }

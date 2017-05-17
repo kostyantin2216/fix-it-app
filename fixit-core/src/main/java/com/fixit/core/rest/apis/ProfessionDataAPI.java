@@ -1,8 +1,10 @@
 package com.fixit.core.rest.apis;
 
 import com.fixit.core.data.Profession;
-import com.fixit.core.rest.ServerDataAPI;
-import com.fixit.core.rest.services.ProfessionService;
+import com.fixit.core.rest.queries.DataApiQuery;
+import com.fixit.core.rest.queries.DataQueryCriteria;
+import com.fixit.core.rest.queries.DataQueryRequest;
+import com.fixit.core.rest.services.ProfessionDataService;
 
 import java.util.List;
 
@@ -16,9 +18,9 @@ public class ProfessionDataAPI implements ServerDataAPI<Profession> {
 
     public final static String API_NAME = "data/Professions";
 
-    private ProfessionService mService;
+    private ProfessionDataService mService;
 
-    public ProfessionDataAPI(ProfessionService service) {
+    public ProfessionDataAPI(ProfessionDataService service) {
         mService = service;
     }
 
@@ -45,6 +47,16 @@ public class ProfessionDataAPI implements ServerDataAPI<Profession> {
     @Override
     public Call<Profession> delete(Integer id) {
         return mService.delete(id);
+    }
+
+    @Override
+    public Call<List<Profession>> query(DataQueryCriteria criteria) {
+        return mService.query(criteria.build());
+    }
+
+    @Override
+    public Call<List<Profession>> query(DataApiQuery query) {
+        return mService.query(new DataQueryRequest(query));
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.fixit.core.rest.services;
 
 import com.fixit.core.data.ServerLog;
 import com.fixit.core.rest.apis.ServerLogDataAPI;
+import com.fixit.core.rest.queries.DataQueryRequest;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import retrofit2.http.Path;
  * Created by Kostyantin on 12/20/2016.
  */
 
-public interface ServerLogService {
+public interface ServerLogDataService {
 
     @GET(ServerLogDataAPI.API_NAME + "/{id}")
     Call<ServerLog> find(@Path("id") Integer id);
@@ -33,5 +34,8 @@ public interface ServerLogService {
 
     @DELETE(ServerLogDataAPI.API_NAME + "/{id}")
     Call<ServerLog> delete(@Path("id") Integer id);
+
+    @POST(ServerLogDataAPI.API_NAME + "/query")
+    Call<List<ServerLog>> query(@Body DataQueryRequest req);
 
 }

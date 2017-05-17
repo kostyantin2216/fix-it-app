@@ -1,4 +1,4 @@
-package com.fixit.core.rest;
+package com.fixit.core.rest.apis;
 
 /**
  * Created by Kostyantin on 3/20/2017.

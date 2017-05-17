@@ -7,7 +7,7 @@ import com.fixit.core.rest.requests.data.UserRegistrationRequestData;
 import com.fixit.core.rest.responses.APIResponse;
 import com.fixit.core.rest.responses.data.TelephoneVerificationResponseData;
 import com.fixit.core.rest.responses.data.UserRegistrationResponseData;
-import com.fixit.core.rest.services.UserServiceService;
+import com.fixit.core.rest.services.UserService;
 
 import retrofit2.Callback;
 
@@ -19,9 +19,9 @@ public class UserServiceAPI extends BaseServiceAPI {
 
     public final static String API_NAME = "services/users";
 
-    private final UserServiceService mService;
+    private final UserService mService;
 
-    public UserServiceAPI(APIRequestHeader header, UserServiceService service) {
+    public UserServiceAPI(APIRequestHeader header, UserService service) {
         super(header);
         mService = service;
     }

@@ -1,61 +1,61 @@
 package com.fixit.core.rest.apis;
 
-import com.fixit.core.data.MapArea;
+import com.fixit.core.data.Review;
 import com.fixit.core.rest.queries.DataApiQuery;
 import com.fixit.core.rest.queries.DataQueryCriteria;
 import com.fixit.core.rest.queries.DataQueryRequest;
-import com.fixit.core.rest.services.MapAreaDataService;
+import com.fixit.core.rest.services.ReviewDataService;
 
 import java.util.List;
 
 import retrofit2.Call;
 
 /**
- * Created by Kostyantin on 12/20/2016.
+ * Created by konstantin on 5/17/2017.
  */
 
-public class MapAreaDataAPI implements ServerDataAPI<MapArea> {
+public class ReviewDataAPI implements ServerDataAPI<Review> {
 
-    public final static String API_NAME = "data/MapAreas";
+    public final static String API_NAME = "data/Reviews";
 
-    private final MapAreaDataService mService;
+    private final ReviewDataService mService;
 
-    public MapAreaDataAPI(MapAreaDataService service) {
-        this.mService = service;
+    public ReviewDataAPI(ReviewDataService service) {
+        mService = service;
     }
 
     @Override
-    public Call<MapArea> find(Integer id) {
+    public Call<Review> find(Integer id) {
         return mService.find(id);
     }
 
     @Override
-    public Call<List<MapArea>> findAll() {
+    public Call<List<Review>> findAll() {
         return mService.findAll();
     }
 
     @Override
-    public Call<MapArea> create(MapArea obj) {
+    public Call<Review> create(Review obj) {
         return mService.create(obj);
     }
 
     @Override
-    public Call<MapArea> update(MapArea obj) {
+    public Call<Review> update(Review obj) {
         return mService.update(obj);
     }
 
     @Override
-    public Call<MapArea> delete(Integer id) {
+    public Call<Review> delete(Integer id) {
         return mService.delete(id);
     }
 
     @Override
-    public Call<List<MapArea>> query(DataQueryCriteria criteria) {
+    public Call<List<Review>> query(DataQueryCriteria criteria) {
         return mService.query(criteria.build());
     }
 
     @Override
-    public Call<List<MapArea>> query(DataApiQuery query) {
+    public Call<List<Review>> query(DataApiQuery query) {
         return mService.query(new DataQueryRequest(query));
     }
 
@@ -63,5 +63,4 @@ public class MapAreaDataAPI implements ServerDataAPI<MapArea> {
     public String getApiName() {
         return API_NAME;
     }
-
 }
