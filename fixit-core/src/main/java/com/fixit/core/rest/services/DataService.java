@@ -16,7 +16,7 @@ import retrofit2.http.POST;
  * Created by konstantin on 5/7/2017.
  */
 
-public interface DataServiceService {
+public interface DataService {
 
     @POST(DataServiceAPI.API_NAME + "/reviewsForTradesman")
     Call<APIResponse<TradesmanReviewResponseData>> getReviewsForTradesman(@Body APIRequest<TradesmanReviewsRequestData> request);

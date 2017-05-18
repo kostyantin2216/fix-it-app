@@ -9,7 +9,7 @@ import com.fixit.core.config.AppConfig;
 import com.fixit.core.data.AppInstallation;
 import com.fixit.core.factories.APIFactory;
 import com.fixit.core.factories.DAOFactory;
-import com.fixit.core.rest.apis.AppInstallationAPI;
+import com.fixit.core.rest.apis.AppInstallationDataAPI;
 import com.fixit.core.rest.apis.SynchronizationServiceAPI;
 import com.fixit.core.synchronization.SynchronizationTask;
 import com.fixit.core.utils.FILog;
@@ -82,7 +82,7 @@ public class AppInitializationTask extends Thread {
         }
     }
 
-    private void sendInstallation(Context context, AppInstallationAPI api) {
+    private void sendInstallation(Context context, AppInstallationDataAPI api) {
         AppInstallation appInstallation = new AppInstallation(
                 "", // TODO: get url from google play.
                 AppConfig.getDeviceInfo(context),

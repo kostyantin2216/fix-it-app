@@ -2,14 +2,11 @@ package com.fixit.core.rest.apis;
 
 import com.fixit.core.rest.requests.APIRequest;
 import com.fixit.core.rest.requests.APIRequestHeader;
-import com.fixit.core.rest.requests.data.TelephoneVerificationRequestData;
 import com.fixit.core.rest.requests.data.TradesmanReviewsRequestData;
 import com.fixit.core.rest.responses.APIResponse;
-import com.fixit.core.rest.responses.data.TelephoneVerificationResponseData;
 import com.fixit.core.rest.responses.data.TradesmanReviewResponseData;
-import com.fixit.core.rest.services.DataServiceService;
+import com.fixit.core.rest.services.DataService;
 
-import retrofit2.Call;
 import retrofit2.Callback;
 
 /**
@@ -20,9 +17,9 @@ public class DataServiceAPI extends BaseServiceAPI {
 
     public final static String API_NAME = "services/data";
 
-    private DataServiceService mService;
+    private DataService mService;
 
-    public DataServiceAPI(APIRequestHeader header, DataServiceService service) {
+    public DataServiceAPI(APIRequestHeader header, DataService service) {
         super(header);
         this.mService = service;
     }

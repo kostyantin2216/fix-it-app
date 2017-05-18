@@ -7,7 +7,7 @@ import com.fixit.core.data.ServerLog;
 import com.fixit.core.factories.RetrofitFactory;
 import com.fixit.core.rest.apis.ServerLogDataAPI;
 import com.fixit.core.rest.callbacks.EmptyCallback;
-import com.fixit.core.rest.services.ServerLogService;
+import com.fixit.core.rest.services.ServerLogDataService;
 import com.fixit.core.utils.PrefUtils;
 
 import java.util.Date;
@@ -26,7 +26,7 @@ public class ErrorReporter {
         if(mServerApi == null) {
             String baseUrl = AppConfig.getString(context, AppConfig.KEY_SERVER_API_BASE_URL, "");
             Retrofit retrofit = RetrofitFactory.createServerRetrofitClient(context, baseUrl);
-            mServerApi = new ServerLogDataAPI(retrofit.create(ServerLogService.class));
+            mServerApi = new ServerLogDataAPI(retrofit.create(ServerLogDataService.class));
         }
 
         ServerLog log = new ServerLog(

@@ -6,7 +6,7 @@ import android.support.annotation.StringRes;
 import com.fixit.core.R;
 import com.fixit.core.rest.callbacks.EmptyCallback;
 import com.fixit.core.rest.responses.TwilioMessageResponse;
-import com.fixit.core.rest.services.TwilioService;
+import com.fixit.core.rest.services.TwilioExternalService;
 import com.fixit.core.utils.FILog;
 
 import java.util.Map;
@@ -21,10 +21,10 @@ public class TwilioAPI {
 
     private final static String LOG_TAG = "TwilioAPI";
 
-    private final TwilioService mService;
+    private final TwilioExternalService mService;
     private final String mAccountSid;
 
-    public TwilioAPI(TwilioService service, String accountSid) {
+    public TwilioAPI(TwilioExternalService service, String accountSid) {
         mService = service;
         this.mAccountSid = accountSid;
     }

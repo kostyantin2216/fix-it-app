@@ -19,4 +19,6 @@ public class Constants {
     public final static String KEY_USER_AVATAR = "userAvatar";
     public final static String KEY_USER_NAME = "userName";
 
+    public final static String PROP_TRADESMAN_ID = "tradesmanId";
+
 }

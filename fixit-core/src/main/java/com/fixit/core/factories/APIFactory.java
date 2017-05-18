@@ -3,25 +3,27 @@ package com.fixit.core.factories;
 import android.content.Context;
 
 import com.fixit.core.config.AppConfig;
-import com.fixit.core.rest.apis.AppInstallationAPI;
+import com.fixit.core.rest.apis.AppInstallationDataAPI;
 import com.fixit.core.rest.apis.DataServiceAPI;
 import com.fixit.core.rest.apis.MapAreaDataAPI;
 import com.fixit.core.rest.apis.ProfessionDataAPI;
+import com.fixit.core.rest.apis.ReviewDataAPI;
 import com.fixit.core.rest.apis.SearchServiceAPI;
 import com.fixit.core.rest.apis.ServerLogDataAPI;
 import com.fixit.core.rest.apis.SynchronizationServiceAPI;
 import com.fixit.core.rest.apis.twilio.TwilioAPI;
 import com.fixit.core.rest.apis.UserServiceAPI;
 import com.fixit.core.rest.requests.APIRequestHeader;
-import com.fixit.core.rest.services.AppInstallationService;
-import com.fixit.core.rest.services.DataServiceService;
-import com.fixit.core.rest.services.MapAreaService;
-import com.fixit.core.rest.services.ProfessionService;
-import com.fixit.core.rest.services.SearchServiceService;
-import com.fixit.core.rest.services.ServerLogService;
-import com.fixit.core.rest.services.SynchronizationServiceService;
-import com.fixit.core.rest.services.TwilioService;
-import com.fixit.core.rest.services.UserServiceService;
+import com.fixit.core.rest.services.AppInstallationDataService;
+import com.fixit.core.rest.services.DataService;
+import com.fixit.core.rest.services.MapAreaDataService;
+import com.fixit.core.rest.services.ProfessionDataService;
+import com.fixit.core.rest.services.ReviewDataService;
+import com.fixit.core.rest.services.SearchService;
+import com.fixit.core.rest.services.ServerLogDataService;
+import com.fixit.core.rest.services.SynchronizationService;
+import com.fixit.core.rest.services.TwilioExternalService;
+import com.fixit.core.rest.services.UserService;
 import com.fixit.core.utils.PrefUtils;
 
 import retrofit2.Retrofit;
@@ -31,8 +33,6 @@ import retrofit2.Retrofit;
  */
 
 public class APIFactory {
-
-    private final static String LOG_TAG = "#" + APIFactory.class.getSimpleName();
 
     private final Retrofit mClient;
     private final APIRequestHeader mHeader;
@@ -44,48 +44,47 @@ public class APIFactory {
         PrefUtils.fillApiRequestHeader(context, mHeader);
     }
 
-    public enum API {
-        APP_INSTALLATION,
-        DATA_SERVICE,
-        MAP_AREA,
-        PROFESSION,
-        SEARCH_SERVICE,
-        SERVER_LOG,
-        SYNCHRONIZATION_SERVICE,
-        USER_SERVICE
-    }
+    // DATA APIS
 
-    public AppInstallationAPI createAppInstallationApi() {
-        return new AppInstallationAPI(mClient.create(AppInstallationService.class));
-    }
-
-    public DataServiceAPI createDataServiceApi() {
-        return new DataServiceAPI(mHeader, mClient.create(DataServiceService.class));
+    public AppInstallationDataAPI createAppInstallationApi() {
+        return new AppInstallationDataAPI(mClient.create(AppInstallationDataService.class));
     }
 
     public MapAreaDataAPI createMapAreaApi() {
-        return new MapAreaDataAPI(mClient.create(MapAreaService.class));
+        return new MapAreaDataAPI(mClient.create(MapAreaDataService.class));
     }
 
     public ProfessionDataAPI createProfessionApi() {
-        return new ProfessionDataAPI(mClient.create(ProfessionService.class));
+        return new ProfessionDataAPI(mClient.create(ProfessionDataService.class));
     }
 
-    public SearchServiceAPI createSearchServiceApi() {
-        return new SearchServiceAPI(mHeader, mClient.create(SearchServiceService.class));
+    public ReviewDataAPI createReviewApi() {
+        return new ReviewDataAPI(mClient.create(ReviewDataService.class));
     }
 
     public ServerLogDataAPI createServerLogApi() {
-        return new ServerLogDataAPI(mClient.create(ServerLogService.class));
+        return new ServerLogDataAPI(mClient.create(ServerLogDataService.class));
+    }
+
+    // SERVICE APIS
+
+    public DataServiceAPI createDataServiceApi() {
+        return new DataServiceAPI(mHeader, mClient.create(DataService.class));
+    }
+
+    public SearchServiceAPI createSearchServiceApi() {
+        return new SearchServiceAPI(mHeader, mClient.create(SearchService.class));
     }
 
     public SynchronizationServiceAPI createSynchronizationApi() {
-        return new SynchronizationServiceAPI(mHeader, mClient.create(SynchronizationServiceService.class));
+        return new SynchronizationServiceAPI(mHeader, mClient.create(SynchronizationService.class));
     }
 
     public UserServiceAPI createUserServiceApi() {
-        return new UserServiceAPI(mHeader, mClient.create(UserServiceService.class));
+        return new UserServiceAPI(mHeader, mClient.create(UserService.class));
     }
+
+    // EXTERNAL APIS
 
     /**
      * Currently only used for telephone number verification upon user registration, so no need for
@@ -97,7 +96,7 @@ public class APIFactory {
         String authToken = AppConfig.getString(context, AppConfig.KEY_TWILIO_AUTH_TOKEN, "");
 
         Retrofit retrofit = RetrofitFactory.createRetrofitClient(context, baseUrl, accSid, authToken);
-        return new TwilioAPI(retrofit.create(TwilioService.class), accSid);
+        return new TwilioAPI(retrofit.create(TwilioExternalService.class), accSid);
     }
 
 }
