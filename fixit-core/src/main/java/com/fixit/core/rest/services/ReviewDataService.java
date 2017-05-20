@@ -1,10 +1,8 @@
 package com.fixit.core.rest.services;
 
 import com.fixit.core.data.Review;
-import com.fixit.core.data.Review;
 import com.fixit.core.rest.apis.ReviewDataAPI;
-import com.fixit.core.rest.apis.ReviewDataAPI;
-import com.fixit.core.rest.queries.DataQueryRequest;
+import com.fixit.core.rest.queries.DataApiQuery;
 
 import java.util.List;
 
@@ -38,6 +36,6 @@ public interface ReviewDataService {
     Call<Review> delete(@Path("id") Integer id);
 
     @POST(ReviewDataAPI.API_NAME + "/query")
-    Call<List<Review>> query(@Body DataQueryRequest req);
+    Call<List<Review>> query(@Body DataApiQuery[] queries);
 
 }

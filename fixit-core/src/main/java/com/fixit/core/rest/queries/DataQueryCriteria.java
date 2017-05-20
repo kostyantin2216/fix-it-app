@@ -34,8 +34,8 @@ public class DataQueryCriteria {
         return queries;
     }
 
-    public DataQueryRequest build() {
-        return new DataQueryRequest(queries.toArray(new DataApiQuery[queries.size()]));
+    public DataApiQuery[] build() {
+        return queries.toArray(new DataApiQuery[queries.size()]);
     }
 
     public void reset() {

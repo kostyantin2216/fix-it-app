@@ -2,7 +2,7 @@ package com.fixit.core.rest.services;
 
 import com.fixit.core.data.Profession;
 import com.fixit.core.rest.apis.ProfessionDataAPI;
-import com.fixit.core.rest.queries.DataQueryRequest;
+import com.fixit.core.rest.queries.DataApiQuery;
 
 import java.util.List;
 
@@ -36,6 +36,6 @@ public interface ProfessionDataService {
     Call<Profession> delete(@Path("id") Integer id);
 
     @POST(ProfessionDataAPI.API_NAME + "/query")
-    Call<List<Profession>> query(@Body DataQueryRequest req);
+    Call<List<Profession>> query(@Body DataApiQuery[] queries);
 
 }

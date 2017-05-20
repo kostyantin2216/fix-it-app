@@ -2,7 +2,7 @@ package com.fixit.core.rest.services;
 
 import com.fixit.core.data.MapArea;
 import com.fixit.core.rest.apis.MapAreaDataAPI;
-import com.fixit.core.rest.queries.DataQueryRequest;
+import com.fixit.core.rest.queries.DataApiQuery;
 
 import java.util.List;
 
@@ -36,6 +36,6 @@ public interface MapAreaDataService {
     Call<MapArea> delete(@Path("id") Integer id);
 
     @POST(MapAreaDataAPI.API_NAME + "/query")
-    Call<List<MapArea>> query(@Body DataQueryRequest req);
+    Call<List<MapArea>> query(@Body DataApiQuery[] queries);
 
 }

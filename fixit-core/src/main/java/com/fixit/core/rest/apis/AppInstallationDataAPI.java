@@ -3,7 +3,6 @@ package com.fixit.core.rest.apis;
 import com.fixit.core.data.AppInstallation;
 import com.fixit.core.rest.queries.DataApiQuery;
 import com.fixit.core.rest.queries.DataQueryCriteria;
-import com.fixit.core.rest.queries.DataQueryRequest;
 import com.fixit.core.rest.services.AppInstallationDataService;
 
 import java.util.List;
@@ -56,7 +55,7 @@ public class AppInstallationDataAPI implements ServerDataAPI<AppInstallation> {
 
     @Override
     public Call<List<AppInstallation>> query(DataApiQuery query) {
-        return service.query(new DataQueryRequest(query));
+        return service.query(new DataApiQuery[] {query});
     }
 
     @Override

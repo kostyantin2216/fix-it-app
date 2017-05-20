@@ -3,7 +3,6 @@ package com.fixit.core.rest.apis;
 import com.fixit.core.data.MapArea;
 import com.fixit.core.rest.queries.DataApiQuery;
 import com.fixit.core.rest.queries.DataQueryCriteria;
-import com.fixit.core.rest.queries.DataQueryRequest;
 import com.fixit.core.rest.services.MapAreaDataService;
 
 import java.util.List;
@@ -56,7 +55,7 @@ public class MapAreaDataAPI implements ServerDataAPI<MapArea> {
 
     @Override
     public Call<List<MapArea>> query(DataApiQuery query) {
-        return mService.query(new DataQueryRequest(query));
+        return mService.query(new DataApiQuery[] {query});
     }
 
     @Override

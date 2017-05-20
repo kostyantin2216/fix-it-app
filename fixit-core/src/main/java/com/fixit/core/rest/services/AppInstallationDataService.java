@@ -2,7 +2,7 @@ package com.fixit.core.rest.services;
 
 import com.fixit.core.data.AppInstallation;
 import com.fixit.core.rest.apis.AppInstallationDataAPI;
-import com.fixit.core.rest.queries.DataQueryRequest;
+import com.fixit.core.rest.queries.DataApiQuery;
 
 import java.util.List;
 
@@ -36,6 +36,6 @@ public interface AppInstallationDataService {
     Call<AppInstallation> delete(@Path("id") Integer id);
 
     @POST(AppInstallationDataAPI.API_NAME + "/query")
-    Call<List<AppInstallation>> query(@Body DataQueryRequest req);
+    Call<List<AppInstallation>> query(@Body DataApiQuery[] queries);
 
 }

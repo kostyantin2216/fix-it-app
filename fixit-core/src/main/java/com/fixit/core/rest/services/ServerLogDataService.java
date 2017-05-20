@@ -2,7 +2,7 @@ package com.fixit.core.rest.services;
 
 import com.fixit.core.data.ServerLog;
 import com.fixit.core.rest.apis.ServerLogDataAPI;
-import com.fixit.core.rest.queries.DataQueryRequest;
+import com.fixit.core.rest.queries.DataApiQuery;
 
 import java.util.List;
 
@@ -36,6 +36,6 @@ public interface ServerLogDataService {
     Call<ServerLog> delete(@Path("id") Integer id);
 
     @POST(ServerLogDataAPI.API_NAME + "/query")
-    Call<List<ServerLog>> query(@Body DataQueryRequest req);
+    Call<List<ServerLog>> query(@Body DataApiQuery[] queries);
 
 }

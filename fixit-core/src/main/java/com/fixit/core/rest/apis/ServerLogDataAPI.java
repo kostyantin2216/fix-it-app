@@ -3,7 +3,6 @@ package com.fixit.core.rest.apis;
 import com.fixit.core.data.ServerLog;
 import com.fixit.core.rest.queries.DataApiQuery;
 import com.fixit.core.rest.queries.DataQueryCriteria;
-import com.fixit.core.rest.queries.DataQueryRequest;
 import com.fixit.core.rest.services.ServerLogDataService;
 
 import java.util.List;
@@ -56,7 +55,7 @@ public class ServerLogDataAPI implements ServerDataAPI<ServerLog> {
 
     @Override
     public Call<List<ServerLog>> query(DataApiQuery query) {
-        return mService.query(new DataQueryRequest(query));
+        return mService.query(new DataApiQuery[] {query});
     }
 
     @Override
