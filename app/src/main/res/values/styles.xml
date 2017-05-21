@@ -16,6 +16,10 @@
         <item name="colorControlActivated">@color/gold</item>
     </style>
 
+    <style name="EditTextTheme">
+        <item name="colorControlNormal">@color/grey_300</item>
+    </style>
+
     <style name="expandedAppBar" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">26sp
         </item>

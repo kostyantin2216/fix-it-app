@@ -22,7 +22,8 @@ import com.fixit.core.utils.PrefUtils;
 public class LoginActivity extends BaseActivity<RegistrationController>
     implements LoginFragment.LoginFragmentCallbacks,
                UserRegistrationFragment.UserRegistrationInteractionsListener,
-               TelephoneVerificationFragment.TelephoneVerificationListener, UserController.UserRegistrationCallback {
+               TelephoneVerificationFragment.TelephoneVerificationListener,
+               UserController.UserRegistrationCallback {
 
     private final static String FRAG_TAG_NUMBER_VERIFICATION = "number_verification";
 

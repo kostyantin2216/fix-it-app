@@ -11,6 +11,7 @@ import com.fixit.core.general.UnexpectedErrorCallback;
 import com.fixit.core.rest.APIError;
 import com.fixit.core.rest.callbacks.GeneralServiceErrorCallback;
 import com.fixit.core.rest.callbacks.ServiceErrorCallback;
+import com.fixit.core.ui.activities.BaseActivity;
 
 import java.util.List;
 

@@ -19,8 +19,6 @@ import java.util.ArrayList;
 public class OrderActivity extends BaseActivity<OrderController>
     implements OrderDetailsFragment.OrderDetailsInteractionListener {
 
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

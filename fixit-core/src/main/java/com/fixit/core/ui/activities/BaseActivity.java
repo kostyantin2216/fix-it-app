@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
@@ -27,17 +30,14 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.fixit.core.R;
 import com.fixit.core.config.AppConfig;
 import com.fixit.core.controllers.ActivityController;
-import com.fixit.core.general.UnexpectedErrorCallback;
 import com.fixit.core.rest.APIError;
 import com.fixit.core.rest.callbacks.GeneralServiceErrorCallback;
-import com.fixit.core.rest.callbacks.ServiceErrorCallback;
 import com.fixit.core.ui.fragments.BaseFragment;
 import com.fixit.core.ui.fragments.ErrorFragment;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 
 /**
  * Created by Kostyantin on 12/21/2016.
