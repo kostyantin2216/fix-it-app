@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.fixit.core.R;
 import com.fixit.core.config.AppConfig;
 import com.fixit.core.controllers.ActivityController;
-import com.fixit.core.general.ErrorReporter;
 import com.fixit.core.rest.APIError;
 import com.fixit.core.utils.Constants;
 import com.fixit.core.utils.ErrorUtils;
@@ -77,8 +76,7 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ErrorReporter.report(getContext(), mParams.errorType.name(), LOG_TAG, mParams.logMsg, Log.getStackTraceString(mParams.cause));
-        FILog.e(LOG_TAG, mParams.logMsg, mParams.cause);
+        FILog.e(LOG_TAG, mParams.logMsg, mParams.cause, getContext());
     }
 
     @Override

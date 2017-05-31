@@ -31,7 +31,8 @@
             android:layout_marginBottom="@dimen/search_activity_item_spacing"
             android:hint="@string/search_professions"
             android:imeOptions="actionNext"
-            android:inputType="text" />
+            android:inputType="text"
+            android:theme="@style/EditTextTheme" />
 
         <Button
             android:id="@+id/btn_show_professions"
@@ -60,7 +61,8 @@
             android:imeOptions="actionDone"
             android:inputType="text"
             android:lines="2"
-            android:minLines="2" />
+            android:minLines="2"
+            android:theme="@style/EditTextTheme" />
 
         <Button
             android:id="@+id/btn_show_map"

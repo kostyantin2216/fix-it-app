@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_brick_wall"
+    android:padding="35dp">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/order_completion_spacing"
+        android:visibility="invisible"
+        android:background="@drawable/bg_transparent_black">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/order_complete"
+            android:paddingStart="@dimen/order_completion_spacing"
+            android:paddingEnd="@dimen/order_completion_spacing"
+            android:paddingTop="@dimen/order_completion_spacing"
+            style="@style/dark_bg_title_text"/>
+
+        <TextView
+            style="@style/dark_bg_content_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/order_completion_spacing"
+            android:layout_weight="1"
+            android:textSize="@dimen/standard_text_size"
+            android:text="@string/order_completed_text" />
+
+        <Button
+            android:id="@+id/btn_view_tradesmen"
+            style="@style/rounded_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginEnd="@dimen/order_completion_spacing"
+            android:layout_marginStart="@dimen/order_completion_spacing"
+            android:text="@string/view_ordered_tradesmen" />
+
+        <Button
+            android:id="@+id/btn_new_search"
+            style="@style/rounded_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="@dimen/order_completion_spacing"
+            android:layout_marginEnd="@dimen/order_completion_spacing"
+            android:layout_marginStart="@dimen/order_completion_spacing"
+            android:text="@string/new_search" />
+
+        <Button
+            android:id="@+id/btn_exit_app"
+            style="@style/rounded_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="@dimen/order_completion_spacing"
+            android:text="@string/exit_app" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/loader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:padding="40dp"
+        android:background="@drawable/bg_transparent_black"/>
+</FrameLayout>

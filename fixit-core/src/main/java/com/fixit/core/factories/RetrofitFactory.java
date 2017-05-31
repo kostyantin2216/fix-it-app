@@ -32,6 +32,7 @@ public class RetrofitFactory {
                 .addConverterFactory(createGeneralGsonConverterFactory())
                 .build();
     }
+
     public static Retrofit createServerRetrofitClient(Context context, String url) {
         return new Retrofit.Builder()
                 .baseUrl(url)

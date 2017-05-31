@@ -17,6 +17,8 @@
     <color name="transparent_white_40">#40FFFFFF</color>
     <color name="transparent_white_60">#60FFFFFF</color>
     <color name="transparent_white_80">#80FFFFFF</color>
+    <color name="transparent_white_AA">#AAFFFFFF</color>
+    <color name="transparent_white_BB">#BBFFFFFF</color>
 
     <color name="transparent_black_20">#20000000</color>
     <color name="transparent_black_40">#40000000</color>
@@ -26,6 +28,10 @@
     <color name="transparent_black_BB">#BB000000</color>
     <color name="transparent_black_CC">#CC000000</color>
     <color name="transparent_black_DD">#DD000000</color>
+
+    <color name="transparent_green_80">#808BC34A</color>
+    <color name="transparent_green_AA">#AA8BC34A</color>
+    <color name="transparent_green_BB">#BB8BC34A</color>
 
     <color name="grey_50">#FAFAFA</color>
     <color name="grey_100">#F5F5F5</color>

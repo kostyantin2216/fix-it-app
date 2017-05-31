@@ -19,12 +19,10 @@ import com.fixit.app.ui.adapters.ReviewRecyclerAdapter;
 import com.fixit.core.controllers.TradesmenController;
 import com.fixit.core.data.ReviewData;
 import com.fixit.core.data.Tradesman;
-import com.fixit.core.rest.APIError;
 import com.fixit.core.ui.components.SimpleRatingView;
 import com.fixit.core.ui.components.WorkingDaysView;
 import com.fixit.core.ui.fragments.BaseFragment;
 import com.fixit.core.utils.Constants;
-import com.fixit.core.utils.ObjectGenerator;
 
 import java.util.List;
 
@@ -33,7 +31,10 @@ import java.util.List;
  */
 
 public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
-        implements TradesmenController.TradesmanReviewsCallback {
+        implements TradesmenController.TradesmanReviewsCallback,
+                   View.OnClickListener {
+
+    private TradesmanProfileInteractionListener mListener;
 
     private Tradesman mTradesman;
 
@@ -52,11 +53,13 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
         final TextView tvNoReviews;
         final ProgressBar pbLoader;
 
-        public ViewHolder(Context context, View v, Tradesman tradesman) {
+        public ViewHolder(Context context, View v, Tradesman tradesman, View.OnClickListener clickListener) {
             svProfileScroller = (NestedScrollView) v.findViewById(R.id.sv_profile_scroller);
             rvReviews = (RecyclerView) v.findViewById(R.id.review_list);
             tvNoReviews = (TextView) v.findViewById(R.id.tv_empty_list);
             pbLoader = (ProgressBar) v.findViewById(R.id.loader);
+
+            v.findViewById(R.id.btn_select_tradesman).setOnClickListener(clickListener);
 
             rvReviews.setNestedScrollingEnabled(false);
             rvReviews.setLayoutManager(new LinearLayoutManager(context));
@@ -124,7 +127,7 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
 
         setToolbar((Toolbar) v.findViewById(R.id.toolbar), true);
 
-        mView = new ViewHolder(getContext(), v, mTradesman);
+        mView = new ViewHolder(getContext(), v, mTradesman, this);
 
         return v;
     }
@@ -133,18 +136,41 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mView.rvReviews.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-               onReviewsLoaded(ObjectGenerator.createReviewData(10));
-            }
-        }, 4000);
-        //getController().getReviews(mTradesman.get_id(), this);
+        getController().getReviews(mTradesman.get_id(), this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(mListener != null && v.getId() == R.id.btn_select_tradesman) {
+            mListener.onTradesmanSelected(mTradesman);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if(context instanceof TradesmanProfileInteractionListener) {
+            mListener = (TradesmanProfileInteractionListener) context;
+        } else {
+            throw new IllegalArgumentException("context needs to implement " + TradesmanProfileInteractionListener.class.getName());
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mListener = null;
     }
 
     @Override
     public void onReviewsLoaded(List<ReviewData> reviewData) {
         ReviewRecyclerAdapter adapter = new ReviewRecyclerAdapter(getContext(), reviewData);
         mView.setRecyclerAdapter(adapter);
+    }
+
+    public interface TradesmanProfileInteractionListener {
+        void onTradesmanSelected(Tradesman tradesman);
     }
 }

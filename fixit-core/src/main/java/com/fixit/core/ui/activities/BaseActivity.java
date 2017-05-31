@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,9 +17,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
@@ -34,6 +33,8 @@ import com.fixit.core.rest.APIError;
 import com.fixit.core.rest.callbacks.GeneralServiceErrorCallback;
 import com.fixit.core.ui.fragments.BaseFragment;
 import com.fixit.core.ui.fragments.ErrorFragment;
+import com.fixit.core.utils.Constants;
+import com.fixit.core.utils.PrefUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -51,8 +52,8 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
     private MaterialDialog mLoaderDialog;
 
     private Set<OnBackPressListener> mBackPressListeners;
-
-    private ActivityBackPressPrompt backPressPrompt = null;
+    private ActivityBackPressPrompt mBackPressPrompt;
+    private LoginRequester mLoginRequester;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +69,27 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
             showError(ErrorFragment.ErrorType.NO_NETWORK);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == Constants.RC_LOGIN) {
+            boolean success = resultCode == RESULT_OK;
+            mLoginRequester.loginComplete(success, success ? data.getExtras() : null);
+            mLoginRequester = null;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public abstract C createController();
 
     public C getController() {
         return mController;
@@ -100,10 +122,6 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         }
     }
 
-    public void setActivityBackPressPrompt(ActivityBackPressPrompt prompt) {
-        this.backPressPrompt = prompt;
-    }
-
     @Override
     public void hideKeyboard(IBinder windowToken) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -115,7 +133,6 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
 
         return cm.getActiveNetworkInfo() != null;
     }
-
     /**
      *  Override for enabling/disabling user notifications.
      */
@@ -138,9 +155,36 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         }
     }
 
+    // USER MANAGEMENT
+    public abstract Class<?> getLoginActivity();
+
+    public boolean isUserRegistered() {
+        return !TextUtils.isEmpty(PrefUtils.getUserId(this));
+    }
+
+    public void requestLogin(LoginRequester requester, Bundle data) {
+        mLoginRequester = requester;
+
+        Intent intent = new Intent(this, getLoginActivity());
+        intent.putExtras(data);
+        startActivityForResult(intent, Constants.RC_LOGIN);
+    }
+
+    public interface LoginRequester {
+        void loginComplete(boolean success, @Nullable Bundle data);
+    }
+
+    // ERROR HANDLING
+    // ===========================
+
     @Override
     public void onAppServiceError(List<APIError> errors) {
         showError(ErrorFragment.ErrorType.GENERAL.createBuilder(this).apiError(errors).build());
+    }
+
+    @Override
+    public void onServerError() {
+        showError(ErrorFragment.ErrorType.SERVER_UNAVAILABLE);
     }
 
     @Override
@@ -178,6 +222,37 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         showError(ErrorFragment.ErrorType.PROMPT.createBuilder(message).build());
     }
 
+    // LOADER
+    // ==========================
+
+    public void showLoader() {
+        showLoader(getString(R.string.loading));
+    }
+
+    public void showLoader(String message) {
+        if(mLoaderDialog == null) {
+            mLoaderDialog = new MaterialDialog.Builder(this)
+                    .title(R.string.please_wait)
+                    .content(message)
+                    .progress(true, 0)
+                    .progressIndeterminateStyle(true)
+                    .show();
+        } else {
+            mLoaderDialog.setContent(message);
+            mLoaderDialog.show();
+        }
+    }
+
+    public void hideLoader() {
+        if(mLoaderDialog != null) {
+            mLoaderDialog.dismiss();
+            mLoaderDialog = null;
+        }
+    }
+
+    // QUESTION PROMPTS
+    // ============================
+
     public void askQuestion(String question, QuestionResult result) {
         askQuestion(question, getString(R.string.yes), getString(R.string.no), result);
     }
@@ -208,32 +283,52 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
                 .show();
     }
 
-    public void showLoader() {
-        showLoader(getString(R.string.loading));
+    public interface QuestionResult {
+        void onQuestionAnswered(boolean answeredYes);
+        void onQuestionCancelled();
     }
 
-    public void showLoader(String message) {
-        if(mLoaderDialog == null) {
-            mLoaderDialog = new MaterialDialog.Builder(this)
-                    .title(R.string.please_wait)
-                    .content(message)
-                    .progress(true, 0)
-                    .progressIndeterminateStyle(true)
-                    .show();
-        } else {
-            mLoaderDialog.setContent(message);
-            mLoaderDialog.show();
+    // FRAGMENT INTERACTIONS
+    // ====================
+
+    public void clearFragmentBackStack() {
+        FragmentManager fm = getSupportFragmentManager();
+        int backStackEntryCount = fm.getBackStackEntryCount();
+        for(int i = 0; i < backStackEntryCount; ++i) {
+            fm.popBackStack();
         }
     }
 
-    public void hideLoader() {
-        if(mLoaderDialog != null) {
-            mLoaderDialog.dismiss();
-            mLoaderDialog = null;
-        }
+    @Nullable
+    public <T extends Fragment> T getFragment(String tag, Class<T> fragmentClass) {
+        return getFragment(tag, fragmentClass, false, 0);
     }
 
-    public abstract C createController();
+    @Nullable
+    public <T extends Fragment> T getFragment(String tag, Class<T> fragmentClass, boolean createIfNotExist) {
+        return getFragment(tag, fragmentClass, createIfNotExist, android.R.id.content);
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public <T extends Fragment> T getFragment(String tag, Class<T> fragmentClass, boolean createIfNotExist, int containerViewId) {
+        FragmentManager fm = getSupportFragmentManager();
+
+        T fragment = (T) fm.findFragmentByTag(tag);
+        if(createIfNotExist && fragment == null) {
+            fragment = (T) Fragment.instantiate(this, fragmentClass.getCanonicalName());
+
+            fm.beginTransaction()
+                    .add(containerViewId, fragment, tag)
+                    .commit();
+        }
+
+        return fragment;
+    }
+
+
+    // BACK PRESS
+    // ==========================
 
     @Override
     public void onBackPressed() {
@@ -248,10 +343,10 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         }
 
         if(!handled) {
-            if(backPressPrompt == null) {
+            if(mBackPressPrompt == null) {
                 super.onBackPressed();
             } else {
-                askQuestion(backPressPrompt.content, backPressPrompt.yesText, backPressPrompt.noText, new QuestionResult() {
+                askQuestion(mBackPressPrompt.content, mBackPressPrompt.yesText, mBackPressPrompt.noText, new QuestionResult() {
                     @Override
                     public void onQuestionAnswered(boolean answeredYes) {
                         if(answeredYes) {
@@ -291,50 +386,12 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         return mBackPressListeners != null && !mBackPressListeners.isEmpty();
     }
 
-    // Fragments
-
-    public void clearFragmentBackStack() {
-        FragmentManager fm = getSupportFragmentManager();
-        int backStackEntryCount = fm.getBackStackEntryCount();
-        for(int i = 0; i < backStackEntryCount; ++i) {
-            fm.popBackStack();
-        }
-    }
-
-    @Nullable
-    public <T extends Fragment> T getFragment(String tag, Class<T> fragmentClass) {
-        return getFragment(tag, fragmentClass, false, 0);
-    }
-
-    @Nullable
-    public <T extends Fragment> T getFragment(String tag, Class<T> fragmentClass, boolean createIfNotExist) {
-        return getFragment(tag, fragmentClass, createIfNotExist, android.R.id.content);
-    }
-
-    @Nullable
-    @SuppressWarnings("unchecked")
-    public <T extends Fragment> T getFragment(String tag, Class<T> fragmentClass, boolean createIfNotExist, int containerViewId) {
-        FragmentManager fm = getSupportFragmentManager();
-
-        T fragment = (T) fm.findFragmentByTag(tag);
-        if(createIfNotExist && fragment == null) {
-            fragment = (T) Fragment.instantiate(this, fragmentClass.getCanonicalName());
-
-            fm.beginTransaction()
-                    .add(containerViewId, fragment, tag)
-                    .commit();
-        }
-
-        return fragment;
+    public void setActivityBackPressPrompt(ActivityBackPressPrompt prompt) {
+        this.mBackPressPrompt = prompt;
     }
 
     public interface OnBackPressListener {
         boolean onBackPressed();
-    }
-
-    public interface QuestionResult {
-        void onQuestionAnswered(boolean answeredYes);
-        void onQuestionCancelled();
     }
 
     public static class ActivityBackPressPrompt {

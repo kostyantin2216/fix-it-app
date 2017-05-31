@@ -7,11 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.fixit.core.controllers.ActivityController;
-import com.fixit.core.general.UnexpectedErrorCallback;
 import com.fixit.core.rest.APIError;
 import com.fixit.core.rest.callbacks.GeneralServiceErrorCallback;
-import com.fixit.core.rest.callbacks.ServiceErrorCallback;
-import com.fixit.core.ui.activities.BaseActivity;
 
 import java.util.List;
 
@@ -63,6 +60,13 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
     public void onAppServiceError(List<APIError> errors) {
         if(mListener != null) {
             mListener.onAppServiceError(errors);
+        }
+    }
+
+    @Override
+    public void onServerError() {
+        if(mListener != null) {
+            mListener.onServerError();
         }
     }
 

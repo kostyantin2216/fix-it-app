@@ -2,11 +2,11 @@
 <resources>
 
     <!-- Text sizes -->
-    <dimen name="extra_large_text_size">27sp</dimen>
-    <dimen name="large_text_size">23sp</dimen>
-    <dimen name="standard_text_size">18sp</dimen>
-    <dimen name="small_text_size">15sp</dimen>
-    <dimen name="very_small_text_size">12sp</dimen>
+    <dimen name="extra_large_text_size">28sp</dimen>
+    <dimen name="large_text_size">22sp</dimen>
+    <dimen name="standard_text_size">17sp</dimen>
+    <dimen name="small_text_size">13sp</dimen>
+    <dimen name="very_small_text_size">10sp</dimen>
 
     <dimen name="error_fragment_padding">12dp</dimen>
     <dimen name="error_fragment_item_spacing">6dp</dimen>
@@ -14,5 +14,7 @@
     <dimen name="empty_list_padding">12dp</dimen>
     
     <dimen name="list_padding">4dp</dimen>
+
+    <dimen name="expandable_panel_spacing">8dp</dimen>
 
 </resources>

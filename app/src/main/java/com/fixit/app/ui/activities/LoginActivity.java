@@ -12,14 +12,13 @@ import com.fixit.core.BaseApplication;
 import com.fixit.core.controllers.RegistrationController;
 import com.fixit.core.controllers.UserController;
 import com.fixit.core.data.UserAccountDetails;
-import com.fixit.core.ui.activities.BaseActivity;
 import com.fixit.core.utils.PrefUtils;
 
 /**
  * Created by konstantin on 5/11/2017.
  */
 
-public class LoginActivity extends BaseActivity<RegistrationController>
+public class LoginActivity extends BaseAppActivity<RegistrationController>
     implements LoginFragment.LoginFragmentCallbacks,
                UserRegistrationFragment.UserRegistrationInteractionsListener,
                TelephoneVerificationFragment.TelephoneVerificationListener,
@@ -69,12 +68,6 @@ public class LoginActivity extends BaseActivity<RegistrationController>
         super.onPause();
 
         clearOnBackPressListeners();
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     @Override
@@ -139,7 +132,8 @@ public class LoginActivity extends BaseActivity<RegistrationController>
     @Override
     public void onRegistrationSuccess(String userId) {
         PrefUtils.setUserId(this, userId);
-        notifyUser("SUCCESS!!!!");
+        setResult(RESULT_OK, getIntent());
+        finish();
     }
 
     @Override

@@ -3,25 +3,23 @@ package com.fixit.app.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.fixit.app.R;
 import com.fixit.app.ui.adapters.TradesmenAdapter;
 import com.fixit.core.controllers.OrderController;
 import com.fixit.core.data.TradesmanWrapper;
+import com.fixit.core.ui.components.ExpandablePanel;
 import com.fixit.core.ui.fragments.BaseFragment;
 import com.fixit.core.utils.Constants;
-import com.fixit.core.utils.FILog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,44 +29,13 @@ import java.util.List;
  */
 
 public class OrderDetailsFragment extends BaseFragment<OrderController>
-        implements View.OnClickListener {
+        implements View.OnClickListener,
+                   ExpandablePanel.ExpandablePanelListener {
 
     private OrderDetailsInteractionListener mListener;
     private TradesmenAdapter mAdapter;
 
-    private NestedScrollView mContentScroller;
-    private EditText etReason;
-
-    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
-        int previousAction = MotionEvent.INVALID_POINTER_ID;
-        @Override
-        public boolean onTouch(final View v, final MotionEvent event) {
-            v.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-
-                    int action = event.getActionMasked();
-
-                    long eventDuration = event.getEventTime() - event.getDownTime();
-                    FILog.i("View: " + v.getClass().getName() + ", event duration: " + eventDuration + ", action: " + action + ", previous action: " + previousAction);
-                    if(previousAction == MotionEvent.ACTION_DOWN && action == MotionEvent.ACTION_UP) {
-                        if (etReason.hasFocus()) {
-                            View lastChild = mContentScroller.getChildAt(mContentScroller.getChildCount() - 1);
-                            int bottom = lastChild.getBottom() + mContentScroller.getPaddingBottom();
-                            int sy = mContentScroller.getScrollY();
-                            int sh = mContentScroller.getHeight();
-                            int delta = bottom - (sy + sh);
-
-                            mContentScroller.smoothScrollBy(0, delta);
-                        }
-                    }
-
-                    previousAction = action;
-                }
-            }, 350);
-            return false;
-        }
-    };
+    private ViewHolder mView;
 
     public static OrderDetailsFragment newInstance(ArrayList<TradesmanWrapper> selectedTradesmen) {
         OrderDetailsFragment fragment = new OrderDetailsFragment();
@@ -81,6 +48,78 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
         return fragment;
     }
 
+    enum ViewState {
+        BEFORE_ORDER,
+        AFTER_ORDER
+    }
+
+    static class ViewHolder implements View.OnFocusChangeListener {
+
+        final ExpandablePanel tradesmenPanel;
+        final EditText etReason;
+        final Button btnPickReason;
+
+        public ViewHolder(View v, TradesmenAdapter recyclerAdapter, int tradesmenCount, ExpandablePanel.ExpandablePanelListener panelListener, View.OnClickListener onClickListener) {
+            tradesmenPanel = (ExpandablePanel) v.findViewById(R.id.panel_tradesmen);
+            tradesmenPanel.setTitle(v.getResources().getString(R.string.selected_x_tradesmen, tradesmenCount));
+            tradesmenPanel.setListener(panelListener);
+
+            RecyclerView rvTradesmen = (RecyclerView) v.findViewById(R.id.rv_tradesmen);
+            rvTradesmen.setAdapter(recyclerAdapter);
+            SnapHelper helper = new LinearSnapHelper();
+            helper.attachToRecyclerView(rvTradesmen);
+
+            etReason = (EditText) v.findViewById(R.id.et_reason);
+            etReason.setOnFocusChangeListener(this);
+
+            btnPickReason = (Button) v.findViewById(R.id.btn_pick_a_reason);
+            btnPickReason.setOnClickListener(onClickListener);
+
+            v.findViewById(R.id.fab_done).setOnClickListener(onClickListener);
+        }
+
+        public void setState(ViewState state) {
+            switch (state) {
+                case BEFORE_ORDER:
+                    etReason.setEnabled(true);
+                    btnPickReason.setVisibility(View.VISIBLE);
+                    break;
+                case AFTER_ORDER:
+                    etReason.setEnabled(false);
+                    btnPickReason.setVisibility(View.GONE);
+                    break;
+            }
+        }
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if(hasFocus) {
+                tradesmenPanel.collapse();
+            } else {
+                tradesmenPanel.expand();
+            }
+        }
+
+        void showTradesmen() {
+            tradesmenPanel.expand();
+        }
+
+        void hideTradesmen() {
+            tradesmenPanel.collapse();
+        }
+
+        void clearFocus() {
+            etReason.clearFocus();
+        }
+
+        String getReason() {
+            return etReason.getText().toString();
+        }
+
+        void setReason(String reason) {
+            etReason.setText(reason);
+        }
+    }
 
     @Nullable
     @Override
@@ -90,22 +129,10 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
         setToolbar((Toolbar) v.findViewById(R.id.toolbar));
 
         int tradesmenCount = getArguments().getInt(Constants.ARG_TRADESMEN_COUNT);
-        TextView tvSummary = (TextView) v.findViewById(R.id.tv_selection_description);
-        tvSummary.setText(getString(R.string.selected_x_tradesmen, tradesmenCount));
 
-        mAdapter = new TradesmenAdapter(getContext(), null);
+        mAdapter = new TradesmenAdapter(null, 0.5f);
 
-        RecyclerView rvTradesmen = (RecyclerView) v.findViewById(R.id.rv_tradesmen);
-        rvTradesmen.setAdapter(mAdapter);
-        SnapHelper helper = new LinearSnapHelper();
-        helper.attachToRecyclerView(rvTradesmen);
-
-        mContentScroller = (NestedScrollView) v.findViewById(R.id.scroll_content);
-        mContentScroller.setOnTouchListener(mTouchListener);
-        etReason = (EditText) v.findViewById(R.id.et_reason);
-       // etReason.setOnTouchListener(mTouchListener);
-
-        v.findViewById(R.id.btn_pick_a_reason).setOnClickListener(this);
+        mView = new ViewHolder(v, mAdapter, tradesmenCount, this, this);
 
         return v;
     }
@@ -141,23 +168,36 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.btn_pick_a_reason) {
-            if(mListener != null) {
-                mListener.showOrderReasons();
+        if(mListener != null) {
+            switch (v.getId()) {
+                case R.id.btn_pick_a_reason:
+                    mListener.showOrderReasons();
+                    break;
+                case R.id.fab_done:
+                    mListener.completeOrder(mView.getReason());
+                    mView.setState(ViewState.AFTER_ORDER);
+                    mView.showTradesmen();
+                    break;
             }
         }
     }
 
-    public void setReason(String reason) {
-        etReason.setText(reason);
+    @Override
+    public void onPanelExpanded(ExpandablePanel panel) {
+        hideKeyboard(getView());
+        mView.clearFocus();
     }
 
-    public String getReason() {
-        return etReason.getText().toString();
+    @Override
+    public void onPanelCollapsed(ExpandablePanel panel) { }
+
+    public void setReason(String reason) {
+        mView.setReason(reason);
     }
 
     public interface OrderDetailsInteractionListener {
         void showOrderReasons();
+        void completeOrder(String reason);
     }
 
 }

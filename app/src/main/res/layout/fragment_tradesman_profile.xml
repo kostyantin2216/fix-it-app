@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="250dp">
 
-
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
@@ -55,6 +54,8 @@
         android:id="@+id/sv_profile_scroller"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/height_select_tradesman_btn"
+        android:background="@android:color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.constraint.ConstraintLayout
@@ -86,7 +87,6 @@
                 android:id="@+id/working_days"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
                 android:gravity="center"
                 android:minHeight="@dimen/tradesman_profile_working_hours_min_height"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -203,5 +203,13 @@
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/btn_select_tradesman"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_select_tradesman_btn"
+        android:text="@string/select_tradesman"
+        android:layout_gravity="bottom"
+        style="@style/button"/>
 
 </android.support.design.widget.CoordinatorLayout>

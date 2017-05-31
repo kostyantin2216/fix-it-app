@@ -8,7 +8,7 @@
     <string name="error_unknown">Unknown error, please try again.</string>
     <string name="error_default_display_msg">We apologize for any inconveniences but an unexpected error has occurred :(</string>
     <string name="error_no_network_msg">Please check your internet connection and try again!</string>
-    <string name="error_server_unavailable">Server is currently unavailable, please try again later.</string>
+    <string name="error_server_unavailable">Server is currently under maintenance, please try again later.</string>
 
     <string name="loading">Loading…</string>
     <string name="please_wait">Please wait</string>
@@ -35,5 +35,10 @@
     <string name="invalid_mobile_number">Invalid Mobile number, make sure this is not a landline number!</string>
     <string name="telephone_unreachable">Telephone number is unreachable.</string>
     <string name="from_number_blacklisted">You have black listed us, please SMS \"START\" to %1$s and try again</string>
+
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="show">Show</string>
+    <string name="hide">Hide</string>
 
 </resources>

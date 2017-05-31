@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/tv_title"
-        style="@style/login_text"
+        style="@style/dark_bg_content_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/number_verification_item_spacing"
@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/tv_hint"
-        style="@style/login_text"
+        style="@style/dark_bg_content_text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/number_verification_item_spacing"

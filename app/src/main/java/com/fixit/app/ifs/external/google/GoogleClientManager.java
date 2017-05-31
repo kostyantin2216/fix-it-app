@@ -21,7 +21,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -33,12 +37,14 @@ public class GoogleClientManager implements GoogleApiClient.OnConnectionFailedLi
 
     private static final int REQUEST_RESOLVE_ERROR = 1001;
     private static final int REQUEST_LOGIN = 1002;
+    private static final int REQUEST_PLACE_PICKER = 1003;
     private static final String DIALOG_ERROR = "dialog_error";
 
     public final GoogleApiClient mClient;
 
     private final GoogleManagerCallback mCallback;
     private GoogleSignInCallback mSignInCallback;
+    private GooglePlacesCallback mPlacesCallback;
 
     private boolean mResolvingError = false;
 
@@ -49,10 +55,24 @@ public class GoogleClientManager implements GoogleApiClient.OnConnectionFailedLi
         mCallback = callback;
     }
 
-    public void login(Fragment fragment, GoogleSignInCallback signInCallback) {
+    public void login(Fragment fragmentForResult, GoogleSignInCallback signInCallback) {
         mSignInCallback = signInCallback;
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mClient);
-        fragment.startActivityForResult(signInIntent, REQUEST_LOGIN);
+        fragmentForResult.startActivityForResult(signInIntent, REQUEST_LOGIN);
+    }
+
+    public boolean showPlacePicker(GooglePlacesCallback placesCallback) {
+        try {
+            Activity fromActivity = mCallback.getActivityForResult();
+            fromActivity.startActivityForResult(new PlacePicker.IntentBuilder().build(fromActivity), REQUEST_PLACE_PICKER);
+            mPlacesCallback = placesCallback;
+            return true;
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
@@ -97,6 +117,12 @@ public class GoogleClientManager implements GoogleApiClient.OnConnectionFailedLi
                     mSignInCallback.onSignInError(result.getStatus().getStatusCode() == GoogleSignInStatusCodes.SIGN_IN_CANCELLED);
                 }
                 mSignInCallback = null;
+                break;
+            case REQUEST_PLACE_PICKER:
+                if(resultCode == RESULT_OK) {
+                    mPlacesCallback.onPlaceChosen(PlacePicker.getPlace(mCallback.getActivityForResult(), data));
+                }
+                mPlacesCallback = null;
                 break;
         }
     }
@@ -160,6 +186,10 @@ public class GoogleClientManager implements GoogleApiClient.OnConnectionFailedLi
     public interface GoogleSignInCallback {
         void onSignInSuccess(GoogleSignInAccount account);
         void onSignInError(boolean wasCancelled);
+    }
+
+    public interface GooglePlacesCallback {
+        void onPlaceChosen(Place place);
     }
 
     public interface GoogleManagerCallback {

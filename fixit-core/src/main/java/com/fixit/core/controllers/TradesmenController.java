@@ -5,15 +5,10 @@ import android.text.TextUtils;
 import com.fixit.core.BaseApplication;
 import com.fixit.core.data.Review;
 import com.fixit.core.data.ReviewData;
-import com.fixit.core.general.UnexpectedErrorCallback;
-import com.fixit.core.rest.APIError;
 import com.fixit.core.rest.apis.DataServiceAPI;
 import com.fixit.core.rest.callbacks.GeneralServiceErrorCallback;
 import com.fixit.core.rest.callbacks.ManagedServiceCallback;
-import com.fixit.core.rest.callbacks.ServiceCallback;
-import com.fixit.core.rest.callbacks.ServiceErrorCallback;
 import com.fixit.core.rest.requests.data.TradesmanReviewsRequestData;
-import com.fixit.core.rest.responses.APIResponse;
 import com.fixit.core.rest.responses.data.TradesmanReviewResponseData;
 import com.fixit.core.utils.CommonUtils;
 import com.fixit.core.utils.Constants;
@@ -22,8 +17,6 @@ import com.fixit.core.utils.FILog;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import retrofit2.Call;
 
 /**
  * Created by konstantin on 4/27/2017.
@@ -73,7 +66,6 @@ public class TradesmenController extends BaseController {
 
         return dataList;
     }
-
 
     public interface TradesmanReviewsCallback extends GeneralServiceErrorCallback {
         void onReviewsLoaded(List<ReviewData> reviewData);

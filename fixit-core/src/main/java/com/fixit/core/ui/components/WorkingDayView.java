@@ -1,15 +1,10 @@
 package com.fixit.core.ui.components;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
-import android.support.constraint.Guideline;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,7 +12,6 @@ import com.fixit.core.R;
 import com.fixit.core.data.WorkingDay;
 import com.fixit.core.data.WorkingHours;
 import com.fixit.core.utils.CommonUtils;
-import com.fixit.core.utils.FILog;
 
 /**
  * Created by konstantin on 4/27/2017.
@@ -41,8 +35,9 @@ public class WorkingDayView extends LinearLayout {
 
         TextView tvDay = new TextView(context);
         tvDay.setId(View.generateViewId());
+        tvDay.setGravity(Gravity.CENTER_VERTICAL);
 
-        LayoutParams dayLp = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LayoutParams dayLp = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         dayLp.weight = 0.4f;
 
         addView(tvDay, dayLp);

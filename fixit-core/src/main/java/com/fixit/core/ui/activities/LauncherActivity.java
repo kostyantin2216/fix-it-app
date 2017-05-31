@@ -60,4 +60,8 @@ public abstract class LauncherActivity extends BaseActivity<LauncherController> 
 
     public abstract void onAppReady();
 
+    @Override
+    public Class<?> getLoginActivity() {
+        throw new UnsupportedOperationException("LauncherActivity does not support login requests");
+    }
 }

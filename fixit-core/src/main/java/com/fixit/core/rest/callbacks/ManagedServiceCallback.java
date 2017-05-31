@@ -34,6 +34,11 @@ public abstract class ManagedServiceCallback<RD> extends ServiceCallback<RD> {
     }
 
     @Override
+    public void onServerError() {
+        this.errorCallback.onServerError();
+    }
+
+    @Override
     public void onRetryFailure(Call<APIResponse<RD>> call, Throwable t) {
         this.errorCallback.onUnexpectedErrorOccurred(unexpectedErrorMessage, t);
     }

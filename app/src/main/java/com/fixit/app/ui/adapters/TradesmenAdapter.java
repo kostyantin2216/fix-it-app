@@ -1,8 +1,5 @@
 package com.fixit.app.ui.adapters;
 
-import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -14,8 +11,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.fixit.app.R;
-import com.fixit.core.config.AppConfig;
-import com.fixit.core.data.Tradesman;
 import com.fixit.core.data.TradesmanWrapper;
 import com.squareup.picasso.Picasso;
 
@@ -30,33 +25,64 @@ import java.util.Set;
 
 public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.TradesmanViewHolder> implements View.OnClickListener {
 
-    private final TradesmanAdapterCallback mCallback;
+    private final TradesmenAdapterCallback mCallback;
 
     private final List<TradesmanWrapper> mTradesmen = new ArrayList<>();
     private final Set<Integer> mSelectedTradesmenPositions;
 
     private final int mMaxTradesmenSelection;
+    private final float mRatingBarScale;
 
-    public TradesmenAdapter(Context context, @Nullable  TradesmanAdapterCallback callback) {
+    public TradesmenAdapter(@Nullable TradesmenAdapterCallback callback) {
+        this(0, callback, -1);
+    }
+
+    public TradesmenAdapter(@Nullable TradesmenAdapterCallback callback, float ratingBarScale) {
+        this(0, callback, ratingBarScale);
+    }
+
+    public TradesmenAdapter(int maxTradesmenSelection, @Nullable TradesmenAdapterCallback callback) {
+        this(maxTradesmenSelection, callback, -1);
+    }
+
+    public TradesmenAdapter(int maxTradesmenSelection, @Nullable TradesmenAdapterCallback callback, float ratingBarScale) {
         mCallback = callback;
-        mMaxTradesmenSelection = AppConfig.getInt(context, AppConfig.KEY_MAX_TRADESMEN_SELECTION, 3);
-        mSelectedTradesmenPositions = new HashSet<>(mMaxTradesmenSelection);
+        mMaxTradesmenSelection = maxTradesmenSelection;
+        mSelectedTradesmenPositions = new HashSet<>(maxTradesmenSelection);
+        mRatingBarScale = ratingBarScale;
     }
 
     @Override
     public TradesmanViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_tradesman, parent, false);
-        TradesmanViewHolder vh = new TradesmanViewHolder(v);
-
-        vh.itemView.setTag(vh);
-        vh.containerLogo.setTag(vh);
+        TradesmanViewHolder vh = new TradesmanViewHolder(v, mRatingBarScale);
 
         if(mCallback != null) {
-            vh.itemView.setOnClickListener(this);
-            vh.containerLogo.setOnClickListener(this);
+            v.setTag(vh);
+            v.setOnClickListener(this);
         }
 
         return vh;
+    }
+
+    @Override
+    public void onClick(View v) {
+        assert mCallback != null;
+
+        TradesmanViewHolder vh = (TradesmanViewHolder) v.getTag();
+        int position = vh.getAdapterPosition();
+
+        if(position != RecyclerView.NO_POSITION) {
+            TradesmanWrapper tradesman = mTradesmen.get(position);
+            if(vh.isSelected) {
+                tradesman.setSelected(false);
+                mSelectedTradesmenPositions.remove(position);
+                notifyItemChanged(position);
+                mCallback.onTradesmanUnselected(mSelectedTradesmenPositions.size() > 0);
+            } else {
+                mCallback.onTradesmanSelected(position, tradesman);
+            }
+        }
     }
 
     @Override
@@ -72,51 +98,49 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
     public void setTradesmen(List<TradesmanWrapper> tradesmen) {
         int oldCount = mTradesmen.size();
         mTradesmen.clear();
+        mSelectedTradesmenPositions.clear();
         notifyItemRangeRemoved(0, oldCount);
         for (int i = 0, count = tradesmen.size(); i < count; i++) {
-            mTradesmen.add(tradesmen.get(i));
-        }
-        notifyItemRangeInserted(0, tradesmen.size());
-    }
-
-    @Override
-    public void onClick(View v) {
-        TradesmanViewHolder vh = (TradesmanViewHolder) v.getTag();
-        int position = vh.getAdapterPosition();
-
-        if(position != RecyclerView.NO_POSITION) {
-            if (v.getId() == R.id.container_logo) {
-                if(vh.isSelected) {
-                    vh.deselect();
-                    mSelectedTradesmenPositions.remove(position);
-                } else if(mSelectedTradesmenPositions.size() < mMaxTradesmenSelection) {
-                    vh.select();
-                    mSelectedTradesmenPositions.add(position);
+            TradesmanWrapper tradesman = tradesmen.get(i);
+            if(tradesman.isSelected()) {
+                if(mSelectedTradesmenPositions.size() < mMaxTradesmenSelection) {
+                    mSelectedTradesmenPositions.add(i);
                 } else {
-                    mCallback.notifyUser(v.getContext().getString(R.string.tradesman_selection_limit_passed, mMaxTradesmenSelection));
+                    tradesman.setSelected(false);
                 }
-            } else {
-                mCallback.onTradesmanSelected(mTradesmen.get(position));
             }
+            mTradesmen.add(tradesman);
+            notifyItemInserted(i);
         }
     }
 
-    public List<Tradesman> getSelectedTradesmen() {
-        List<Tradesman> tradesmen = new ArrayList<>();
+    public List<TradesmanWrapper> getSelectedTradesmen() {
+        List<TradesmanWrapper> tradesmen = new ArrayList<>();
         for(int position : mSelectedTradesmenPositions) {
-            tradesmen.add(mTradesmen.get(position).tradesman);
+            tradesmen.add(mTradesmen.get(position));
         }
         return tradesmen;
     }
 
-    public interface TradesmanAdapterCallback {
+    public boolean selectTradesman(int position) {
+        if(mSelectedTradesmenPositions.size() < mMaxTradesmenSelection) {
+            TradesmanWrapper tradesman = mTradesmen.get(position);
+            tradesman.setSelected(true);
+            mSelectedTradesmenPositions.add(position);
+            notifyItemChanged(position);
+            return true;
+        }
+        return false;
+    }
+
+    public interface TradesmenAdapterCallback {
         void notifyUser(String msg);
-        void onTradesmanSelected(TradesmanWrapper tradesman);
+        void onTradesmanSelected(int adapterPosition, TradesmanWrapper tradesman);
+        void onTradesmanUnselected(boolean hasMoreSelections);
     }
 
     static class TradesmanViewHolder extends RecyclerView.ViewHolder {
 
-        final ViewGroup containerLogo;
         final ImageView ivLogo;
         final TextView tvCompanyName;
         final RatingBar rbRating;
@@ -124,17 +148,21 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
 
         boolean isSelected = false;
 
-        public TradesmanViewHolder(View itemView) {
+        TradesmanViewHolder(View itemView, float ratingBarScale) {
             super(itemView);
 
-            this.containerLogo = (ViewGroup) itemView.findViewById(R.id.container_logo);
             this.ivLogo = (ImageView) itemView.findViewById(R.id.iv_tradesman_logo);
             this.tvCompanyName = (TextView) itemView.findViewById(R.id.tv_company_name);
             this.rbRating = (RatingBar) itemView.findViewById(R.id.rb_tradesman_rating);
             this.tvReviewCount = (TextView) itemView.findViewById(R.id.tv_tradesman_review_count);
+
+            if(ratingBarScale >= 0) {
+                this.rbRating.setScaleX(ratingBarScale);
+                this.rbRating.setScaleY(ratingBarScale);
+            }
         }
 
-        public void populate(TradesmanWrapper dateHolder) {
+        void populate(TradesmanWrapper dateHolder) {
             String logoUrl = dateHolder.tradesman.getLogoUrl();
             if(!TextUtils.isEmpty(logoUrl)) {
                 Picasso.with(itemView.getContext()).load(logoUrl).into(ivLogo);
@@ -144,23 +172,13 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
             rbRating.setRating(dateHolder.tradesman.getRating());
             tvReviewCount.setText(itemView.getContext().getString(R.string.format_review_count, dateHolder.reviewCount));
 
+            isSelected = dateHolder.isSelected();
             if(isSelected) {
-                itemView.setBackgroundResource(R.drawable.list_item_bg_transparent_white_green_border);
+                itemView.setBackgroundResource(R.drawable.list_item_bg_transparent_green);
             } else {
                 itemView.setBackgroundResource(R.drawable.list_item_bg_transparent_white);
             }
         }
-
-        public void select() {
-            isSelected = true;
-            itemView.setBackgroundResource(R.drawable.list_item_bg_transparent_white_green_border);
-        }
-
-        public void deselect() {
-            isSelected = false;
-            itemView.setBackgroundResource(R.drawable.list_item_bg_transparent_white);
-        }
-
     }
 
 

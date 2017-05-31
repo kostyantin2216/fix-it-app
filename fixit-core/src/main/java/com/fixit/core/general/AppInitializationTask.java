@@ -93,8 +93,9 @@ public class AppInitializationTask extends Thread {
         try {
             Response<AppInstallation> response = api.create(appInstallation).execute();
             if(response != null) {
-                appInstallation = response.body();
-                PrefUtils.setInstallationId(context, appInstallation.getId());
+                String appInstallationId = response.body().getId();
+                PrefUtils.setInstallationId(context, appInstallationId);
+                mCallback.updateInstallationId(appInstallationId);
             }
         } catch (IOException e) {
             // Do nothing, try again next time app opens.
@@ -154,6 +155,7 @@ public class AppInitializationTask extends Thread {
         DAOFactory getDaoFactory();
         void onInitializationComplete(Set<String> errors);
         void onInitializationError(String error, boolean fatal);
+        void updateInstallationId(String installationId);
     }
 
     public static InitializationCompleteEvent createCompletionEvent(Set<String> errors) {

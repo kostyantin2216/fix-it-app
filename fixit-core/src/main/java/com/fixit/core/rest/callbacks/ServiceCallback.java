@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.fixit.core.rest.responses.APIResponse;
 import com.fixit.core.rest.responses.APIResponseHeader;
+import com.fixit.core.utils.Constants;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -25,11 +26,15 @@ public abstract class ServiceCallback<RD> extends RetryingCallback<APIResponse<R
     @Override
     public void onResponse(Call<APIResponse<RD>> call, Response<APIResponse<RD>> response) {
         APIResponse<RD> apiResponse = response.body();
-        APIResponseHeader header = apiResponse.getHeader();
-        if(header.hasErrors()) {
-            onAppServiceError(header.getErrors());
+        if(response.code() == Constants.HTTP_INTERNAL_SERVER_ERROR) {
+            onServerError();
         } else {
-            onResponse(apiResponse.getData());
+            APIResponseHeader header = apiResponse.getHeader();
+            if(header.hasErrors()) {
+                onAppServiceError(header.getErrors());
+            } else {
+                onResponse(apiResponse.getData());
+            }
         }
     }
 

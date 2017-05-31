@@ -5,6 +5,7 @@ import com.fixit.core.general.AppInitializationTask;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -21,11 +22,12 @@ public class LauncherController extends BaseController implements AppInitializat
     }
 
     public void initializeApp() {
-        // FIXME: remove
-        /*if(!isInitializing && !isInitialized) {
+        if(!isInitializing && !isInitialized) {
             isInitializing = true;
             new AppInitializationTask(getApplicationContext(), this).start();
-        }*/
+        } else if(isInitialized){
+            onInitializationComplete(Collections.<String>emptySet());
+        }
     }
 
     public boolean isInitialized() {
@@ -43,6 +45,11 @@ public class LauncherController extends BaseController implements AppInitializat
     public void onInitializationError(String error, boolean fatal) {
         isInitializing = false;
         EventBus.getDefault().post(AppInitializationTask.createErrorEvent(fatal, error));
+    }
+
+    @Override
+    public void updateInstallationId(String installationId) {
+        getServerApiFactory().updateAppInstallationId(installationId);
     }
 
 }

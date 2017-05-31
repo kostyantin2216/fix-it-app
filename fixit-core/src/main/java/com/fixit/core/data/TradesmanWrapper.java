@@ -3,18 +3,37 @@ package com.fixit.core.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Created by konstantin on 5/16/2017.
  */
 
 public class TradesmanWrapper implements Parcelable {
 
+    public static Tradesman[] unwrap(List<TradesmanWrapper> tradesmanWrapperList) {
+        Tradesman[] tradesmen = new Tradesman[tradesmanWrapperList.size()];
+        for(int i = 0; i < tradesmen.length; i++) {
+            tradesmen[i] = tradesmanWrapperList.get(i).tradesman;
+        }
+        return tradesmen;
+    }
+
     public final Tradesman tradesman;
     public final int reviewCount;
+    private boolean selected;
 
     public TradesmanWrapper(Tradesman tradesman, int reviewCount) {
         this.tradesman = tradesman;
         this.reviewCount = reviewCount;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     @Override

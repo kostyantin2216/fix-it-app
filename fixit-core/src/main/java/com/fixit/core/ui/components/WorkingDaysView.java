@@ -11,13 +11,9 @@ import android.widget.TextView;
 
 import com.fixit.core.R;
 import com.fixit.core.data.WorkingDay;
-import com.fixit.core.data.WorkingHours;
-import com.fixit.core.utils.CommonUtils;
 import com.fixit.core.utils.DateUtils;
 import com.fixit.core.utils.ObjectGenerator;
 import com.fixit.core.utils.UIUtils;
-
-import java.util.Date;
 
 /**
  * Created by konstantin on 4/27/2017.
@@ -94,10 +90,16 @@ public class WorkingDaysView extends LinearLayout implements View.OnClickListene
             WorkingDayView workingDayView = (WorkingDayView) getChildAt(i);
             if(workingDayView.getWorkingDay().getDayOfWeek() != today) {
                 if(isExpanded) {
-                    workingDayView.setVisibility(GONE);
+                    //workingDayView.setVisibility(GONE);
+                    if(workingDayView.getVisibility() == VISIBLE) {
+                        UIUtils.collapse(workingDayView, 3);
+                    }
                     hidden++;
                 } else {
-                    workingDayView.setVisibility(VISIBLE);
+                    //workingDayView.setVisibility(VISIBLE);
+                    if(workingDayView.getVisibility() != VISIBLE) {
+                        UIUtils.expand(workingDayView, 3);
+                    }
                 }
             }
         }

@@ -11,8 +11,7 @@ import com.fixit.core.data.Tradesman;
 import com.fixit.core.rest.APIError;
 import com.fixit.core.rest.apis.SearchServiceAPI;
 import com.fixit.core.rest.callbacks.GeneralServiceErrorCallback;
-import com.fixit.core.rest.callbacks.ServiceErrorCallback;
-import com.fixit.core.rest.callbacks.ServiceCallback;
+import com.fixit.core.rest.callbacks.ManagedServiceCallback;
 import com.fixit.core.rest.requests.data.SearchRequestData;
 import com.fixit.core.rest.requests.data.SearchResultRequestData;
 import com.fixit.core.rest.responses.APIResponse;
@@ -40,7 +39,7 @@ public class SearchManager {
 
     public void sendSearch(Context context, Profession profession, MutableLatLng location, final SearchCallback searchCallback) {
         SearchRequestData requestData = new SearchRequestData(profession.getId(), location);
-        mApi.beginSearch(requestData, new ServiceCallback<SearchResponseData>(context) {
+        mApi.beginSearch(requestData, new ManagedServiceCallback<SearchResponseData>(context, searchCallback) {
             @Override
             public void onResponse(SearchResponseData responseData) {
                 searchCallback.onSearchStarted(responseData.getSearchKey());
@@ -51,13 +50,8 @@ public class SearchManager {
                 if (APIError.contains(APIError.Error.UNSUPPORTED, errors)){
                     searchCallback.invalidAddress();
                 } else {
-                    searchCallback.onAppServiceError(errors);
+                    super.onAppServiceError(errors);
                 }
-            }
-
-            @Override
-            public void onRetryFailure(Call<APIResponse<SearchResponseData>> call, Throwable t) {
-                searchCallback.onUnexpectedErrorOccurred(t.getMessage(), t);
             }
         });
     }

@@ -7,9 +7,7 @@ import com.fixit.core.data.UserAccountDetails;
 import com.fixit.core.rest.apis.UserServiceAPI;
 import com.fixit.core.rest.callbacks.GeneralServiceErrorCallback;
 import com.fixit.core.rest.callbacks.ManagedServiceCallback;
-import com.fixit.core.rest.requests.data.TelephoneVerificationRequestData;
 import com.fixit.core.rest.requests.data.UserRegistrationRequestData;
-import com.fixit.core.rest.responses.data.TelephoneVerificationResponseData;
 import com.fixit.core.rest.responses.data.UserRegistrationResponseData;
 import com.fixit.core.utils.PrefUtils;
 
@@ -47,7 +45,9 @@ public class UserController extends BaseController {
                 if(responseData.isExistingEmail()) {
                     callback.emailAlreadyExists();
                 } else {
-                    callback.onRegistrationSuccess(responseData.getUserId());
+                    String userId = responseData.getUserId();
+                    callback.onRegistrationSuccess(userId);
+                    getServerApiFactory().updateUserId(userId);
                 }
             }
         });

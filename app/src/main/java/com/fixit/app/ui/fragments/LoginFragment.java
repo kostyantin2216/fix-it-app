@@ -215,12 +215,15 @@ public class LoginFragment extends BaseFragment<UserController>
 
     @Override
     public void onSignInError(boolean wasCancelled) {
+        mView.hideLoader();
         if(!wasCancelled) {
             mView.btnGoogleLogin.setEnabled(false);
             if (mCallbacks != null) {
                 mCallbacks.setGoogleLoginEnabled(false);
             }
             loginError(getString(R.string.google));
+        } else {
+            notifyUser(getString(R.string.error_google_login));
         }
     }
 

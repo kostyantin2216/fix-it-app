@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/tv_login_text"
-        style="@style/login_text"
+        style="@style/dark_bg_content_text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

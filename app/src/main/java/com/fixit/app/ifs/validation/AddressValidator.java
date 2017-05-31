@@ -118,6 +118,9 @@ public class AddressValidator {
                         }
                     }
 
+                    jobLocation.setFloorNum(-1);
+                    jobLocation.setApartmentNum(-1);
+
                     MutableLatLng latLng = result.getGeometry().getLocation();
                     jobLocation.setLat(latLng.getLat());
                     jobLocation.setLng(latLng.getLng());

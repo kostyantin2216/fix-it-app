@@ -2,9 +2,10 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/li_tradesman"
     android:layout_width="match_parent"
     android:layout_height="@dimen/li_tradesman_height"
-    style="@style/li_tradesman">
+    android:clickable="true">
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline_vertical"
@@ -20,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6"
+        app:layout_constraintGuide_percent="0.4"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="132dp" />
 
@@ -29,7 +30,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="@dimen/li_tradesman_item_spacing"
-        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guideline_vertical"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,8 @@
         style="@style/li_tradesman_company_name"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="@dimen/li_tradesman_item_spacing"
+        android:paddingEnd="@dimen/li_tradesman_item_spacing"
+        android:paddingTop="@dimen/li_tradesman_item_spacing"
         app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline_vertical"
@@ -59,27 +60,29 @@
         tools:text="Company Name Plumbing" />
 
     <LinearLayout
+        android:id="@+id/rating_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingBottom="@dimen/li_tradesman_item_spacing"
         android:paddingEnd="@dimen/li_tradesman_item_spacing"
-        android:paddingStart="@dimen/li_tradesman_item_spacing"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline_vertical"
         app:layout_constraintTop_toTopOf="@+id/guideline_horizontal">
 
         <RatingBar
-            android:theme="@style/RatingBar"
             android:id="@+id/rb_tradesman_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:isIndicator="true"
             android:numStars="5"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
             android:stepSize="0.1"
-            tools:rating="3.5"/>
+            android:theme="@style/RatingBar"
+            tools:rating="3.5" />
 
         <TextView
             android:id="@+id/tv_tradesman_review_count"

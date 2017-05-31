@@ -8,7 +8,7 @@
     tools:background="@drawable/bg_transparent_black">
 
     <TextView
-        style="@style/login_text"
+        style="@style/dark_bg_content_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/registration"

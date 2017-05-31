@@ -12,11 +12,11 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.fixit.app.R;
+import com.fixit.app.ifs.external.google.GoogleClientManager;
 import com.fixit.app.ui.adapters.PlaceAutocompleteAdapter;
 import com.fixit.core.controllers.SearchController;
 import com.fixit.core.data.Profession;
 import com.fixit.core.ui.fragments.BaseFragment;
-import com.fixit.core.utils.CommonUtils;
 import com.fixit.core.utils.DataUtils;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.AutocompleteFilter;
@@ -28,7 +28,9 @@ import java.util.List;
  * Created by konstantin on 3/29/2017.
  */
 
-public class SearchFragment extends BaseFragment<SearchController> implements View.OnClickListener {
+public class SearchFragment extends BaseFragment<SearchController>
+        implements View.OnClickListener,
+                   GoogleClientManager.GooglePlacesCallback {
 
     private SearchFragmentInteractionListener mListener;
 
@@ -75,6 +77,7 @@ public class SearchFragment extends BaseFragment<SearchController> implements Vi
         ));
     }
 
+    @Override
     public void onPlaceChosen(Place place) {
         actvAddress.setText(place.getAddress());
     }

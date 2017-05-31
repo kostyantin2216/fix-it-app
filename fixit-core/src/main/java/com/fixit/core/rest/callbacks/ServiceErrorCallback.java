@@ -9,5 +9,6 @@ import java.util.List;
  */
 
 public interface ServiceErrorCallback {
-    public void onAppServiceError(List<APIError> errors);
+    void onAppServiceError(List<APIError> errors);
+    void onServerError();
 }

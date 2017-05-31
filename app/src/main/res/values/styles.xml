@@ -12,12 +12,12 @@
     </style>
 
     <style name="RatingBar" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/grey_500</item>
+        <item name="colorControlNormal">#000</item>
         <item name="colorControlActivated">@color/gold</item>
     </style>
 
     <style name="EditTextTheme">
-        <item name="colorControlNormal">@color/grey_300</item>
+        <item name="colorControlNormal">@color/grey_400</item>
     </style>
 
     <style name="expandedAppBar" parent="@android:style/TextAppearance.Medium">
@@ -34,7 +34,13 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="login_text">
+    <style name="dark_bg_title_text">
+        <item name="android:textSize">@dimen/extra_large_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="dark_bg_content_text">
         <item name="android:textSize">@dimen/large_text_size</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:gravity">center</item>
@@ -56,7 +62,7 @@
     <style name="button">
         <item name="android:background">@drawable/button</item>
         <item name="android:textColor">@color/light_text_color</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/standard_text_size</item>
     </style>
 
     <!-- COMPONENTS END -->
@@ -67,7 +73,7 @@
     </style>
     
     <style name="li_tradesman_company_name">
-        <item name="android:textSize">@dimen/extra_large_text_size</item>
+        <item name="android:textSize">@dimen/large_text_size</item>
         <item name="android:gravity">center</item>
     </style>
 

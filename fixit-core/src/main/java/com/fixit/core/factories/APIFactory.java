@@ -6,17 +6,19 @@ import com.fixit.core.config.AppConfig;
 import com.fixit.core.rest.apis.AppInstallationDataAPI;
 import com.fixit.core.rest.apis.DataServiceAPI;
 import com.fixit.core.rest.apis.MapAreaDataAPI;
+import com.fixit.core.rest.apis.OrderServiceAPI;
 import com.fixit.core.rest.apis.ProfessionDataAPI;
 import com.fixit.core.rest.apis.ReviewDataAPI;
 import com.fixit.core.rest.apis.SearchServiceAPI;
 import com.fixit.core.rest.apis.ServerLogDataAPI;
 import com.fixit.core.rest.apis.SynchronizationServiceAPI;
-import com.fixit.core.rest.apis.twilio.TwilioAPI;
 import com.fixit.core.rest.apis.UserServiceAPI;
+import com.fixit.core.rest.apis.twilio.TwilioAPI;
 import com.fixit.core.rest.requests.APIRequestHeader;
 import com.fixit.core.rest.services.AppInstallationDataService;
 import com.fixit.core.rest.services.DataService;
 import com.fixit.core.rest.services.MapAreaDataService;
+import com.fixit.core.rest.services.OrderService;
 import com.fixit.core.rest.services.ProfessionDataService;
 import com.fixit.core.rest.services.ReviewDataService;
 import com.fixit.core.rest.services.SearchService;
@@ -42,6 +44,18 @@ public class APIFactory {
         mClient = RetrofitFactory.createServerRetrofitClient(context, baseUrl);
         mHeader = new APIRequestHeader();
         PrefUtils.fillApiRequestHeader(context, mHeader);
+    }
+
+    public void updateLatestScreen(String latestScreen) {
+        mHeader.setLatestScreen(latestScreen);
+    }
+
+    public void updateAppInstallationId(String installationId) {
+        mHeader.setInstallationId(installationId);
+    }
+
+    public void updateUserId(String userId) {
+        mHeader.setUserId(userId);
     }
 
     // DATA APIS
@@ -70,6 +84,10 @@ public class APIFactory {
 
     public DataServiceAPI createDataServiceApi() {
         return new DataServiceAPI(mHeader, mClient.create(DataService.class));
+    }
+
+    public OrderServiceAPI createOrderServceApi() {
+        return new OrderServiceAPI(mHeader, mClient.create(OrderService.class));
     }
 
     public SearchServiceAPI createSearchServiceApi() {

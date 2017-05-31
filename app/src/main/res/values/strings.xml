@@ -17,9 +17,11 @@
 
     <string name="no_tradesmen_results">Could not find any tradesmen for your location.</string>
     <string name="no_tradesman_reviews">There are currently no reviews for this tradesman.</string>
+    <string name="format_tradesmen_selection_limit">Cannot select more then %1$d tradesmen.</string>
 
     <string name="format_review_count">%1$d Reviews</string>
     <string name="tradesman_selection_limit_passed">Cannot select more then %1$d tradesmen</string>
+    <string name="select_tradesman">Select Tradesman</string>
     
     <string name="validating_address">Validating address…</string>
     <string name="starting_search">Starting search…</string>
@@ -30,6 +32,8 @@
 
     <string name="login_text">We need your help!\nWithout your reviews and experiences with the tradesmen we won\'t be able to keep providing you with top quality tradesmen, so in order to help out  please create an account with us and leave a review of the tradesman you have ordered!</string>
     <string name="sign_in_with_google">Sign in with Google</string>
+
+    <string name="contact_selected_tradesmen">Contact selected tradesmen</string>
 
     <string name="registration">Registration</string>
     <string name="first_name">First Name</string>
@@ -47,9 +51,20 @@
     <string name="verification_code">Verification Code</string>
     <string name="verification_code_desc">You will shortly receive an SMS with a verification code, please enter the verification code below.</string>
     <string name="email_already_exists">Email already exists.</string>
+    <string name="cannot_continue_without_login">Cannot continue without signing up.</string>
 
     <string name="reason">Reason</string>
     <string name="pick_a_reason">Pick a reason</string>
     <string name="selected_x_tradesmen">You have chosen %1$d tradesmen</string>
+    <string name="error_google_login">Could\'nt login with google.</string>
+
+    <string name="order_complete">Order Complete!</string>
+    <string name="order_completed_text">
+        Thank you for choosing us, let us know if you don\'t get contacted within the next half hour.\n\n
+        Please leave a review after any good or bad interactions you have with any of the tradesmen you have ordered so we can help you and the community find good quality tradesmen.
+    </string>
+    <string name="view_ordered_tradesmen">View Ordered Tradesmen</string>
+    <string name="new_search">New Search</string>
+    <string name="exit_app">Exit Application</string>
 
 </resources>

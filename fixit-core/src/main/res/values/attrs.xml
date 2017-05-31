@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <declare-styleable name="ExpandablePanel">
+        <attr name="body" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ToggleTextView">
+        <attr name="onText" format="string" />
+        <attr name="offText" format="string" />
+        <attr name="onTextColor" format="color" />
+        <attr name="offTextColor" format="color" />
+        <attr name="on" format="boolean" />
+    </declare-styleable>
+
 </resources>

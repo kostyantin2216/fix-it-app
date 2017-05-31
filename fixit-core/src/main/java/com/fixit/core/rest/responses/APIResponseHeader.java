@@ -23,7 +23,7 @@ public class APIResponseHeader {
     }
 
     public boolean hasErrors() {
-        return !errors.isEmpty();
+        return errors != null && !errors.isEmpty();
     }
 
     @Override

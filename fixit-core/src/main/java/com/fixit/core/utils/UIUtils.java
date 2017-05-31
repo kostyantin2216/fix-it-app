@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.Interpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
@@ -60,14 +62,13 @@ public class UIUtils {
         // Setting height to targetHeight makes view jump to full height before expanding which causes a weird effect.
         // If setting to 1 does not work for all devices then maybe check api version before setting height.
         v.getLayoutParams().height = 1;
-        v.setVisibility(View.VISIBLE);
         Animation a = new Animation()
         {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 v.getLayoutParams().height = interpolatedTime == 1
                         ? LinearLayout.LayoutParams.WRAP_CONTENT
-                        : (int)(targetHeight * interpolatedTime);
+                        : (int) (targetHeight * interpolatedTime);
                 v.requestLayout();
             }
 
@@ -76,6 +77,22 @@ public class UIUtils {
                 return true;
             }
         };
+
+        a.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                v.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
         a.setDuration((int)(targetHeight / v.getContext().getResources().getDisplayMetrics().density) * durationMultiplier);
         v.startAnimation(a);
@@ -139,6 +156,77 @@ public class UIUtils {
         r.setRepeatCount(0);
         r.setFillAfter(true);
         v.startAnimation(r);
+    }
+    // http://easings.net/
+    private final static Interpolator easeInOutQuart = PathInterpolatorCompat.create(0.77f, 0f, 0.175f, 1f);
+
+    public static Animation expand(final View view) {
+        int matchParentMeasureSpec = View.MeasureSpec.makeMeasureSpec(((View) view.getParent()).getWidth(), View.MeasureSpec.EXACTLY);
+        int wrapContentMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        view.measure(matchParentMeasureSpec, wrapContentMeasureSpec);
+        final int targetHeight = view.getMeasuredHeight();
+
+        // Older versions of android (pre API 21) cancel animations for views with a height of 0 so use 1 instead.
+        view.getLayoutParams().height = 1;
+        view.setVisibility(View.VISIBLE);
+
+        Animation animation = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+
+                view.getLayoutParams().height = interpolatedTime == 1
+                        ? ViewGroup.LayoutParams.WRAP_CONTENT
+                        : (int) (targetHeight * interpolatedTime);
+
+                view.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        animation.setInterpolator(easeInOutQuart);
+        animation.setDuration(computeDurationFromHeight(view));
+        view.startAnimation(animation);
+
+        return animation;
+    }
+
+    public static Animation collapse(final View view) {
+        final int initialHeight = view.getMeasuredHeight();
+
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime == 1) {
+                    view.setVisibility(View.GONE);
+                } else {
+                    view.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
+                    view.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setInterpolator(easeInOutQuart);
+
+        int durationMillis = computeDurationFromHeight(view);
+        a.setDuration(durationMillis);
+
+        view.startAnimation(a);
+
+        return a;
+    }
+
+    private static int computeDurationFromHeight(View view) {
+        // 1dp/ms * multiplier
+        return (int) (view.getMeasuredHeight() / view.getContext().getResources().getDisplayMetrics().density);
     }
 
     /**

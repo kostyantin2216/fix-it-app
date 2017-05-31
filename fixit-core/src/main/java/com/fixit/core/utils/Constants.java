@@ -16,9 +16,13 @@ public class Constants {
     public final static String ARG_LISTENER = "listener";
     public final static String ARG_EMAIL_EXISTS = "email_exists";
 
+    public final static int HTTP_INTERNAL_SERVER_ERROR = 500;
+
     public final static String KEY_USER_AVATAR = "userAvatar";
     public final static String KEY_USER_NAME = "userName";
 
     public final static String PROP_TRADESMAN_ID = "tradesmanId";
+
+    public final static int RC_LOGIN = 1100;
 
 }

@@ -5,8 +5,6 @@ import android.os.Bundle;
 
 import com.fixit.app.R;
 import com.fixit.core.ui.activities.LauncherActivity;
-import com.fixit.core.utils.Constants;
-import com.fixit.core.utils.ObjectGenerator;
 
 public class SplashActivity extends LauncherActivity {
 
@@ -15,13 +13,13 @@ public class SplashActivity extends LauncherActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Bundle extras = new Bundle();
+        /*Bundle extras = new Bundle();
         extras.putParcelableArrayList(Constants.ARG_TRADESMEN, ObjectGenerator.createTradesmenWrappers(3));
 
         Intent intent = new Intent(this, OrderActivity.class);
         intent.putExtras(extras);
 
-        startActivity(intent);
+        startActivity(intent);*/
     }
 
     @Override
