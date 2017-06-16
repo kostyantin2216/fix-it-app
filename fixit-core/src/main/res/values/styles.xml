@@ -22,6 +22,18 @@
         <item name="android:padding">@dimen/empty_list_padding</item>
     </style>
 
+    <style name="dark_bg_title_text">
+        <item name="android:textSize">@dimen/extra_large_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="dark_bg_content_text">
+        <item name="android:textSize">@dimen/large_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+    </style>
+
     <style name="list">
         <item name="android:padding">@dimen/list_padding</item>
     </style>

@@ -101,7 +101,7 @@ public class RetrofitFactory {
 
         private final String credentials;
 
-        public BasicAuthorizationInterceptor(String userName, String password) {
+        BasicAuthorizationInterceptor(String userName, String password) {
             this.credentials = Credentials.basic(userName, password);
         }
 
@@ -123,7 +123,7 @@ public class RetrofitFactory {
         private final String userAgent;
         private final String apiKey;
 
-        public ServerAuthorizationInterceptor(String userAgent, String apiKey) {
+        ServerAuthorizationInterceptor(String userAgent, String apiKey) {
             this.userAgent = userAgent;
             this.apiKey = apiKey;
         }

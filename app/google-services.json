@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "255078666095",
-    "project_id": "fix-it-1490789073165"
+    "firebase_url": "https://fix-it-1490789073165.firebaseio.com",
+    "project_id": "fix-it-1490789073165",
+    "storage_bucket": "fix-it-1490789073165.appspot.com"
   },
   "client": [
     {
@@ -13,6 +15,18 @@
       },
       "oauth_client": [
         {
+          "client_id": "255078666095-29mrc4kgqnd94q95slfbfg981c9f5ldo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fixit.app",
+            "certificate_hash": "ef40768ebcb8f57b5c1567a480e343a365d4837f"
+          }
+        },
+        {
+          "client_id": "255078666095-6ei2a9fhjbqs6q80kk0i82g09ehqmelo.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
           "client_id": "255078666095-b39rcbn3uiqtiganmk8haae2sdktedi3.apps.googleusercontent.com",
           "client_type": 3
         },
@@ -21,7 +35,7 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.fixit.app",
-            "certificate_hash": "ef40768ebcb8f57b5c1567a480e343a365d4837f"
+            "certificate_hash": "1103e5d8f277533573cf344cc90fa9557497f679"
           }
         }
       ],
@@ -35,11 +49,112 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255078666095-6ei2a9fhjbqs6q80kk0i82g09ehqmelo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255078666095:android:3e943ba16d64f42b",
+        "android_client_info": {
+          "package_name": "com.fixit.app.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255078666095-tg1gsfu930eg4g4d1eeo7toc3qt827qf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fixit.app.dev",
+            "certificate_hash": "1103e5d8f277533573cf344cc90fa9557497f679"
+          }
+        },
+        {
+          "client_id": "255078666095-6ei2a9fhjbqs6q80kk0i82g09ehqmelo.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "255078666095-b39rcbn3uiqtiganmk8haae2sdktedi3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnmRTLGEiyAV8-Iche4V4pRWRgbXrsO4Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
           "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255078666095-6ei2a9fhjbqs6q80kk0i82g09ehqmelo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255078666095:android:85a6882c3da5476f",
+        "android_client_info": {
+          "package_name": "com.fixit.app.proto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255078666095-265pd12r9sj73u1uf915osmt45fl5qnn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fixit.app.proto",
+            "certificate_hash": "56b399dd0ba154ca6937ef4ef5c42b35a8e46a71"
+          }
+        },
+        {
+          "client_id": "255078666095-6ei2a9fhjbqs6q80kk0i82g09ehqmelo.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "255078666095-b39rcbn3uiqtiganmk8haae2sdktedi3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnmRTLGEiyAV8-Iche4V4pRWRgbXrsO4Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255078666095-6ei2a9fhjbqs6q80kk0i82g09ehqmelo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
         }
       }
     }

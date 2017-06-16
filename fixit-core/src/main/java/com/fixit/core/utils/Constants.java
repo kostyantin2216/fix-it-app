@@ -15,6 +15,8 @@ public class Constants {
     public final static String ARG_LOGIN_DETAILS = "login_details";
     public final static String ARG_LISTENER = "listener";
     public final static String ARG_EMAIL_EXISTS = "email_exists";
+    public final static String ARG_PROFESSION_ID = "profession_id";
+    public final static String ARG_PROFESSION = "profession";
 
     public final static int HTTP_INTERNAL_SERVER_ERROR = 500;
 

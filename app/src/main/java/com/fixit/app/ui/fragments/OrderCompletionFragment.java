@@ -67,7 +67,7 @@ public class OrderCompletionFragment extends BaseFragment<OrderController> imple
         final ViewGroup contentContainer;
         final ProgressBar loader;
 
-        public ViewHolder(View v, View.OnClickListener onClickListener) {
+        ViewHolder(View v, View.OnClickListener onClickListener) {
             contentContainer = (ViewGroup) v.findViewById(R.id.container);
             loader = (ProgressBar) v.findViewById(R.id.loader);
 

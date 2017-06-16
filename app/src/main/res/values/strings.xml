@@ -66,5 +66,6 @@
     <string name="view_ordered_tradesmen">View Ordered Tradesmen</string>
     <string name="new_search">New Search</string>
     <string name="exit_app">Exit Application</string>
+    <string name="finished">Finished</string>
 
 </resources>

@@ -1,6 +1,29 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
+    signingConfigs {
+        prototype {
+            keyAlias 'prototype'
+            keyPassword 'MakeMoney4Life!'
+            storeFile file('C:/FixIt/FixIt/prototypeKeyStore/prototypeKeyStore.jks')
+            storePassword 'MakeMoney4Life!'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion '25.0.0'
     defaultConfig {
@@ -12,24 +35,36 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            applicationIdSuffix '.dev'
+            debuggable true
+            manifestPlaceholders = [applicationLabel: "Fix It Development"]
+            versionNameSuffix '-d'
+        }
+        prototype {
+            signingConfig signingConfigs.prototype
+            applicationIdSuffix '.proto'
+            debuggable true
+            manifestPlaceholders = [applicationLabel: "Fix It Prototype"]
+            versionNameSuffix '-p'
+        }
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [applicationLabel: "Fix It"]
+            versionNameSuffix '-r'
         }
     }
 }
 
 dependencies {
     compile project(':fixit-core')
-
     compile 'com.google.android.gms:play-services-places:10.2.4'
     compile 'com.google.android.gms:play-services-auth:10.2.4'
-
     compile 'com.facebook.android:facebook-android-sdk:4.22.0'
-
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

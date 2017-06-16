@@ -5,6 +5,7 @@ import android.content.Context;
 import com.fixit.core.config.AppConfig;
 import com.fixit.core.rest.apis.AppInstallationDataAPI;
 import com.fixit.core.rest.apis.DataServiceAPI;
+import com.fixit.core.rest.apis.JobReasonDataAPI;
 import com.fixit.core.rest.apis.MapAreaDataAPI;
 import com.fixit.core.rest.apis.OrderServiceAPI;
 import com.fixit.core.rest.apis.ProfessionDataAPI;
@@ -17,6 +18,7 @@ import com.fixit.core.rest.apis.twilio.TwilioAPI;
 import com.fixit.core.rest.requests.APIRequestHeader;
 import com.fixit.core.rest.services.AppInstallationDataService;
 import com.fixit.core.rest.services.DataService;
+import com.fixit.core.rest.services.JobReasonDataService;
 import com.fixit.core.rest.services.MapAreaDataService;
 import com.fixit.core.rest.services.OrderService;
 import com.fixit.core.rest.services.ProfessionDataService;
@@ -62,6 +64,10 @@ public class APIFactory {
 
     public AppInstallationDataAPI createAppInstallationApi() {
         return new AppInstallationDataAPI(mClient.create(AppInstallationDataService.class));
+    }
+
+    public JobReasonDataAPI createJobReasonApi() {
+        return new JobReasonDataAPI(mClient.create(JobReasonDataService.class));
     }
 
     public MapAreaDataAPI createMapAreaApi() {

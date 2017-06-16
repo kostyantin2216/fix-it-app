@@ -40,6 +40,7 @@ public class SearchActivity extends BaseAppActivity<SearchController>
     private AddressValidator mAddressValidator;
 
     private JobLocation mJobLocation;
+    private Profession mProfession;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,8 +114,8 @@ public class SearchActivity extends BaseAppActivity<SearchController>
 
     @Override
     public void performSearch(String professionName, String address) {
-        final Profession profession = getController().getProfession(professionName);
-        if(profession != null) {
+        mProfession = getController().getProfession(professionName);
+        if(mProfession != null) {
             showLoader(getString(R.string.validating_address));
             mAddressValidator.validate(address, new AddressValidator.AddressValidationCallback() {
                 @Override
@@ -126,7 +127,7 @@ public class SearchActivity extends BaseAppActivity<SearchController>
                         double lng = mJobLocation.getLng();
                         getController().sendSearch(
                                 SearchActivity.this,
-                                profession,
+                                mProfession,
                                 new MutableLatLng(lat, lng),
                                 SearchActivity.this
                         );
@@ -157,6 +158,7 @@ public class SearchActivity extends BaseAppActivity<SearchController>
         Intent intent = new Intent(this, ResultsActivity.class);
         intent.putExtra(Constants.ARG_SEARCH_ID, searchId);
         intent.putExtra(Constants.ARG_JOB_LOCATION, mJobLocation);
+        intent.putExtra(Constants.ARG_PROFESSION, mProfession);
         startActivity(intent);
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_out_left);
         hideLoader();

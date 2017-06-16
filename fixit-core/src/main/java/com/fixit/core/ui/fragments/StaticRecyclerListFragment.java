@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.fixit.core.R;
@@ -39,11 +40,15 @@ public abstract class StaticRecyclerListFragment<C extends ActivityController> e
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.layout_recycler_list, container, false);
+        View v = inflater.inflate(getLayoutResId(), container, false);
 
         mViewManager = new ViewManager(v, getEmptyListMessage());
 
         return v;
+    }
+
+    public int getLayoutResId() {
+        return R.layout.layout_recycler_list;
     }
 
     public void setAdapter(RecyclerView.Adapter adapter) {
@@ -84,12 +89,12 @@ public abstract class StaticRecyclerListFragment<C extends ActivityController> e
     }
 
     private static class ViewManager extends RecyclerView.AdapterDataObserver {
-        final ViewGroup root;
+        final LinearLayout root;
         final RecyclerView recyclerView;
         final TextView tvEmptyList;
 
         ViewManager(View v, String emptyListMessage) {
-            root = (ViewGroup) v.findViewById(R.id.root);
+            root = (LinearLayout) v.findViewById(R.id.root);
             recyclerView = (RecyclerView) v.findViewById(R.id.recycler);
             tvEmptyList = (TextView) v.findViewById(R.id.tv_empty_list);
 
@@ -154,6 +159,7 @@ public abstract class StaticRecyclerListFragment<C extends ActivityController> e
         void setAppBarToolBar(AppBarLayout appBarToolBar) {
             root.addView(appBarToolBar, 0);
         }
+
     }
 
 }

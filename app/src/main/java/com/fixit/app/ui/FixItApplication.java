@@ -1,8 +1,12 @@
 package com.fixit.app.ui;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.fixit.core.BaseApplication;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by konstantin on 3/29/2017.
@@ -13,6 +17,7 @@ public class FixItApplication extends BaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics(), new Answers());
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 

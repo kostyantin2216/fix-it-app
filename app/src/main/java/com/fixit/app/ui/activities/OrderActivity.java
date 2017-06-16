@@ -5,30 +5,35 @@ import android.support.annotation.Nullable;
 import android.view.WindowManager;
 
 import com.fixit.app.R;
+import com.fixit.app.ui.fragments.JobReasonsSelectionFragment;
 import com.fixit.app.ui.fragments.OrderCompletionFragment;
 import com.fixit.app.ui.fragments.OrderDetailsFragment;
 import com.fixit.core.BaseApplication;
 import com.fixit.core.controllers.OrderController;
 import com.fixit.core.data.JobLocation;
+import com.fixit.core.data.JobReason;
+import com.fixit.core.data.Profession;
 import com.fixit.core.data.Tradesman;
 import com.fixit.core.data.TradesmanWrapper;
 import com.fixit.core.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by konstantin on 5/16/2017.
  */
 
 public class OrderActivity extends BaseAppActivity<OrderController>
-    implements OrderDetailsFragment.OrderDetailsInteractionListener, OrderController.TradesmenOrderCallback {
+    implements OrderDetailsFragment.OrderDetailsInteractionListener,
+               OrderController.TradesmenOrderCallback,
+               JobReasonsSelectionFragment.JobReasonsInteractionListener {
 
     private final static String FRAG_TAG_ORDER_COMPLETE = "orderCompleteFrag";
 
     private JobLocation mJobLocation;
+    private Profession mProfession;
     private Tradesman[] mTradesmen;
-
-    private boolean orderSent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +43,7 @@ public class OrderActivity extends BaseAppActivity<OrderController>
 
         Bundle intentExtras = getIntent().getExtras();
         mJobLocation = intentExtras.getParcelable(Constants.ARG_JOB_LOCATION);
+        mProfession = intentExtras.getParcelable(Constants.ARG_PROFESSION);
         if(savedInstanceState == null) {
             ArrayList<TradesmanWrapper> tradesmen = intentExtras.getParcelableArrayList(Constants.ARG_TRADESMEN);
             mTradesmen = TradesmanWrapper.unwrap(tradesmen);
@@ -55,12 +61,15 @@ public class OrderActivity extends BaseAppActivity<OrderController>
 
     @Override
     public void showOrderReasons() {
-
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_holder, JobReasonsSelectionFragment.newInstance(mProfession.getId()))
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
     public void completeOrder(String reason) {
-        orderSent = true;
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_holder, OrderCompletionFragment.newInstance(), FRAG_TAG_ORDER_COMPLETE)
@@ -76,5 +85,10 @@ public class OrderActivity extends BaseAppActivity<OrderController>
         if(fragment != null) {
             fragment.onOrderComplete();
         }
+    }
+
+    @Override
+    public void onJobReasonsSelected(List<JobReason> reasons) {
+
     }
 }

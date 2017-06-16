@@ -3,8 +3,10 @@ package com.fixit.app.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
+import android.view.View;
 
 import com.fixit.app.R;
 import com.fixit.app.ui.fragments.TradesmanProfileFragment;
@@ -12,6 +14,7 @@ import com.fixit.app.ui.fragments.TradesmenResultsFragment;
 import com.fixit.core.BaseApplication;
 import com.fixit.core.controllers.ResultsController;
 import com.fixit.core.data.JobLocation;
+import com.fixit.core.data.Profession;
 import com.fixit.core.data.Tradesman;
 import com.fixit.core.data.TradesmanWrapper;
 import com.fixit.core.general.SearchManager;
@@ -36,8 +39,11 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
     private final static String FRAG_TAG_RESULTS_LIST = "results_list";
 
     private JobLocation mJobLocation;
+    private Profession mProfession;
 
     private SparseArray<String> mTradesmenIdsForPositions;
+
+    private FloatingActionButton fabDone;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +51,8 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
         setContentView(R.layout.layout_appbar_fragment_holder);
 
         setToolbar((Toolbar) findViewById(R.id.toolbar), false);
+
+        fabDone = (FloatingActionButton) findViewById(R.id.fab_done);
 
         if(savedInstanceState == null) {
             getSupportFragmentManager()
@@ -59,6 +67,7 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
         showLoader(getString(R.string.waiting_for_results));
 
         mJobLocation = intent.getParcelableExtra(Constants.ARG_JOB_LOCATION);
+        mProfession = intent.getParcelableExtra(Constants.ARG_PROFESSION);
         mTradesmenIdsForPositions = new SparseArray<>();
     }
 
@@ -106,6 +115,21 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
     }
 
     @Override
+    public void showDoneBtn() {
+        fabDone.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideDoneBtn() {
+        fabDone.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setDoneBtnClickListener(View.OnClickListener onClickListener) {
+        fabDone.setOnClickListener(onClickListener);
+    }
+
+    @Override
     public void loginComplete(boolean success, Bundle data) {
         if(success) {
             if (data.containsKey(Constants.ARG_TRADESMAN)) {
@@ -129,6 +153,7 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
         Bundle extras = new Bundle();
         extras.putParcelableArrayList(Constants.ARG_TRADESMEN, tradesmen);
         extras.putParcelable(Constants.ARG_JOB_LOCATION, mJobLocation);
+        extras.putParcelable(Constants.ARG_PROFESSION, mProfession);
         return extras;
     }
 
