@@ -61,7 +61,7 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
 
         public ViewHolder(View v, TradesmenAdapter recyclerAdapter, int tradesmenCount, ExpandablePanel.ExpandablePanelListener panelListener, View.OnClickListener onClickListener) {
             tradesmenPanel = (ExpandablePanel) v.findViewById(R.id.panel_tradesmen);
-            tradesmenPanel.setTitle(v.getResources().getString(R.string.selected_x_tradesmen, tradesmenCount));
+            tradesmenPanel.setTitle(v.getResources().getString(R.string.chosen_x_tradesmen, tradesmenCount));
             tradesmenPanel.setListener(panelListener);
 
             RecyclerView rvTradesmen = (RecyclerView) v.findViewById(R.id.rv_tradesmen);

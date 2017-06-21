@@ -1,6 +1,5 @@
 package com.fixit.app.ui.adapters;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fixit.app.R;
+import com.fixit.app.ui.adapters.ProfessionRecyclerAdapter.ProfessionViewHolder;
 import com.fixit.core.data.Profession;
 import com.fixit.core.ui.adapters.CommonRecyclerAdapter;
-import com.fixit.core.ui.adapters.CommonRecyclerAdapter.CommonViewHolder;
-import com.fixit.app.ui.adapters.ProfessionRecyclerAdapter.ProfessionViewHolder;
 import com.fixit.core.ui.adapters.animations.RecyclerItemScaleAnimation;
-import com.fixit.core.ui.adapters.animations.RecyclerItemSlideInAnimation;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 /**
  * Created by konstantin on 4/2/2017.
@@ -25,7 +20,7 @@ import java.util.List;
 
 public class ProfessionRecyclerAdapter extends CommonRecyclerAdapter<Profession, ProfessionViewHolder> {
 
-    public ProfessionRecyclerAdapter(List<Profession> items, CommonRecyclerViewInteractionsListener<Profession> listener) {
+    public ProfessionRecyclerAdapter(Profession[] items, CommonRecyclerViewInteractionListener<Profession> listener) {
         super(new RecyclerItemScaleAnimation(600), items, listener);
     }
 

@@ -1,5 +1,8 @@
 package com.fixit.app.ui.activities;
 
+import android.widget.TextView;
+
+import com.fixit.app.R;
 import com.fixit.core.controllers.ActivityController;
 import com.fixit.core.ui.activities.BaseActivity;
 
@@ -14,4 +17,11 @@ public abstract class BaseAppActivity<C extends ActivityController> extends Base
         return LoginActivity.class;
     }
 
+    @Override
+    public void setToolbarTitle(String title) {
+        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        if(toolbarTitle != null) {
+            toolbarTitle.setText(title);
+        }
+    }
 }

@@ -3,7 +3,6 @@ package com.fixit.app.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.fixit.app.R;
@@ -13,13 +12,11 @@ import com.fixit.core.data.Profession;
 import com.fixit.core.ui.adapters.CommonRecyclerAdapter;
 import com.fixit.core.ui.fragments.StaticRecyclerListFragment;
 
-import java.util.List;
-
 /**
  * Created by konstantin on 4/2/2017.
  */
 
-public class ProfessionsListFragment extends StaticRecyclerListFragment<SearchController> implements CommonRecyclerAdapter.CommonRecyclerViewInteractionsListener<Profession> {
+public class ProfessionsListFragment extends StaticRecyclerListFragment<SearchController> implements CommonRecyclerAdapter.CommonRecyclerViewInteractionListener<Profession> {
 
     private ProfessionSelectionListener mListener;
 
@@ -27,7 +24,9 @@ public class ProfessionsListFragment extends StaticRecyclerListFragment<SearchCo
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        List<Profession> professions = getController().getProfessions();
+        SearchController searchController = getController();
+        assert  searchController != null;
+        Profession[] professions = searchController.getProfessions();
         ProfessionRecyclerAdapter adapter = new ProfessionRecyclerAdapter(professions, this);
         setAdapter(adapter);
 

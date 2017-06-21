@@ -3,7 +3,7 @@ package com.fixit.core.utils;
 import android.text.TextUtils;
 import android.util.Patterns;
 
-import java.text.DecimalFormat;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -129,6 +129,12 @@ public class CommonUtils {
             return String.format("%02d:%02d", hours, minutes);
         }
         return "";
+    }
+
+    public static <C, T extends C> C[] toArray(Class<C> componentType, List<T> list) {
+        @SuppressWarnings("unchecked")
+        C[] array = (C[]) Array.newInstance(componentType, list.size());
+        return list.toArray(array);
     }
 
 }

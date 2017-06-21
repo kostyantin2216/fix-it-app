@@ -9,5 +9,6 @@
     <integer name="db_version">3</integer>
 
     <integer name="max_tradesmen_selection">3</integer>
+    <integer name="max_job_reason_selection">6</integer>
     
 </resources>

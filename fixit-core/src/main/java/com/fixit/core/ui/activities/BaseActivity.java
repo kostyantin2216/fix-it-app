@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -98,7 +99,15 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
     @Override
     public void setToolbar(Toolbar toolbar, boolean homeAsUpEnabled) {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(homeAsUpEnabled);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(homeAsUpEnabled);
+        }
+    }
+
+    @Override
+    public void setToolbarTitle(String title) {
+        throw new UnsupportedOperationException("must override this method if you need to use it");
     }
 
     @Override

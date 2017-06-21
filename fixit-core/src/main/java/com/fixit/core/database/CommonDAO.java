@@ -18,16 +18,16 @@ public interface CommonDAO<DMO extends DataModelObject> {
      */
     int insert(List<DMO> objs);
     DMO findById(Integer id);
-    List<DMO> findByQuery(String query, String[] values);
+    DMO[] findByQuery(String query, String[] values);
     DMO findOneByProperty(String property, String value);
-    List<DMO> findByProperty(String property, String value);
+    DMO[] findByProperty(String property, String value);
 
     /**
      * @return List&lt;T&gt; All objects of current type or an empty immutable List
      *         if no objects can be found.
      */
-    List<DMO> findAll();
-    List<DMO> findAll(String orderBy);
+    DMO[] findAll();
+    DMO[] findAll(String orderBy);
     boolean update(DMO obj);
 
     /**
@@ -35,11 +35,14 @@ public interface CommonDAO<DMO extends DataModelObject> {
      * @return Amount of objects failed to update.
      */
     int updateAll(List<DMO> objs);
+
     boolean delete(String id);
     int truncate();
+
     boolean contains(Serializable id);
     int count();
     int countQuery(String query, String[] selectionArgs);
-    String getTableName();
 
+    String getTableName();
+    Class<DMO> getEntityType();
 }

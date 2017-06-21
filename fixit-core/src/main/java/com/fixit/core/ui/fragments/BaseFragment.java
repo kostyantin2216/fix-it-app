@@ -2,6 +2,7 @@ package com.fixit.core.ui.fragments;
 
 import android.content.Context;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -24,6 +25,7 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
 
     private BaseFragmentInteractionsListener<C> mListener;
 
+    @Nullable
     public C getController() {
         if(mListener != null) {
             return mListener.getController();
@@ -92,6 +94,12 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         }
     }
 
+    public void setToolbarTitle(String title) {
+        if(mListener != null) {
+            mListener.setToolbarTitle(title);
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -116,6 +124,7 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         void showError(String displayMsg);
         void showPrompt(String displayMsg);
         void setToolbar(Toolbar toolbar, boolean homeAsUpEnabled);
+        void setToolbarTitle(String title);
         void startChrome(String url);
         void notifyUser(String msg);
         void hideKeyboard(IBinder windowToken);

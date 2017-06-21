@@ -4,18 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.fixit.app.R;
-import com.fixit.core.data.Review;
 import com.fixit.core.data.ReviewData;
 import com.fixit.core.ui.adapters.CommonRecyclerAdapter;
 import com.fixit.core.utils.DateUtils;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -25,7 +21,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ReviewRecyclerAdapter extends CommonRecyclerAdapter<ReviewData, ReviewRecyclerAdapter.ReviewViewHolder> {
 
-    public ReviewRecyclerAdapter(Context context, List<ReviewData> items) {
+    public ReviewRecyclerAdapter(Context context, ReviewData[] items) {
         super(context, items);
     }
 

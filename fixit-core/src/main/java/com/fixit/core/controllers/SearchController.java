@@ -8,8 +8,6 @@ import com.fixit.core.data.Profession;
 import com.fixit.core.database.ProfessionDAO;
 import com.fixit.core.general.SearchManager;
 
-import java.util.List;
-
 /**
  * Created by konstantin on 3/29/2017.
  */
@@ -25,7 +23,7 @@ public class SearchController extends BaseController {
         mProfessionDao = getDaoFactory().createProfessionDao();
     }
 
-    public List<Profession> getProfessions() {
+    public Profession[] getProfessions() {
         return mProfessionDao.findAll();
     }
 

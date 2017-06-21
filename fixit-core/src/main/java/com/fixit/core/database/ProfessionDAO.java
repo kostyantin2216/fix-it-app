@@ -72,4 +72,9 @@ public class ProfessionDAO extends BaseDAO<Profession> {
     public String getTableName() {
         return TABLE_NAME;
     }
+
+    @Override
+    public Class<Profession> getEntityType() {
+        return Profession.class;
+    }
 }

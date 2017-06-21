@@ -15,6 +15,8 @@
     <string name="invalid_profession">Invalid profession, must select from predefined professions.</string>
     <string name="invalid_address">Invalid address, must pick a street address.</string>
 
+    <string name="no_tradesmen_selected">Haven\'t selected any tradesmen.</string>
+    <string name="selected_x_out_of_tradesmen">Selected %1$d out of %2$d tradesmen.</string>
     <string name="no_tradesmen_results">Could not find any tradesmen for your location.</string>
     <string name="no_tradesman_reviews">There are currently no reviews for this tradesman.</string>
     <string name="format_tradesmen_selection_limit">Cannot select more then %1$d tradesmen.</string>
@@ -55,7 +57,8 @@
 
     <string name="reason">Reason</string>
     <string name="pick_a_reason">Pick a reason</string>
-    <string name="selected_x_tradesmen">You have chosen %1$d tradesmen</string>
+    <string name="cant_select_gt_x_reasons">Can\'t select more then %1$d reasons.</string>
+    <string name="chosen_x_tradesmen">You have chosen %1$d tradesmen</string>
     <string name="error_google_login">Could\'nt login with google.</string>
 
     <string name="order_complete">Order Complete!</string>

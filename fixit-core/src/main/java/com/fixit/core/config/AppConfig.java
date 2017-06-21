@@ -45,6 +45,7 @@ public class AppConfig {
     public final static String KEY_TWILIO_ACCOUNT_SID = "twilio_account_sid";
     public final static String KEY_TWILIO_AUTH_TOKEN = "twilio_auth_token";
     public final static String KEY_VERIFICATION_FROM_TELEPHONE = "verification_from_number";
+    public final static String KEY_MAX_JOB_REASON_SELECTION = "max_job_reason_selection";
 
     private final static String KEY_IS_PRODUCTION = "is_production";
     private final static String KEY_DEVICE_INFO = "device_info";

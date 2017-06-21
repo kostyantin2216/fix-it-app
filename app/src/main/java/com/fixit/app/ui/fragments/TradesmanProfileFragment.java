@@ -24,8 +24,6 @@ import com.fixit.core.ui.components.WorkingDaysView;
 import com.fixit.core.ui.fragments.BaseFragment;
 import com.fixit.core.utils.Constants;
 
-import java.util.List;
-
 /**
  * Created by konstantin on 4/26/2017.
  */
@@ -165,7 +163,7 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
     }
 
     @Override
-    public void onReviewsLoaded(List<ReviewData> reviewData) {
+    public void onReviewsLoaded(ReviewData[] reviewData) {
         ReviewRecyclerAdapter adapter = new ReviewRecyclerAdapter(getContext(), reviewData);
         mView.setRecyclerAdapter(adapter);
     }

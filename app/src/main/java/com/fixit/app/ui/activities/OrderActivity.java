@@ -18,7 +18,6 @@ import com.fixit.core.data.TradesmanWrapper;
 import com.fixit.core.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by konstantin on 5/16/2017.
@@ -29,11 +28,13 @@ public class OrderActivity extends BaseAppActivity<OrderController>
                OrderController.TradesmenOrderCallback,
                JobReasonsSelectionFragment.JobReasonsInteractionListener {
 
+    private final static String FRAG_TAG_ORDER_DETAILS = "orderDetailsFrag";
     private final static String FRAG_TAG_ORDER_COMPLETE = "orderCompleteFrag";
 
     private JobLocation mJobLocation;
     private Profession mProfession;
     private Tradesman[] mTradesmen;
+    private JobReason[] mJobReasons = new JobReason[0];
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class OrderActivity extends BaseAppActivity<OrderController>
             mTradesmen = TradesmanWrapper.unwrap(tradesmen);
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(com.fixit.core.R.id.fragment_holder, OrderDetailsFragment.newInstance(tradesmen))
+                    .add(com.fixit.core.R.id.fragment_holder, OrderDetailsFragment.newInstance(tradesmen), FRAG_TAG_ORDER_DETAILS)
                     .commit();
         }
     }
@@ -88,7 +89,17 @@ public class OrderActivity extends BaseAppActivity<OrderController>
     }
 
     @Override
-    public void onJobReasonsSelected(List<JobReason> reasons) {
+    public void onJobReasonsSelected(JobReason[] reasons) {
+        mJobReasons = reasons;
+        getSupportFragmentManager().popBackStack();
+        OrderDetailsFragment fragment = (OrderDetailsFragment) getSupportFragmentManager().findFragmentByTag(FRAG_TAG_ORDER_DETAILS);
+        if(fragment != null) {
+            fragment.setReason(JobReason.toDescription(reasons));
+        }
+    }
 
+    @Override
+    public JobReason[] getSelectedJobReasons() {
+        return mJobReasons;
     }
 }

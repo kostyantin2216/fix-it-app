@@ -22,8 +22,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 
-import java.util.List;
-
 /**
  * Created by konstantin on 3/29/2017.
  */
@@ -58,7 +56,7 @@ public class SearchFragment extends BaseFragment<SearchController>
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        List<Profession> professions = getController().getProfessions();
+        Profession[] professions = getController().getProfessions();
         actvProfessions.setAdapter(new ArrayAdapter<>(
                 getContext(),
                 android.R.layout.simple_dropdown_item_1line,

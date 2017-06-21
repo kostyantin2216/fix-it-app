@@ -51,6 +51,7 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
         setContentView(R.layout.layout_appbar_fragment_holder);
 
         setToolbar((Toolbar) findViewById(R.id.toolbar), false);
+        setToolbarTitle(getString(R.string.no_tradesmen_selected));
 
         fabDone = (FloatingActionButton) findViewById(R.id.fab_done);
 

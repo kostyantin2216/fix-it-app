@@ -159,7 +159,7 @@ public abstract class StaticRecyclerListFragment<C extends ActivityController> e
         void setAppBarToolBar(AppBarLayout appBarToolBar) {
             root.addView(appBarToolBar, 0);
         }
-
+        
     }
 
 }

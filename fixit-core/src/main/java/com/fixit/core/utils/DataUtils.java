@@ -2,19 +2,18 @@ package com.fixit.core.utils;
 
 import com.fixit.core.data.Profession;
 
-import java.util.List;
-
 /**
  * Created by konstantin on 3/29/2017.
  */
 
 public class DataUtils {
 
-    public static String[] toAutoCompleteList(List<Profession> professions) {
-        String[] names = new String[professions.size()];
+    public static String[] toAutoCompleteList(Profession[] professions) {
+        int professionCount = professions.length;
+        String[] names = new String[professionCount];
 
-        for(int i = 0; i < professions.size(); i++) {
-            Profession profession = professions.get(i);
+        for(int i = 0; i < professionCount; i++) {
+            Profession profession = professions[i];
             names[i] = profession.getName();
         }
 

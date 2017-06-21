@@ -80,7 +80,7 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
                 notifyItemChanged(position);
                 mCallback.onTradesmanUnselected(mSelectedTradesmenPositions.size() > 0);
             } else {
-                mCallback.onTradesmanSelected(position, tradesman);
+                mCallback.onTradesmanClick(position, tradesman);
             }
         }
     }
@@ -93,6 +93,10 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
     @Override
     public int getItemCount() {
         return mTradesmen.size();
+    }
+
+    public int getSelectedItemCount() {
+        return mSelectedTradesmenPositions.size();
     }
 
     public void setTradesmen(List<TradesmanWrapper> tradesmen) {
@@ -135,7 +139,7 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
 
     public interface TradesmenAdapterCallback {
         void notifyUser(String msg);
-        void onTradesmanSelected(int adapterPosition, TradesmanWrapper tradesman);
+        void onTradesmanClick(int adapterPosition, TradesmanWrapper tradesman);
         void onTradesmanUnselected(boolean hasMoreSelections);
     }
 

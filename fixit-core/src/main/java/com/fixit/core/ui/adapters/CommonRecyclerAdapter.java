@@ -7,8 +7,6 @@ import android.view.View;
 import com.fixit.core.ui.adapters.animations.RecyclerItemAnimation;
 import com.fixit.core.ui.adapters.animations.RecyclerItemSlideInAnimation;
 
-import java.util.List;
-
 /**
  * Created by konstantin on 3/9/2017.
  */
@@ -16,44 +14,45 @@ import java.util.List;
 public abstract class CommonRecyclerAdapter<E, VH extends CommonRecyclerAdapter.CommonViewHolder<E>>
         extends AnimatedRecyclerAdapter<VH> {
 
-    private CommonRecyclerViewInteractionsListener<E> listener;
-    private List<E> items;
+    private CommonRecyclerViewInteractionListener<E> listener;
+    private E[] items;
 
-    public CommonRecyclerAdapter(RecyclerItemAnimation itemAnimation, List<E> items, CommonRecyclerViewInteractionsListener<E> listener) {
+    public CommonRecyclerAdapter(RecyclerItemAnimation itemAnimation, E[] items, CommonRecyclerViewInteractionListener<E> listener) {
         super(itemAnimation);
         this.items = items;
         this.listener = listener;
     }
 
-    public CommonRecyclerAdapter(Context context, List<E> items, CommonRecyclerViewInteractionsListener<E> listener) {
-        this(new RecyclerItemSlideInAnimation(context, RecyclerItemSlideInAnimation.Direction.getRandom(), true), items, listener);
+    public CommonRecyclerAdapter(RecyclerItemAnimation itemAnimation, E[] items) {
+        this(itemAnimation, items, null);
     }
 
-    public CommonRecyclerAdapter(Context context, List<E> items) {
+    public CommonRecyclerAdapter(Context context, E[] items, CommonRecyclerViewInteractionListener<E> listener) {
+        this(new RecyclerItemSlideInAnimation(context, RecyclerItemSlideInAnimation.Direction.getRandom(), true),
+                items, listener);
+    }
+
+    public CommonRecyclerAdapter(Context context, E[] items) {
         this(context, items, null);
-    }
-
-    public void setInteractionListener(CommonRecyclerViewInteractionsListener<E> listener) {
-        this.listener = listener;
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return items.length;
     }
 
-    public List<E> getItems() {
+    public E[] getItems() {
         return items;
     }
 
     public E getItem(int position) {
-        return items.get(position);
+        return items[position];
     }
 
     @Override
     public void onBindViewHolder(VH holder, int position) {
         super.onBindViewHolder(holder, position);
-        holder.populate(items.get(position));
+        holder.populate(items[position]);
     }
 
     protected void attachItemClickListener(View v, VH vh) {
@@ -66,7 +65,7 @@ public abstract class CommonRecyclerAdapter<E, VH extends CommonRecyclerAdapter.
                     VH vh = (VH) v.getTag();
                     int position = vh.getAdapterPosition();
                     if(position != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(items.get(position));
+                        listener.onItemClick(items[position]);
                     }
                 }
             });
@@ -82,7 +81,7 @@ public abstract class CommonRecyclerAdapter<E, VH extends CommonRecyclerAdapter.
         public abstract void populate(E entity);
     }
 
-    public interface CommonRecyclerViewInteractionsListener<E> {
+    public interface CommonRecyclerViewInteractionListener<E> {
         void onItemClick(E item);
     }
 

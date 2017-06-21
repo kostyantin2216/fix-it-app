@@ -71,7 +71,7 @@ public class TradesmenResultsFragment extends StaticRecyclerListFragment<Results
     }
 
     @Override
-    public void onTradesmanSelected(int adapterPosition, TradesmanWrapper tradesman) {
+    public void onTradesmanClick(int adapterPosition, TradesmanWrapper tradesman) {
         if(mListener != null) {
             mListener.showTradesman(adapterPosition, tradesman);
         }
@@ -80,7 +80,14 @@ public class TradesmenResultsFragment extends StaticRecyclerListFragment<Results
     @Override
     public void onTradesmanUnselected(boolean hasMoreSelections) {
         if(mListener != null && !hasMoreSelections) {
+            setToolbarTitle(getString(R.string.no_tradesmen_selected));
             mListener.hideDoneBtn();
+        } else if(hasMoreSelections) {
+            setToolbarTitle(getString(
+                    R.string.selected_x_out_of_tradesmen,
+                    mAdapter.getSelectedItemCount(),
+                    mMaxTradesmanSelection
+            ));
         }
     }
 
@@ -99,6 +106,11 @@ public class TradesmenResultsFragment extends StaticRecyclerListFragment<Results
             if (!mAdapter.selectTradesman(adapterPosition)) {
                 notifyUser(getString(R.string.format_tradesmen_selection_limit, mMaxTradesmanSelection));
             } else {
+                setToolbarTitle(getString(
+                    R.string.selected_x_out_of_tradesmen,
+                    mAdapter.getSelectedItemCount(),
+                    mMaxTradesmanSelection
+                ));
                 mListener.showDoneBtn();
             }
         }
@@ -114,7 +126,6 @@ public class TradesmenResultsFragment extends StaticRecyclerListFragment<Results
     public interface TradesmenResultsInteractionListener {
         void showTradesman(int fromAdapterPosition, TradesmanWrapper tradesman);
         void orderTradesmen(List<TradesmanWrapper> selectedTradesmen);
-
 
         void showDoneBtn();
         void hideDoneBtn();

@@ -54,6 +54,17 @@ public class JobReason {
         this.updatedAt = updatedAt;
     }
 
+    public static String toDescription(JobReason[] jobReasons) {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < jobReasons.length; i++) {
+            sb.append(jobReasons[i].name);
+            if(i < jobReasons.length - 1) {
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
+    }
+
     @Override
     public String toString() {
         return "JobReason{" +
