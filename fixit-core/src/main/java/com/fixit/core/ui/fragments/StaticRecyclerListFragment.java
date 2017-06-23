@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fixit.core.R;
@@ -71,16 +72,18 @@ public abstract class StaticRecyclerListFragment<C extends ActivityController> e
         mViewManager.root.setBackgroundResource(resId);
     }
 
-    public void setAppBarToolBar(@LayoutRes int appBarToolBarRes, @IdRes int toolbarResId) {
+    public AppBarLayout setAppBarToolBar(@LayoutRes int appBarToolBarRes, @IdRes int toolbarResId, boolean homeAsUpEnabled) {
         AppBarLayout appBar = (AppBarLayout) LayoutInflater.from(getContext()).inflate(appBarToolBarRes, mViewManager.root, false);
         mViewManager.setAppBarToolBar(appBar);
-        super.setToolbar((Toolbar) appBar.findViewById(toolbarResId));
+        super.setToolbar((Toolbar) appBar.findViewById(toolbarResId), homeAsUpEnabled);
+        return appBar;
     }
 
-    public void setToolbar(@LayoutRes int toolbarRes) {
+    public Toolbar setToolbar(@LayoutRes int toolbarRes) {
         Toolbar toolbar = (Toolbar) LayoutInflater.from(getContext()).inflate(toolbarRes, mViewManager.root, false);
         mViewManager.setToolbar(toolbar);
         super.setToolbar(toolbar);
+        return toolbar;
     }
 
     public void setToolbar(Toolbar toolbar) {
@@ -88,15 +91,31 @@ public abstract class StaticRecyclerListFragment<C extends ActivityController> e
         super.setToolbar(toolbar);
     }
 
+    public void awaitData() {
+        mViewManager.setState(ViewState.LOADING);
+    }
+
+    public RecyclerView getRecyclerView() {
+        return mViewManager.recyclerView;
+    }
+
+    private enum ViewState {
+        LOADING,
+        EMPTY,
+        POPULATED
+    }
+
     private static class ViewManager extends RecyclerView.AdapterDataObserver {
-        final LinearLayout root;
+        final ViewGroup root;
         final RecyclerView recyclerView;
         final TextView tvEmptyList;
+        final ProgressBar pbLoader;
 
         ViewManager(View v, String emptyListMessage) {
-            root = (LinearLayout) v.findViewById(R.id.root);
+            root = (ViewGroup) v.findViewById(R.id.root);
             recyclerView = (RecyclerView) v.findViewById(R.id.recycler);
             tvEmptyList = (TextView) v.findViewById(R.id.tv_empty_list);
+            pbLoader = (ProgressBar) v.findViewById(R.id.pb_loader);
 
             tvEmptyList.setText(emptyListMessage);
         }
@@ -144,12 +163,16 @@ public abstract class StaticRecyclerListFragment<C extends ActivityController> e
         void updateListStatus() {
             RecyclerView.Adapter adapter = getAdapter();
             if(adapter != null && adapter.getItemCount() > 0) {
-                recyclerView.setVisibility(View.VISIBLE);
-                tvEmptyList.setVisibility(View.GONE);
+                setState(ViewState.POPULATED);
             } else {
-                recyclerView.setVisibility(View.GONE);
-                tvEmptyList.setVisibility(View.VISIBLE);
+                setState(ViewState.EMPTY);
             }
+        }
+
+        void setState(ViewState state) {
+            recyclerView.setVisibility(state == ViewState.POPULATED ? View.VISIBLE : View.GONE);
+            tvEmptyList.setVisibility(state == ViewState.EMPTY ? View.VISIBLE : View.GONE);
+            pbLoader.setVisibility(state == ViewState.LOADING ? View.VISIBLE : View.GONE);
         }
 
         void setToolbar(Toolbar toolbar) {

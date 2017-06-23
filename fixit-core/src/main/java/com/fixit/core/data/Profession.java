@@ -3,6 +3,7 @@ package com.fixit.core.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -10,6 +11,13 @@ import java.util.Date;
  */
 
 public class Profession implements DataModelObject, Parcelable {
+
+    public final static Comparator<Profession> NAME_COMPARATOR = new Comparator<Profession>() {
+        @Override
+        public int compare(Profession o1, Profession o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    };
 
     private Integer id;
     private String name;

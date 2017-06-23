@@ -3,18 +3,18 @@ package com.fixit.app.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.fixit.app.R;
 import com.fixit.app.ui.adapters.JobReasonsAdapter;
+import com.fixit.app.ui.adapters.SearchableStaticRecyclerListFragment;
 import com.fixit.core.controllers.OrderController;
 import com.fixit.core.data.JobReason;
+import com.fixit.core.ui.adapters.CommonRecyclerAdapter;
 import com.fixit.core.ui.adapters.MultiSelectRecyclerAdapter;
-import com.fixit.core.ui.fragments.StaticRecyclerListFragment;
+import com.fixit.core.ui.components.FloatingTextButton;
 import com.fixit.core.utils.Constants;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
  * Created by Kostyantin on 6/1/2017.
  */
 
-public class JobReasonsSelectionFragment extends StaticRecyclerListFragment<OrderController>
+public class JobReasonsSelectionFragment extends SearchableStaticRecyclerListFragment<OrderController>
         implements OrderController.JobReasonsCallback,
                    JobReasonsAdapter.OnMultiSelectItemChangeListener,
                    View.OnClickListener {
@@ -31,7 +31,7 @@ public class JobReasonsSelectionFragment extends StaticRecyclerListFragment<Orde
     private JobReasonsInteractionListener mListener;
     private JobReasonsAdapter mAdapter;
 
-    private FloatingActionButton fabDone;
+    private FloatingTextButton fabDone;
 
     public static JobReasonsSelectionFragment newInstance(int professionId) {
         JobReasonsSelectionFragment fragment = new JobReasonsSelectionFragment();
@@ -43,24 +43,41 @@ public class JobReasonsSelectionFragment extends StaticRecyclerListFragment<Orde
 
     @Override
     public int getLayoutResId() {
-        return R.layout.layout_coordinated_recycler_list;
+        return R.layout.layout_done_recycler_view;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
         assert v != null;
-        fabDone = (FloatingActionButton) v.findViewById(R.id.fab_done);
+        fabDone = (FloatingTextButton) v.findViewById(R.id.fab_done);
         fabDone.setOnClickListener(this);
         return v;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         hideKeyboard(view);
+
         setBackground(R.drawable.bg_brick_wall);
-        setToolbar((Toolbar) view.findViewById(R.id.toolbar), true);
+        awaitData();
+
+        OrderController controller = getController();
+        assert controller != null;
         getController().findReasonsForProfession(getProfessionId(), this);
+    }
+
+    @Override
+    public void onTextChanged(final String text) {
+        if(mAdapter != null) {
+            mAdapter.filter(new CommonRecyclerAdapter.AdapterFilterer<MultiSelectRecyclerAdapter.SelectItem>() {
+                @Override
+                public boolean filter(MultiSelectRecyclerAdapter.SelectItem data) {
+                    return !data.display.toLowerCase().contains(text.trim().toLowerCase());
+                }
+            });
+        }
     }
 
     private int getProfessionId() {

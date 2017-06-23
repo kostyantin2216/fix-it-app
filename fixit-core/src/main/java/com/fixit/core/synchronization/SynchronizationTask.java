@@ -38,7 +38,7 @@ public class SynchronizationTask extends Thread {
         this.mServiceApi = api;
         this.mCallback = callback;
         this.mDaoFactory = daoFactory;
-        this.mHistory = new SynchronizationHistory(context);
+        this.mHistory = new SynchronizationHistory(context, SYNCHRONIZATION_TARGETS);
     }
 
     public boolean isReadyForSynchronization() {
@@ -50,15 +50,6 @@ public class SynchronizationTask extends Thread {
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
         Map<String, Set<SynchronizationAction>> history = mHistory.getHistory();
-        boolean isFirstSynchronization = history.isEmpty();
-
-        if(isFirstSynchronization) {
-            // tell the server what data this version of the app supports.
-            for(String target : SYNCHRONIZATION_TARGETS) {
-                history.put(target, Collections.<SynchronizationAction>emptySet());
-            }
-        }
-
         try {
             // create request data and get response body.
             SynchronizationRequestData requestData = new SynchronizationRequestData(mHistory.getLastUpdate(), history);

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr name="cancelDrawable" format="reference" />
+    <attr name="clearButtonMode">
+        <enum name="never" value="0" />
+        <enum name="always" value="1" />
+        <enum name="whileEditing" value="2" />
+        <enum name="unlessEditing" value="3" />
+    </attr>
+
     <declare-styleable name="ExpandablePanel">
         <attr name="body" format="reference" />
     </declare-styleable>
@@ -11,6 +19,23 @@
         <attr name="onTextColor" format="color" />
         <attr name="offTextColor" format="color" />
         <attr name="on" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="CancelableEditText">
+        <attr name="cancelDrawable" />
+        <attr name="clearButtonMode" />
+    </declare-styleable>
+
+    <declare-styleable name="CancelableAutoCompleteTextView">
+        <attr name="cancelDrawable" />
+        <attr name="clearButtonMode" />
+    </declare-styleable>
+
+    <declare-styleable name="FloatingTextButton">
+        <attr name="buttonIcon" format="reference" />
+        <attr name="buttonText" format="string|reference" />
+        <attr name="buttonTextColor" format="reference|color" />
+        <attr name="buttonColor" format="reference|color" />
     </declare-styleable>
 
 </resources>

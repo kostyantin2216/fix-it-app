@@ -45,6 +45,12 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         }
     }
 
+    public void notifyUser(String msg, View v) {
+        if(mListener != null) {
+            mListener.notifyUser(msg, v);
+        }
+    }
+
     public void hideKeyboard(View rootView) {
         if(mListener != null) {
             mListener.hideKeyboard(rootView.getWindowToken());
@@ -127,6 +133,7 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         void setToolbarTitle(String title);
         void startChrome(String url);
         void notifyUser(String msg);
+        void notifyUser(String msg, View v);
         void hideKeyboard(IBinder windowToken);
     }
 

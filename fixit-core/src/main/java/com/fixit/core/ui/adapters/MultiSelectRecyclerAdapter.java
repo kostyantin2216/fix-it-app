@@ -13,8 +13,11 @@ import com.fixit.core.ui.adapters.MultiSelectRecyclerAdapter.SelectItemViewHolde
 import com.fixit.core.ui.adapters.animations.RecyclerItemAnimation;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -29,12 +32,12 @@ public class MultiSelectRecyclerAdapter extends CommonRecyclerAdapter<SelectItem
     private final int mMaxSelection;
 
     public MultiSelectRecyclerAdapter(RecyclerItemAnimation itemAnimation, SelectItem[] items, int maxSelection) {
-        super(itemAnimation, items, null);
+        super(itemAnimation, items, null, SelectItem.COMPARATOR);
         this.mMaxSelection = maxSelection;
     }
 
     public MultiSelectRecyclerAdapter(Context context, SelectItem[] items, int maxSelection) {
-        super(context, items);
+        super(context, items, null, SelectItem.COMPARATOR);
         this.mMaxSelection = maxSelection;
     }
 
@@ -56,14 +59,15 @@ public class MultiSelectRecyclerAdapter extends CommonRecyclerAdapter<SelectItem
 
     public void setSelectedItems(SelectItem[] selectedItemsArg) {
         SelectItem[] selectedItems = Arrays.copyOf(selectedItemsArg, selectedItemsArg.length);
-        SelectItem[] adapterItems = getItems();
+        List<SelectItem> adapterItems = getItems();
 
         mSelectedItemPositions.clear();
-        for(int ai = 0; ai < adapterItems.length; ai++) {
+        for(int ai = 0; ai < adapterItems.size(); ai++) {
+            SelectItem adapterItem = adapterItems.get(ai);
             boolean selected = false;
 
             for(int si = 0; si < selectedItems.length; si++) {
-                if(selectedItems[si] != null && selectedItems[si].code == adapterItems[ai].code) {
+                if(selectedItems[si] != null && selectedItems[si].code == adapterItem.code) {
                     selectedItems[si] = null;
                     selected = true;
                     break;
@@ -71,22 +75,27 @@ public class MultiSelectRecyclerAdapter extends CommonRecyclerAdapter<SelectItem
             }
 
             if(!selected) {
-                adapterItems[ai].isSelected = false;
+                adapterItem.isSelected = false;
             } else {
-                adapterItems[ai].isSelected = true;
+                adapterItem.isSelected = true;
                 mSelectedItemPositions.add(ai);
-                notifyItemChanged(ai);
+
+                int adapterPosition = getAdapterPosition(adapterItem);
+                if(adapterPosition > -1) {
+                    notifyItemChanged(adapterPosition);
+                }
             }
         }
     }
 
     public SelectItem[] getSelectedItems() {
         SelectItem[] selectedItems = new SelectItem[mSelectedItemPositions.size()];
-        SelectItem[] selectItems = getItems();
+        List<SelectItem> selectItems = getItems();
         Iterator<Integer> selectedItemPos = mSelectedItemPositions.iterator();
         for(int i = 0; i < selectedItems.length; i++) {
-            selectedItems[i] = selectItems[selectedItemPos.next()];
+            selectedItems[i] = selectItems.get(selectedItemPos.next());
         }
+        Arrays.sort(selectedItems, SelectItem.COMPARATOR);
         return selectedItems;
     }
 
@@ -107,16 +116,17 @@ public class MultiSelectRecyclerAdapter extends CommonRecyclerAdapter<SelectItem
     public void onClick(View v) {
         SelectItemViewHolder viewHolder = (SelectItemViewHolder) v.getTag();
         int adapterPos = viewHolder.getAdapterPosition();
-        SelectItem selectItem = getItem(adapterPos);
-        if(selectItem.isSelected || mMaxSelection == -1 || mSelectedItemPositions.size() < mMaxSelection) {
-            selectItem.isSelected = !selectItem.isSelected;
-            if (selectItem.isSelected) {
-                mSelectedItemPositions.add(adapterPos);
+        SelectItem adapterItem = getAdapterItem(adapterPos);
+        if(adapterItem.isSelected || mMaxSelection == -1 || mSelectedItemPositions.size() < mMaxSelection) {
+            adapterItem.isSelected = !adapterItem.isSelected;
+            int itemPos = getItemPosition(adapterItem);
+            if (adapterItem.isSelected) {
+                mSelectedItemPositions.add(itemPos);
             } else {
-                mSelectedItemPositions.remove(adapterPos);
+                mSelectedItemPositions.remove(itemPos);
             }
             if (mChangeListener != null) {
-                mChangeListener.onSelectItemChanged(selectItem);
+                mChangeListener.onSelectItemChanged(adapterItem);
             }
         } else if(mChangeListener != null) {
             mChangeListener.onSelectionLimitReached(mMaxSelection);
@@ -139,6 +149,13 @@ public class MultiSelectRecyclerAdapter extends CommonRecyclerAdapter<SelectItem
             this.display = display;
             this.isSelected = false;
         }
+
+        private final static Comparator<SelectItem> COMPARATOR = new Comparator<SelectItem>() {
+            @Override
+            public int compare(SelectItem o1, SelectItem o2) {
+                return o1.display.compareTo(o2.display);
+            }
+        };
     }
 
     static class SelectItemViewHolder extends CommonRecyclerAdapter.CommonViewHolder<SelectItem> {

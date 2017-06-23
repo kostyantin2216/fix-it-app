@@ -3,10 +3,16 @@ package com.fixit.app.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 
 import com.fixit.app.R;
 import com.fixit.app.ui.adapters.ProfessionRecyclerAdapter;
+import com.fixit.app.ui.adapters.SearchableStaticRecyclerListFragment;
 import com.fixit.core.controllers.SearchController;
 import com.fixit.core.data.Profession;
 import com.fixit.core.ui.adapters.CommonRecyclerAdapter;
@@ -16,9 +22,10 @@ import com.fixit.core.ui.fragments.StaticRecyclerListFragment;
  * Created by konstantin on 4/2/2017.
  */
 
-public class ProfessionsListFragment extends StaticRecyclerListFragment<SearchController> implements CommonRecyclerAdapter.CommonRecyclerViewInteractionListener<Profession> {
+public class ProfessionsListFragment extends SearchableStaticRecyclerListFragment<SearchController> implements CommonRecyclerAdapter.CommonRecyclerViewInteractionListener<Profession> {
 
     private ProfessionSelectionListener mListener;
+    private ProfessionRecyclerAdapter mAdapter;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -27,10 +34,9 @@ public class ProfessionsListFragment extends StaticRecyclerListFragment<SearchCo
         SearchController searchController = getController();
         assert  searchController != null;
         Profession[] professions = searchController.getProfessions();
-        ProfessionRecyclerAdapter adapter = new ProfessionRecyclerAdapter(professions, this);
-        setAdapter(adapter);
+        mAdapter = new ProfessionRecyclerAdapter(professions, this);
+        setAdapter(mAdapter);
 
-        setAppBarToolBar(R.layout.layout_appbar_toolbar, R.id.toolbar);
         setBackground(R.drawable.bg_corner_nuts);
     }
 
@@ -58,6 +64,16 @@ public class ProfessionsListFragment extends StaticRecyclerListFragment<SearchCo
         if(mListener != null) {
             mListener.onProfessionSelect(item);
         }
+    }
+
+    @Override
+    public void onTextChanged(final String text) {
+        mAdapter.filter(new CommonRecyclerAdapter.AdapterFilterer<Profession>() {
+            @Override
+            public boolean filter(Profession data) {
+                return !data.getName().trim().toLowerCase().contains(text.toLowerCase());
+            }
+        });
     }
 
     public interface ProfessionSelectionListener {

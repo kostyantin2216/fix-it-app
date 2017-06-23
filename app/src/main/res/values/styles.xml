@@ -38,7 +38,7 @@
 
     <style name="toolbar_title">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">center|start</item>
         <item name="android:textSize">@dimen/large_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -63,6 +63,12 @@
     <style name="li_tradesman_company_name">
         <item name="android:textSize">@dimen/large_text_size</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="toolbar_search">
+        <item name="android:drawableStart">@drawable/ic_search_white_24dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:visibility">gone</item>
     </style>
 
     <!-- LISTS END -->

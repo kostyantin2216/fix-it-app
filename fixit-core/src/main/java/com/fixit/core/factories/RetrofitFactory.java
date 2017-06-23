@@ -6,6 +6,7 @@ import com.fixit.core.config.AppConfig;
 import com.fixit.core.rest.adapters.SynchronizationResultDeserializer;
 import com.fixit.core.synchronization.SynchronizationResult;
 import com.fixit.core.utils.DateUtils;
+import com.fixit.core.utils.FILog;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;

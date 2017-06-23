@@ -179,6 +179,7 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
                     mView.showTradesmen();
                     break;
             }
+            mView.clearFocus();
         }
     }
 

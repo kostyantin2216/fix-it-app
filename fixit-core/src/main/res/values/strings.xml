@@ -40,5 +40,6 @@
     <string name="off">Off</string>
     <string name="show">Show</string>
     <string name="hide">Hide</string>
+    <string name="complete">Complete</string>
 
 </resources>

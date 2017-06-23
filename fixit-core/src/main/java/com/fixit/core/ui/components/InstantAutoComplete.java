@@ -9,7 +9,7 @@ import android.view.View;
 /**
  * Created by konstantin on 3/30/2017.
  */
-public class InstantAutoComplete extends AppCompatAutoCompleteTextView implements View.OnClickListener {
+public class InstantAutoComplete extends CancelableAutoCompleteTextView implements View.OnClickListener {
 
     public InstantAutoComplete(Context context) {
         super(context);

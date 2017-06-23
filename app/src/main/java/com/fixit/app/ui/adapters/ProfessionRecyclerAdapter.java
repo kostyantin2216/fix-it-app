@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.fixit.app.R;
 import com.fixit.app.ui.adapters.ProfessionRecyclerAdapter.ProfessionViewHolder;
+import com.fixit.core.ui.adapters.CommonRecyclerAdapter.CommonViewHolder;
 import com.fixit.core.data.Profession;
 import com.fixit.core.ui.adapters.CommonRecyclerAdapter;
 import com.fixit.core.ui.adapters.animations.RecyclerItemScaleAnimation;
@@ -21,7 +22,7 @@ import com.squareup.picasso.Picasso;
 public class ProfessionRecyclerAdapter extends CommonRecyclerAdapter<Profession, ProfessionViewHolder> {
 
     public ProfessionRecyclerAdapter(Profession[] items, CommonRecyclerViewInteractionListener<Profession> listener) {
-        super(new RecyclerItemScaleAnimation(600), items, listener);
+        super(new RecyclerItemScaleAnimation(600), items, listener, Profession.NAME_COMPARATOR);
     }
 
     @Override

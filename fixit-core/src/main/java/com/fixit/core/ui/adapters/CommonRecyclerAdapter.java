@@ -7,6 +7,12 @@ import android.view.View;
 import com.fixit.core.ui.adapters.animations.RecyclerItemAnimation;
 import com.fixit.core.ui.adapters.animations.RecyclerItemSlideInAnimation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * Created by konstantin on 3/9/2017.
  */
@@ -15,21 +21,40 @@ public abstract class CommonRecyclerAdapter<E, VH extends CommonRecyclerAdapter.
         extends AnimatedRecyclerAdapter<VH> {
 
     private CommonRecyclerViewInteractionListener<E> listener;
-    private E[] items;
+    private final List<E> items;
+    private List<E> adapterItems;
+    private final Comparator<E> comparator;
+
+    public CommonRecyclerAdapter(RecyclerItemAnimation itemAnimation, E[] items, CommonRecyclerViewInteractionListener<E> listener, Comparator<E> comparator) {
+        super(itemAnimation);
+        this.items = Arrays.asList(items);
+        this.adapterItems = new ArrayList<>();
+        for(E item : items) {
+            this.adapterItems.add(item);
+        }
+        this.listener = listener;
+        this.comparator = comparator;
+        if(this.comparator != null) {
+            Collections.sort(adapterItems, comparator);
+        }
+    }
 
     public CommonRecyclerAdapter(RecyclerItemAnimation itemAnimation, E[] items, CommonRecyclerViewInteractionListener<E> listener) {
-        super(itemAnimation);
-        this.items = items;
-        this.listener = listener;
+        this(itemAnimation, items, listener, null);
     }
 
     public CommonRecyclerAdapter(RecyclerItemAnimation itemAnimation, E[] items) {
-        this(itemAnimation, items, null);
+        this(itemAnimation, items, null, null);
+    }
+
+    public CommonRecyclerAdapter(Context context, E[] items, CommonRecyclerViewInteractionListener<E> listener, Comparator<E> comparator) {
+        this(new RecyclerItemSlideInAnimation(context, RecyclerItemSlideInAnimation.Direction.getRandom(), true),
+                items, listener, comparator);
     }
 
     public CommonRecyclerAdapter(Context context, E[] items, CommonRecyclerViewInteractionListener<E> listener) {
         this(new RecyclerItemSlideInAnimation(context, RecyclerItemSlideInAnimation.Direction.getRandom(), true),
-                items, listener);
+                items, listener, null);
     }
 
     public CommonRecyclerAdapter(Context context, E[] items) {
@@ -38,21 +63,37 @@ public abstract class CommonRecyclerAdapter<E, VH extends CommonRecyclerAdapter.
 
     @Override
     public int getItemCount() {
-        return items.length;
+        return adapterItems.size();
     }
 
-    public E[] getItems() {
+    public List<E> getItems() {
         return items;
     }
 
     public E getItem(int position) {
-        return items[position];
+        return adapterItems.get(position);
+    }
+
+    public int getItemPosition(E item) {
+        return items.indexOf(item);
+    }
+
+    public List<E> getAdapterItem() {
+        return adapterItems;
+    }
+
+    public E getAdapterItem(int position) {
+        return adapterItems.get(position);
+    }
+
+    public int getAdapterPosition(E item) {
+        return adapterItems.indexOf(item);
     }
 
     @Override
     public void onBindViewHolder(VH holder, int position) {
         super.onBindViewHolder(holder, position);
-        holder.populate(items[position]);
+        holder.populate(getAdapterItem(position));
     }
 
     protected void attachItemClickListener(View v, VH vh) {
@@ -65,11 +106,26 @@ public abstract class CommonRecyclerAdapter<E, VH extends CommonRecyclerAdapter.
                     VH vh = (VH) v.getTag();
                     int position = vh.getAdapterPosition();
                     if(position != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(items[position]);
+                        listener.onItemClick(getAdapterItem(position));
                     }
                 }
             });
         }
+    }
+
+    public <V> void filter(AdapterFilterer<E> filterer) {
+        adapterItems.clear();
+        for(E item : items) {
+            if(!filterer.filter(item)) {
+                adapterItems.add(item);
+            }
+        }
+
+        if(this.comparator != null) {
+            Collections.sort(adapterItems, comparator);
+        }
+
+        notifyDataSetChanged();
     }
 
     public static abstract class CommonViewHolder<E> extends RecyclerView.ViewHolder {
@@ -83,6 +139,13 @@ public abstract class CommonRecyclerAdapter<E, VH extends CommonRecyclerAdapter.
 
     public interface CommonRecyclerViewInteractionListener<E> {
         void onItemClick(E item);
+    }
+
+    public interface AdapterFilterer<E> {
+        /**
+         * @return true to hide item, false to make it visible
+         */
+        boolean filter(E data);
     }
 
 }

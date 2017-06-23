@@ -22,6 +22,10 @@
         <item name="android:padding">@dimen/empty_list_padding</item>
     </style>
 
+    <style name="standard_progress">
+
+    </style>
+
     <style name="dark_bg_title_text">
         <item name="android:textSize">@dimen/extra_large_text_size</item>
         <item name="android:textColor">@android:color/white</item>

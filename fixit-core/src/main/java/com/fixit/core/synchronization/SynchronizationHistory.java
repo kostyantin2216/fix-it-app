@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 
 import com.fixit.core.config.AppConfig;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,18 +22,19 @@ public class SynchronizationHistory {
 
     private final static String PREF_GROUP_SYNC_HISTORY = "sync_history_prefs";
     private final static String PREF_LAST_SYNC = "pref_last_sync";
-    private final static String PREF_TABLE_NAMES = "pref_table_names";
     private final static String PREF_PREFIX_SYNC_ACTIONS = "pref_sync_actions_for_";
     private final static String PREF_PREFIX_ACTION_DATE = "pref_";
 
     private final Map<String, Set<SynchronizationAction>> synchronizationHistory = new HashMap<>();
     private final SharedPreferences preferences;
     private final Date lastSyncDate;
+    private final String[] supportedTables;
     public final boolean isReadyForSync;
 
 
-    public SynchronizationHistory(Context context) {
+    public SynchronizationHistory(Context context, String[] supportedTables) {
         this.preferences = context.getSharedPreferences(PREF_GROUP_SYNC_HISTORY, Context.MODE_PRIVATE);
+        this.supportedTables = supportedTables;
 
         long syncMinIntervalMs = AppConfig.getInt(context, AppConfig.KEY_SYNCHRONIZATION_MIN_INTERVAL_MS, 3600000);
         long lastSyncTime = preferences.getLong(PREF_LAST_SYNC, 0);
@@ -51,21 +53,19 @@ public class SynchronizationHistory {
     }
 
     private void load() {
-        Set<String> tables = preferences.getStringSet(PREF_TABLE_NAMES, null);
+        for (String table : supportedTables) {
+            Set<String> actions = preferences.getStringSet(PREF_PREFIX_SYNC_ACTIONS + table, null);
 
-        if (tables != null) {
-            for (String table : tables) {
-                Set<String> actions = preferences.getStringSet(PREF_PREFIX_SYNC_ACTIONS + table, null);
+            if (actions != null && actions.size() > 0) {
+                Set<SynchronizationAction> actionHistory = new HashSet<>();
+                for (String action : actions) {
+                    Date actionDate = new Date(preferences.getLong(PREF_PREFIX_ACTION_DATE + action + "_for_" + table, 0L));
 
-                if (actions != null) {
-                    Set<SynchronizationAction> actionHistory = new HashSet<>();
-                    for (String action : actions) {
-                        Date actionDate = new Date(preferences.getLong(PREF_PREFIX_ACTION_DATE + action + "_for_" + table, 0L));
-
-                        actionHistory.add(new SynchronizationAction(action, actionDate));
-                    }
-                    synchronizationHistory.put(table, actionHistory);
+                    actionHistory.add(new SynchronizationAction(action, actionDate));
                 }
+                synchronizationHistory.put(table, actionHistory);
+            } else {
+                synchronizationHistory.put(table, Collections.<SynchronizationAction>emptySet());
             }
         }
     }
@@ -74,11 +74,9 @@ public class SynchronizationHistory {
     public void update(List<SynchronizationResult> results) {
         SharedPreferences.Editor editor = preferences.edit();
 
-        Set<String> tables = new HashSet<>(results.size());
         for(SynchronizationResult result : results) {
             if(result.isSupported()) {
                 String table = result.getName();
-                tables.add(table);
 
                 SynchronizationResult.Result[] resultData = result.getResults();
                 Set<String> actions = preferences.getStringSet(PREF_PREFIX_SYNC_ACTIONS + table, null);
@@ -97,9 +95,8 @@ public class SynchronizationHistory {
                 editor.putStringSet(PREF_PREFIX_SYNC_ACTIONS + table, actions);
             }
         }
-        editor.putStringSet(PREF_TABLE_NAMES, tables);
-
         editor.putLong(PREF_LAST_SYNC, new Date().getTime());
+
         // should already be in background thread so just commit.
         editor.commit();
     }

@@ -151,8 +151,13 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
 
     @Override
     public void notifyUser(String msg) {
+        notifyUser(msg, getWindow().getDecorView());
+    }
+
+    @Override
+    public void notifyUser(String msg, View v) {
         if(notifyPossible()) {
-            Snackbar snackbar = Snackbar.make(getWindow().getDecorView(), msg, Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG);
             View snackBarView = snackbar.getView();
             snackBarView.setBackgroundColor(AppConfig.getColor(this, AppConfig.KEY_COLOR_ACCENT, Color.BLACK));
             TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);

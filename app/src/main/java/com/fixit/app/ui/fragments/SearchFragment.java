@@ -3,6 +3,7 @@ package com.fixit.app.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.AutoCompleteTextView;
 
 import com.fixit.app.R;
 import com.fixit.app.ifs.external.google.GoogleClientManager;
+import com.fixit.app.ui.FontCache;
 import com.fixit.app.ui.adapters.PlaceAutocompleteAdapter;
 import com.fixit.core.controllers.SearchController;
 import com.fixit.core.data.Profession;
@@ -32,14 +34,17 @@ public class SearchFragment extends BaseFragment<SearchController>
 
     private SearchFragmentInteractionListener mListener;
 
+    private CoordinatorLayout root;
     private AutoCompleteTextView actvProfessions;
     private AutoCompleteTextView actvAddress;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_search, container, false);
 
+        root = (CoordinatorLayout) v.findViewById(R.id.root);
         actvProfessions = (AutoCompleteTextView) v.findViewById(R.id.actv_professions);
         actvAddress = (AutoCompleteTextView) v.findViewById(R.id.actv_address);
 
@@ -48,6 +53,8 @@ public class SearchFragment extends BaseFragment<SearchController>
         v.findViewById(R.id.fab_search).setOnClickListener(this);
 
         setToolbar((Toolbar) v.findViewById(R.id.toolbar));
+
+       // FontCache.setTypefaceRecursive(v, FontCache.CachedTypeface.STANDARD);
 
         return v;
     }
@@ -117,11 +124,11 @@ public class SearchFragment extends BaseFragment<SearchController>
                 case R.id.fab_search:
                     String profession = actvProfessions.getText().toString();
                     if(TextUtils.isEmpty(profession)) {
-                        notifyUser(getString(R.string.empty_profession));
+                        notifyUser(getString(R.string.empty_profession), root);
                     } else {
                         String address = actvAddress.getText().toString();
                         if(TextUtils.isEmpty(address)) {
-                            notifyUser(getString(R.string.empty_address));
+                            notifyUser(getString(R.string.empty_address), root);
                         } else {
                             mListener.performSearch(profession, address);
                         }
