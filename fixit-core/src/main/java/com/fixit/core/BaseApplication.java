@@ -35,4 +35,9 @@ public class BaseApplication extends Application {
         return mDaoFactory;
     }
 
+    public void onDeveloperSettingsChanged() {
+        mServerApiFactory = null;
+        mDaoFactory = null;
+    }
+
 }

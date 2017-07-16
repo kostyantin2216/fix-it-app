@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
@@ -60,7 +61,7 @@ public class ProfessionsListFragment extends SearchableStaticRecyclerListFragmen
     }
 
     @Override
-    public void onItemClick(Profession item) {
+    public void onItemClick(RecyclerView.ViewHolder vh, Profession item) {
         if(mListener != null) {
             mListener.onProfessionSelect(item);
         }

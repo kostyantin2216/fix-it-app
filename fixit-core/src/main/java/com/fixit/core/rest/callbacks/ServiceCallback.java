@@ -25,10 +25,12 @@ public abstract class ServiceCallback<RD> extends RetryingCallback<APIResponse<R
 
     @Override
     public void onResponse(Call<APIResponse<RD>> call, Response<APIResponse<RD>> response) {
-        APIResponse<RD> apiResponse = response.body();
-        if(response.code() == Constants.HTTP_INTERNAL_SERVER_ERROR) {
+        if(response != null && response.code() == Constants.HTTP_INTERNAL_SERVER_ERROR) {
+            onRetryFailure(call, new RuntimeException("HTTP Internal Server Error"));
+        } else if(response == null || !response.isSuccessful()) {
             onServerError();
         } else {
+            APIResponse<RD> apiResponse = response.body();
             APIResponseHeader header = apiResponse.getHeader();
             if(header.hasErrors()) {
                 onAppServiceError(header.getErrors());

@@ -39,21 +39,26 @@ public class ProfessionRecyclerAdapter extends CommonRecyclerAdapter<Profession,
 
         private final ImageView ivBackground;
         private final TextView tvName;
+        private final TextView tvDesc;
 
         ProfessionViewHolder(View itemView) {
             super(itemView);
 
             this.ivBackground = (ImageView) itemView.findViewById(R.id.iv_profession_bg);
             this.tvName = (TextView) itemView.findViewById(R.id.tv_profession_name);
+            this.tvDesc = (TextView) itemView.findViewById(R.id.tv_profession_desc);
         }
 
         @Override
         public void populate(Profession entity) {
             tvName.setText(entity.getName());
+            tvDesc.setText(entity.getDescription());
 
             String imgUrl = entity.getImageUrl();
             if(!TextUtils.isEmpty(imgUrl)) {
-                Picasso.with(itemView.getContext()).load(imgUrl).centerCrop().into(ivBackground);
+                Picasso.with(itemView.getContext()).load(imgUrl).fit().into(ivBackground);
+            } else {
+                Picasso.with(itemView.getContext()).load(R.drawable.bg_plumber).fit().into(ivBackground);
             }
         }
     }

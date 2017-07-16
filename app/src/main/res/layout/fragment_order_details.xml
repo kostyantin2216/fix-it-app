@@ -65,6 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:src="@drawable/ic_check_white_24dp"
+        app:backgroundTint="@color/colorButton"
         app:rippleColor="@android:color/white"
         app:layout_anchor="@id/scroll_content"
         app:layout_anchorGravity="bottom|end"

@@ -3,9 +3,11 @@ package com.fixit.core.factories;
 import android.content.Context;
 
 import com.fixit.core.data.DataModelObject;
+import com.fixit.core.data.Order;
 import com.fixit.core.data.Profession;
 import com.fixit.core.database.CommonDAO;
 import com.fixit.core.database.DatabaseManager;
+import com.fixit.core.database.OrderDAO;
 import com.fixit.core.database.ProfessionDAO;
 
 import java.lang.reflect.Constructor;
@@ -21,14 +23,13 @@ public class DAOFactory {
 
     private final Map<String, String> mDmoToDaoMappings = new HashMap<>();
 
-    private final static String PREFIX_DAO_PACKAGE_NAME = "com.fixit.core.database.";
-
     private final DatabaseManager mDbManager;
 
     public DAOFactory(Context context) {
         mDbManager = new DatabaseManager(context);
 
         addDmoToDaoMapping(Profession.class, ProfessionDAO.class);
+        addDmoToDaoMapping(Order.class, OrderDAO.class);
     }
 
     private <DMO extends DataModelObject, DAO extends CommonDAO<DMO>> void addDmoToDaoMapping(Class<DMO> dmoClass, Class<DAO> daoClass) {
@@ -61,6 +62,10 @@ public class DAOFactory {
 
     public ProfessionDAO createProfessionDao() {
         return new ProfessionDAO(mDbManager);
+    }
+
+    public OrderDAO createOrderDao() {
+        return new OrderDAO(mDbManager);
     }
 
 }

@@ -41,6 +41,8 @@
         <item name="android:gravity">center|start</item>
         <item name="android:textSize">@dimen/large_text_size</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:drawableStart">@drawable/ic_yellow_logo_white_border</item>
+        <item name="android:drawablePadding">12dp</item>
     </style>
 
     <style name="rounded_button" parent="button">

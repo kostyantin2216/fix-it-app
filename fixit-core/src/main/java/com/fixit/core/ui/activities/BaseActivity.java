@@ -20,6 +20,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -47,7 +49,8 @@ import java.util.Set;
 
 public abstract class BaseActivity<C extends ActivityController> extends AppCompatActivity
         implements BaseFragment.BaseFragmentInteractionsListener,
-                   GeneralServiceErrorCallback {
+                   GeneralServiceErrorCallback,
+                   ActivityController.UiCallback {
 
     private C mController;
     private MaterialDialog mLoaderDialog;
@@ -82,12 +85,30 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if(!AppConfig.isProduction(this)) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.development_settings, menu);
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
+        int itemId = item.getItemId();
+        if(itemId == android.R.id.home) {
             onBackPressed();
+            return true;
+        } else if(itemId == R.id.open_developer_settings) {
+            openDeveloperSettings();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openDeveloperSettings() {
+        // Override if needed.
     }
 
     public abstract C createController();
@@ -159,7 +180,7 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         if(notifyPossible()) {
             Snackbar snackbar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG);
             View snackBarView = snackbar.getView();
-            snackBarView.setBackgroundColor(AppConfig.getColor(this, AppConfig.KEY_COLOR_ACCENT, Color.BLACK));
+            snackBarView.setBackgroundColor(AppConfig.getColor(this, AppConfig.KEY_COLOR_PRIMARY_DARK, Color.BLACK));
             TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(Color.WHITE);
             textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
@@ -176,11 +197,13 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         return !TextUtils.isEmpty(PrefUtils.getUserId(this));
     }
 
-    public void requestLogin(LoginRequester requester, Bundle data) {
+    public void requestLogin(LoginRequester requester, @Nullable Bundle data) {
         mLoginRequester = requester;
 
         Intent intent = new Intent(this, getLoginActivity());
-        intent.putExtras(data);
+        if(data != null) {
+            intent.putExtras(data);
+        }
         startActivityForResult(intent, Constants.RC_LOGIN);
     }
 
@@ -228,7 +251,7 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(android.R.id.content, ErrorFragment.newInstance(params))
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Override

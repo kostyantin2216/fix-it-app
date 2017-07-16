@@ -106,6 +106,12 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         }
     }
 
+    public void restartApp(boolean skipSplash) {
+        if(mListener != null) {
+            mListener.restartApp(skipSplash);
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -135,6 +141,7 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         void notifyUser(String msg);
         void notifyUser(String msg, View v);
         void hideKeyboard(IBinder windowToken);
+        void restartApp(boolean skipSplash);
     }
 
 }

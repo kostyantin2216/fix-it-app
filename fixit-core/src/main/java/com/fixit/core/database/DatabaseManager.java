@@ -27,11 +27,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(ProfessionDAO.CMD_CREATE_TABLE);
+        db.execSQL(OrderDAO.CMD_CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DROP_TABLE + ProfessionDAO.TABLE_NAME);
+        db.execSQL(DROP_TABLE + OrderDAO.TABLE_NAME);
 
         onCreate(db);
     }

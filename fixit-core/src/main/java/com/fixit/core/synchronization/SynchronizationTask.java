@@ -7,6 +7,7 @@ import com.fixit.core.data.DataModelObject;
 import com.fixit.core.data.Profession;
 import com.fixit.core.database.CommonDAO;
 import com.fixit.core.factories.DAOFactory;
+import com.fixit.core.rest.ServerCallback;
 import com.fixit.core.rest.apis.SynchronizationServiceAPI;
 import com.fixit.core.rest.requests.data.SynchronizationRequestData;
 import com.fixit.core.rest.responses.APIResponse;
@@ -19,10 +20,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import retrofit2.Response;
+
 /**
  * Created by Kostyantin on 3/27/2017.
+ *
+ * if this task is stopped it will only prevent calls to SynchronizationCallback, it
+ * will still try to finish synchronization if it already has the response from the server.
  */
-
 public class SynchronizationTask extends Thread {
 
     private final static String[] SYNCHRONIZATION_TARGETS = new String[] {
@@ -34,11 +39,17 @@ public class SynchronizationTask extends Thread {
     private final SynchronizationServiceAPI mServiceApi;
     private final DAOFactory mDaoFactory;
 
+    private volatile boolean mStopped;
+
     public SynchronizationTask(Context context, SynchronizationServiceAPI api, DAOFactory daoFactory, SynchronizationCallback callback) {
         this.mServiceApi = api;
         this.mCallback = callback;
         this.mDaoFactory = daoFactory;
         this.mHistory = new SynchronizationHistory(context, SYNCHRONIZATION_TARGETS);
+    }
+
+    public void stopTask() {
+        mStopped = true;
     }
 
     public boolean isReadyForSynchronization() {
@@ -49,28 +60,43 @@ public class SynchronizationTask extends Thread {
     public void run() {
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
-        Map<String, Set<SynchronizationAction>> history = mHistory.getHistory();
-        try {
-            // create request data and get response body.
-            SynchronizationRequestData requestData = new SynchronizationRequestData(mHistory.getLastUpdate(), history);
-            APIResponse<SynchronizationResponseData> response = mServiceApi.synchronize(requestData).execute().body();
+        Map<String, Set<SynchronizationAction>> history = mHistory.getHistory();     // create request data and get response body.
+        SynchronizationRequestData requestData = new SynchronizationRequestData(mHistory.getLastUpdate(), history);
 
-            // check for errors from server.
-            APIResponseHeader header = response.getHeader();
-            if(header.hasErrors()) {
-                mCallback.onSynchronizationError(header.getErrors().get(0).getDescription(), null);
-            } else {
-                // no errors, great! let's start synchronizing.
-                SynchronizationResponseData responseData = response.getData();
-                synchronize(responseData);
+        if(!mStopped) {
+            try {
+                Response<APIResponse<SynchronizationResponseData>> response = mServiceApi.synchronize(requestData).execute();
 
-                // update synchronization history for future synchronizations.
-                mHistory.update(responseData.getSynchronizationResults());
+                if (response == null || !response.isSuccessful()) {
+                    if (!mStopped) {
+                        mCallback.serverUnavailable();
+                    }
+                } else {
+                    APIResponse<SynchronizationResponseData> apiResponse = response.body();
+                    // check for errors from server.
+                    APIResponseHeader header = apiResponse.getHeader();
+                    if (header.hasErrors()) {
+                        if (!mStopped) {
+                            mCallback.onSynchronizationError(header.getErrors().get(0).getDescription(), null);
+                        }
+                    } else {
+                        // no errors, great! let's start synchronizing.
+                        SynchronizationResponseData responseData = apiResponse.getData();
+                        synchronize(responseData);
 
-                mCallback.onSynchronizationComplete();
+                        // update synchronization history for future synchronizations.
+                        mHistory.update(responseData.getSynchronizationResults());
+
+                        if (!mStopped) {
+                            mCallback.onSynchronizationComplete();
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                if (!mStopped) {
+                    mCallback.onSynchronizationError("Could not connect to server", e);
+                }
             }
-        } catch (IOException e) {
-            mCallback.onSynchronizationError("Could not connect to server", e);
         }
     }
 
@@ -116,7 +142,7 @@ public class SynchronizationTask extends Thread {
         }
     }
 
-    public interface SynchronizationCallback {
+    public interface SynchronizationCallback extends ServerCallback {
         void onSynchronizationComplete();
         void onSynchronizationError(String msg, Throwable t);
     }

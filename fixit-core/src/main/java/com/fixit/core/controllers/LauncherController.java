@@ -2,6 +2,7 @@ package com.fixit.core.controllers;
 
 import com.fixit.core.BaseApplication;
 import com.fixit.core.general.AppInitializationTask;
+import com.fixit.core.ui.fragments.ErrorFragment;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -17,14 +18,17 @@ public class LauncherController extends BaseController implements AppInitializat
     private boolean isInitializing = false;
     private boolean isInitialized = false;
 
-    public LauncherController(BaseApplication baseApplication) {
-        super(baseApplication);
+    private AppInitializationTask initializationTask;
+
+    public LauncherController(BaseApplication baseApplication, UiCallback uiCallback) {
+        super(baseApplication, uiCallback);
     }
 
     public void initializeApp() {
         if(!isInitializing && !isInitialized) {
             isInitializing = true;
-            new AppInitializationTask(getApplicationContext(), this).start();
+            initializationTask = new AppInitializationTask(getApplicationContext(), this);
+            initializationTask.start();
         } else if(isInitialized){
             onInitializationComplete(Collections.<String>emptySet());
         }
@@ -45,6 +49,12 @@ public class LauncherController extends BaseController implements AppInitializat
     public void onInitializationError(String error, boolean fatal) {
         isInitializing = false;
         EventBus.getDefault().post(AppInitializationTask.createErrorEvent(fatal, error));
+    }
+
+    public void stopInitializationTask() {
+        if(initializationTask != null) {
+            initializationTask.stopTask();
+        }
     }
 
     @Override

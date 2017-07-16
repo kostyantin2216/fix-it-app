@@ -2,9 +2,11 @@ package com.fixit.app.ui.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.WindowManager;
 
 import com.fixit.app.R;
+import com.fixit.app.ifs.notifications.OrderNotificationManager;
 import com.fixit.app.ui.fragments.JobReasonsSelectionFragment;
 import com.fixit.app.ui.fragments.OrderCompletionFragment;
 import com.fixit.app.ui.fragments.OrderDetailsFragment;
@@ -12,9 +14,11 @@ import com.fixit.core.BaseApplication;
 import com.fixit.core.controllers.OrderController;
 import com.fixit.core.data.JobLocation;
 import com.fixit.core.data.JobReason;
+import com.fixit.core.data.Order;
 import com.fixit.core.data.Profession;
 import com.fixit.core.data.Tradesman;
 import com.fixit.core.data.TradesmanWrapper;
+import com.fixit.core.ui.activities.BaseActivity;
 import com.fixit.core.utils.Constants;
 
 import java.util.ArrayList;
@@ -26,7 +30,8 @@ import java.util.ArrayList;
 public class OrderActivity extends BaseAppActivity<OrderController>
     implements OrderDetailsFragment.OrderDetailsInteractionListener,
                OrderController.TradesmenOrderCallback,
-               JobReasonsSelectionFragment.JobReasonsInteractionListener {
+               JobReasonsSelectionFragment.JobReasonsInteractionListener,
+               BaseActivity.LoginRequester {
 
     private final static String FRAG_TAG_ORDER_DETAILS = "orderDetailsFrag";
     private final static String FRAG_TAG_ORDER_COMPLETE = "orderCompleteFrag";
@@ -57,35 +62,17 @@ public class OrderActivity extends BaseAppActivity<OrderController>
 
     @Override
     public OrderController createController() {
-        return new OrderController((BaseApplication) getApplication());
+        return new OrderController((BaseApplication) getApplication(), this);
     }
 
     @Override
     public void showOrderReasons() {
+        getAnalyticsManager().trackShowReasons();
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_holder, JobReasonsSelectionFragment.newInstance(mProfession.getId()))
                 .addToBackStack(null)
                 .commit();
-    }
-
-    @Override
-    public void completeOrder(String reason) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_holder, OrderCompletionFragment.newInstance(), FRAG_TAG_ORDER_COMPLETE)
-                .addToBackStack(null)
-                .commit();
-
-        getController().orderTradesmen(mTradesmen, mJobLocation, reason, this);
-    }
-
-    @Override
-    public void onOrderComplete(boolean success) {
-        OrderCompletionFragment fragment = (OrderCompletionFragment) getSupportFragmentManager().findFragmentByTag(FRAG_TAG_ORDER_COMPLETE);
-        if(fragment != null) {
-            fragment.onOrderComplete();
-        }
     }
 
     @Override
@@ -99,7 +86,51 @@ public class OrderActivity extends BaseAppActivity<OrderController>
     }
 
     @Override
+    public void completeOrder(String reason) {
+        if(isUserRegistered()) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_holder, OrderCompletionFragment.newInstance(), FRAG_TAG_ORDER_COMPLETE)
+                    .addToBackStack(null)
+                    .commit();
+
+            getController().orderTradesmen(mTradesmen, mJobLocation, reason, this);
+            setToolbarTitle(getString(R.string.order_complete));
+            getAnalyticsManager().trackJobReasonsSelected(!TextUtils.isEmpty(reason) && mJobReasons.length == 0, mJobReasons.length);
+        } else{
+            requestLogin(this, null);
+        }
+    }
+
+    @Override
+    public void onOrderComplete(boolean success) {
+        OrderCompletionFragment fragment = (OrderCompletionFragment) getSupportFragmentManager().findFragmentByTag(FRAG_TAG_ORDER_COMPLETE);
+        if(fragment != null) {
+            fragment.onOrderComplete();
+        }
+        Order order = getController().saveOrder(mJobLocation, mProfession, mTradesmen, mJobReasons);
+        OrderNotificationManager.createNewOrderNotification(order);
+    }
+
+    @Override
+    public void loginComplete(boolean success, @Nullable Bundle data) {
+        if(success) {
+            OrderDetailsFragment orderDetailsFragment = getFragment(FRAG_TAG_ORDER_DETAILS, OrderDetailsFragment.class);
+            String reason;
+            if(orderDetailsFragment != null) {
+                reason = orderDetailsFragment.getReason();
+            } else {
+                reason = JobReason.toDescription(mJobReasons);
+            }
+            completeOrder(reason);
+        } else {
+            showPrompt(getString(R.string.cannot_continue_without_login));
+        }
+    }
+
+    @Override
     public JobReason[] getSelectedJobReasons() {
         return mJobReasons;
     }
+
 }

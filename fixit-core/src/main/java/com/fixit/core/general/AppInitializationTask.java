@@ -9,6 +9,7 @@ import com.fixit.core.config.AppConfig;
 import com.fixit.core.data.AppInstallation;
 import com.fixit.core.factories.APIFactory;
 import com.fixit.core.factories.DAOFactory;
+import com.fixit.core.rest.ServerCallback;
 import com.fixit.core.rest.apis.AppInstallationDataAPI;
 import com.fixit.core.rest.apis.SynchronizationServiceAPI;
 import com.fixit.core.synchronization.SynchronizationTask;
@@ -36,8 +37,11 @@ public class AppInitializationTask extends Thread {
     private final Handler mHandler;
     private final Set<String> mErrors;
 
+    private SynchronizationTask mSynchronizationTask;
     private int mAsyncCount;
-    private boolean finishedSynchronousWork = false;
+    private boolean mFinishedSynchronousWork = false;
+
+    private volatile boolean mStopped;
 
     public AppInitializationTask(Context context, AppInitializationCallback callback) {
         mContextReference = new WeakReference<>(context);
@@ -45,6 +49,13 @@ public class AppInitializationTask extends Thread {
         mErrors = new HashSet<>();
         mAsyncCount = 0;
         mHandler = new Handler(context.getMainLooper());
+    }
+
+    public void stopTask() {
+        mStopped = true;
+        if(mSynchronizationTask != null) {
+            mSynchronizationTask.stopTask();
+        }
     }
 
     private Context getContext() {
@@ -67,16 +78,20 @@ public class AppInitializationTask extends Thread {
             APIFactory serverAPIFactory = mCallback.getServerApiFactory();
             DAOFactory daoFactory = mCallback.getDaoFactory();
 
-            if(TextUtils.isEmpty(PrefUtils.getInstallationId(context))) {
-                sendInstallation(context, serverAPIFactory.createAppInstallationApi());
-            }
+            if(!mStopped) {
+                if (TextUtils.isEmpty(PrefUtils.getInstallationId(context))) {
+                    sendInstallation(context, serverAPIFactory.createAppInstallationApi());
+                }
 
-            synchronizeDatabase(context, serverAPIFactory.createSynchronizationApi(), daoFactory);
+                if(!mStopped) {
+                    synchronizeDatabase(context, serverAPIFactory.createSynchronizationApi(), daoFactory);
+                }
+            }
         } else {
             FILog.e(LOG_TAG, "cannot initialize app without context");
         }
 
-        finishedSynchronousWork = true;
+        mFinishedSynchronousWork = true;
         if (isComplete()) {
             finish();
         }
@@ -92,10 +107,12 @@ public class AppInitializationTask extends Thread {
 
         try {
             Response<AppInstallation> response = api.create(appInstallation).execute();
-            if(response != null) {
+            if(!mStopped && response != null) {
                 String appInstallationId = response.body().getId();
                 PrefUtils.setInstallationId(context, appInstallationId);
-                mCallback.updateInstallationId(appInstallationId);
+                if(!mStopped) {
+                    mCallback.updateInstallationId(appInstallationId);
+                }
             }
         } catch (IOException e) {
             // Do nothing, try again next time app opens.
@@ -104,7 +121,14 @@ public class AppInitializationTask extends Thread {
     }
 
     private void synchronizeDatabase(Context context, SynchronizationServiceAPI api, DAOFactory daoFactory) {
-        SynchronizationTask task = new SynchronizationTask(context, api, daoFactory, new SynchronizationTask.SynchronizationCallback() {
+        mSynchronizationTask = new SynchronizationTask(context, api, daoFactory, new SynchronizationTask.SynchronizationCallback() {
+            @Override
+            public void serverUnavailable() {
+                if(!mStopped) {
+                    mCallback.serverUnavailable();
+                }
+            }
+
             @Override
             public void onSynchronizationComplete() {
                 finishAsync();
@@ -112,14 +136,16 @@ public class AppInitializationTask extends Thread {
 
             @Override
             public void onSynchronizationError(String msg, Throwable t) {
-                mCallback.onInitializationError(msg, true);
+                if(!mStopped) {
+                    mCallback.onInitializationError(msg, true);
+                }
                 finishAsync();
             }
         });
 
-        if(task.isReadyForSynchronization()) {
+        if(mSynchronizationTask.isReadyForSynchronization()) {
             startAsync();
-            task.run(); // We are already in a background thread so just run the sync task thread instead of starting it.
+            mSynchronizationTask.run(); // We are already in a background thread so just run the sync task thread instead of starting it.
         }
     }
 
@@ -135,21 +161,23 @@ public class AppInitializationTask extends Thread {
     }
 
     private boolean isComplete() {
-        return mAsyncCount == 0 && finishedSynchronousWork;
+        return mAsyncCount == 0 && mFinishedSynchronousWork;
     }
 
     private void finish() {
         FILog.i(LOG_TAG, "finished app synchronization");
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mCallback.onInitializationComplete(mErrors);
-                mErrors.clear();
-            }
-        });
+        if(!mStopped) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mCallback.onInitializationComplete(mErrors);
+                    mErrors.clear();
+                }
+            });
+        }
     }
 
-    public interface AppInitializationCallback {
+    public interface AppInitializationCallback extends ServerCallback {
         Context getApplicationContext();
         APIFactory getServerApiFactory();
         DAOFactory getDaoFactory();

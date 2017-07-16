@@ -15,7 +15,7 @@
     <string name="invalid_profession">Invalid profession, must select from predefined professions.</string>
     <string name="invalid_address">Invalid address, must pick a street address.</string>
 
-    <string name="no_tradesmen_selected">Haven\'t selected any tradesmen.</string>
+    <string name="no_tradesmen_selected">Please select a tradesman.</string>
     <string name="selected_x_out_of_tradesmen">Selected %1$d out of %2$d tradesmen.</string>
     <string name="no_tradesmen_results">Could not find any tradesmen for your location.</string>
     <string name="no_tradesman_reviews">There are currently no reviews for this tradesman.</string>

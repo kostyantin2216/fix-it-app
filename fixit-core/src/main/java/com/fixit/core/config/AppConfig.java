@@ -1,6 +1,7 @@
 package com.fixit.core.config;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -12,6 +13,8 @@ import com.fixit.core.utils.FILog;
 import com.fixit.core.utils.PrefUtils;
 import com.google.gson.Gson;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -29,6 +32,7 @@ public class AppConfig {
     public final static String KEY_SERVER_API_BASE_URL = "server_api_base_url";
     public final static String KEY_DB_VERSION = "db_version";
     public final static String KEY_COLOR_ACCENT = "colorAccent";
+    public final static String KEY_COLOR_PRIMARY_DARK = "colorPrimaryDark";
     public final static String KEY_SERVER_CONNECTION_RETRY_LIMIT = "server_connection_retry_limit";
     public final static String KEY_SERVER_CONNECTION_RETRY_INTERVAL_MS = "server_connection_retry_interval_ms";
     public final static String KEY_SEARCH_RESULT_POLLING_RETRY_LIMIT = "search_result_polling_retry_limit";
@@ -72,12 +76,16 @@ public class AppConfig {
     }
 
     public static Integer getInt(Context context, String code, Integer defaultVal) {
+        Integer override = Overrides.getInteger(context, code);
+        if(override != null) {
+            return override;
+        }
         Object config = configurations.get(code);
         if(config == null) {
             Resources resources = context.getResources();
             int resId = resources.getIdentifier(code, "integer", context.getPackageName());
             if(resId > 0) {
-                Integer val = resources.getInteger(resId);
+                int val = resources.getInteger(resId);
                 configurations.putIfAbsent(code, val);
                 return val;
             }
@@ -88,12 +96,16 @@ public class AppConfig {
     }
 
     public static Boolean getBoolean(Context context, String code, Boolean defaultVal) {
+        Boolean override = Overrides.getBoolean(context, code);
+        if(override != null) {
+            return override;
+        }
         Object config = configurations.get(code);
         if(config == null) {
             Resources resources = context.getResources();
             int resId = resources.getIdentifier(code, "bool", context.getPackageName());
             if(resId > 0) {
-                Boolean val = resources.getBoolean(resId);
+                boolean val = resources.getBoolean(resId);
                 configurations.putIfAbsent(code, val);
                 return val;
             }
@@ -104,6 +116,10 @@ public class AppConfig {
     }
 
     public static String getString(Context context, String code, String defaultVal) {
+        String override = Overrides.getString(context, code);
+        if(override != null) {
+            return override;
+        }
         Object config = configurations.get(code);
         if(config == null) {
             Resources resources = context.getResources();
@@ -182,4 +198,86 @@ public class AppConfig {
         return getBoolean(context, KEY_IS_PRODUCTION, true);
     }
 
+    public static class Overrides {
+        private final static String PREF_GROUP = "config_overrides";
+        private final static String PREF_OVERRIDDEN_CONFIG_KEYS = "overridden_config_keys";
+        private static Set<String> overrides = null;
+
+        private Overrides() { }
+
+        private static void initIfNeeded(Context context) {
+            if(overrides == null) {
+                SharedPreferences prefs = context.getSharedPreferences(PREF_GROUP, Context.MODE_PRIVATE);
+                overrides = prefs.getStringSet(PREF_OVERRIDDEN_CONFIG_KEYS, null);
+                if(overrides == null){
+                    overrides = new HashSet<>();
+                }
+            }
+        }
+
+        public static Integer getInteger(Context context, String key) {
+            initIfNeeded(context);
+            if(overrides.contains(key)) {
+                SharedPreferences prefs = context.getSharedPreferences(PREF_GROUP, Context.MODE_PRIVATE);
+                if(prefs.contains(key)) {
+                    return prefs.getInt(key, 0);
+                }
+            }
+            return null;
+        }
+
+        public static Boolean getBoolean(Context context, String key) {
+            initIfNeeded(context);
+            if(overrides.contains(key)) {
+                SharedPreferences prefs = context.getSharedPreferences(PREF_GROUP, Context.MODE_PRIVATE);
+                if(prefs.contains(key)) {
+                    return prefs.getBoolean(key, false);
+                }
+            }
+            return null;
+        }
+
+        public static String getString(Context context, String key) {
+            initIfNeeded(context);
+            if(overrides.contains(key)) {
+                SharedPreferences prefs = context.getSharedPreferences(PREF_GROUP, Context.MODE_PRIVATE);
+                return prefs.getString(key, null);
+            }
+            return null;
+        }
+
+        public static void override(Context context, String key, String value) {
+            SharedPreferences prefs = context.getSharedPreferences(PREF_GROUP, Context.MODE_PRIVATE);
+            prefs.edit().putString(key, value).apply();
+            updateOverrides(context, key);
+        }
+
+        public static void override(Context context, String key, boolean value) {
+            SharedPreferences prefs = context.getSharedPreferences(PREF_GROUP, Context.MODE_PRIVATE);
+            prefs.edit().putBoolean(key, value).apply();
+            updateOverrides(context, key);
+        }
+
+        public static void override(Context context, String key, int value) {
+            SharedPreferences prefs = context.getSharedPreferences(PREF_GROUP, Context.MODE_PRIVATE);
+            prefs.edit().putInt(key, value).apply();
+            updateOverrides(context, key);
+        }
+
+        static void updateOverrides(Context context, String key) {
+            initIfNeeded(context);
+            if(!overrides.contains(key)) {
+                overrides.add(key);
+                SharedPreferences prefs = context.getSharedPreferences(PREF_GROUP, Context.MODE_PRIVATE);
+                prefs.edit().putStringSet(PREF_OVERRIDDEN_CONFIG_KEYS, overrides).apply();
+            }
+        }
+
+        public static void clearOverrides(Context context) {
+            initIfNeeded(context);
+            context.getSharedPreferences(PREF_GROUP, Context.MODE_PRIVATE).edit().clear().apply();
+            overrides.clear();
+        }
+
+    }
 }

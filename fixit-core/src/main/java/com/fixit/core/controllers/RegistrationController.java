@@ -30,8 +30,8 @@ public class RegistrationController extends UserController {
 
     private String previousMsgSid;
 
-    public RegistrationController(BaseApplication baseApplication) {
-        super(baseApplication);
+    public RegistrationController(BaseApplication baseApplication, UiCallback uiCallback) {
+        super(baseApplication, uiCallback);
 
         mTwilioApi = getServerApiFactory().createTwilioApi(baseApplication);
         mRandom = new SecureRandom();

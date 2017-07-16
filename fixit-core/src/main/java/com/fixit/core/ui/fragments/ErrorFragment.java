@@ -94,6 +94,8 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
             showMobileNetworkSettings();
         } else if(resId == R.id.btn_exit_app) {
             exitApp();
+        } else if(resId == R.id.btn_developer_settings) {
+            openDeveloperSettings();
         }
     }
 
@@ -146,6 +148,11 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
         startActivity(new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS));
     }
 
+    private void openDeveloperSettings() {
+        // TODO: need to create developer settings intent.
+        //startActivity(new Intent(this, DeveloperSe));
+    }
+
     // VIEW
 
     private static class ViewHolder {
@@ -157,6 +164,7 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
         final Button btnClose;
         final Button btnContinue;
         final Button btnExitApp;
+        final Button btnDeveloperSettings;
 
         ViewHolder(View v, View.OnClickListener onClickListener) {
             tvDisplayMessage = (TextView) v.findViewById(R.id.tv_display_msg);
@@ -166,6 +174,7 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
             btnClose = (Button) v.findViewById(R.id.btn_close);
             btnContinue = (Button) v.findViewById(R.id.btn_continue);
             btnExitApp = (Button) v.findViewById(R.id.btn_exit_app);
+            btnDeveloperSettings = (Button) v.findViewById(R.id.btn_developer_settings);
 
             btnReport.setOnClickListener(onClickListener);
             btnWifiSettings.setOnClickListener(onClickListener);
@@ -192,6 +201,9 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
                 case PROMPT:
                     btnClose.setVisibility(View.VISIBLE);
                     break;
+            }
+            if(!AppConfig.isProduction(btnDeveloperSettings.getContext())) {
+                btnDeveloperSettings.setVisibility(View.VISIBLE);
             }
         }
 

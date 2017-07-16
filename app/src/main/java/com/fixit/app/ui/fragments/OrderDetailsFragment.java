@@ -3,6 +3,8 @@ package com.fixit.app.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
@@ -48,7 +50,7 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
         return fragment;
     }
 
-    enum ViewState {
+    private enum ViewState {
         BEFORE_ORDER,
         AFTER_ORDER
     }
@@ -58,8 +60,11 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
         final ExpandablePanel tradesmenPanel;
         final EditText etReason;
         final Button btnPickReason;
+        final FloatingActionButton fabDone;
 
-        public ViewHolder(View v, TradesmenAdapter recyclerAdapter, int tradesmenCount, ExpandablePanel.ExpandablePanelListener panelListener, View.OnClickListener onClickListener) {
+        private ViewState mState = ViewState.BEFORE_ORDER;
+
+        ViewHolder(View v, TradesmenAdapter recyclerAdapter, int tradesmenCount, ExpandablePanel.ExpandablePanelListener panelListener, View.OnClickListener onClickListener) {
             tradesmenPanel = (ExpandablePanel) v.findViewById(R.id.panel_tradesmen);
             tradesmenPanel.setTitle(v.getResources().getString(R.string.chosen_x_tradesmen, tradesmenCount));
             tradesmenPanel.setListener(panelListener);
@@ -75,18 +80,22 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
             btnPickReason = (Button) v.findViewById(R.id.btn_pick_a_reason);
             btnPickReason.setOnClickListener(onClickListener);
 
-            v.findViewById(R.id.fab_done).setOnClickListener(onClickListener);
+            fabDone = (FloatingActionButton) v.findViewById(R.id.fab_done);
+            fabDone.setOnClickListener(onClickListener);
         }
 
-        public void setState(ViewState state) {
+        void setState(ViewState state) {
+            mState = state;
             switch (state) {
                 case BEFORE_ORDER:
                     etReason.setEnabled(true);
                     btnPickReason.setVisibility(View.VISIBLE);
+                    fabDone.setImageDrawable(ContextCompat.getDrawable(fabDone.getContext(), R.drawable.ic_check_white_24dp));
                     break;
                 case AFTER_ORDER:
                     etReason.setEnabled(false);
                     btnPickReason.setVisibility(View.GONE);
+                    fabDone.setImageDrawable(ContextCompat.getDrawable(fabDone.getContext(), R.drawable.ic_close_white_24dp));
                     break;
             }
         }
@@ -126,7 +135,7 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_order_details, container, false);
 
-        setToolbar((Toolbar) v.findViewById(R.id.toolbar));
+        setToolbar((Toolbar) v.findViewById(R.id.toolbar), true);
 
         int tradesmenCount = getArguments().getInt(Constants.ARG_TRADESMEN_COUNT);
 
@@ -174,9 +183,16 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
                     mListener.showOrderReasons();
                     break;
                 case R.id.fab_done:
-                    mListener.completeOrder(mView.getReason());
-                    mView.setState(ViewState.AFTER_ORDER);
-                    mView.showTradesmen();
+                    switch (mView.mState) {
+                        case BEFORE_ORDER:
+                            mListener.completeOrder(mView.getReason());
+                            mView.setState(ViewState.AFTER_ORDER);
+                            mView.showTradesmen();
+                            break;
+                        case AFTER_ORDER:
+                            restartApp(true);
+                            break;
+                    }
                     break;
             }
             mView.clearFocus();
@@ -194,6 +210,10 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
 
     public void setReason(String reason) {
         mView.setReason(reason);
+    }
+
+    public String getReason() {
+        return mView.getReason();
     }
 
     public interface OrderDetailsInteractionListener {

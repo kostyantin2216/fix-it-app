@@ -44,9 +44,7 @@ public class OrderCompletionFragment extends BaseFragment<OrderController> imple
                 getActivity().onBackPressed();
                 break;
             case R.id.btn_new_search:
-                Intent intent = new Intent(getContext(), SearchActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
+                restartApp(true);
                 break;
             case R.id.btn_exit_app:
                 getActivity().finishAffinity();

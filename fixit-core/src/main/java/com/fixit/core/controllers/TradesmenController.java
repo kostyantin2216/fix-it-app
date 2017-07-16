@@ -21,8 +21,8 @@ public class TradesmenController extends BaseController {
 
     private final DataServiceAPI mDataApi;
 
-    public TradesmenController(BaseApplication baseApplication) {
-        super(baseApplication);
+    public TradesmenController(BaseApplication baseApplication, UiCallback uiCallback) {
+        super(baseApplication, uiCallback);
 
         mDataApi = baseApplication.getServerApiFactory().createDataServiceApi();
     }

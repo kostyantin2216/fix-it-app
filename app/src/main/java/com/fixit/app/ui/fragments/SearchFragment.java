@@ -38,7 +38,6 @@ public class SearchFragment extends BaseFragment<SearchController>
     private AutoCompleteTextView actvProfessions;
     private AutoCompleteTextView actvAddress;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -114,6 +113,7 @@ public class SearchFragment extends BaseFragment<SearchController>
     @Override
     public void onClick(View v) {
         if(mListener != null) {
+            clearFocus();
             switch (v.getId()) {
                 case R.id.btn_show_professions:
                     mListener.showProfessionsList();
@@ -136,6 +136,11 @@ public class SearchFragment extends BaseFragment<SearchController>
                     break;
             }
         }
+    }
+
+    private void clearFocus() {
+        actvProfessions.clearFocus();
+        actvAddress.clearFocus();
     }
 
     public interface SearchFragmentInteractionListener {

@@ -15,13 +15,9 @@ public class Tradesman implements Parcelable {
     private int professionId;
     private String contactName;
     private String companyName;
-    private String email;
-    private String telephone;
-    private String password;
     private String logoUrl;
     private float rating;
     private MutableLatLng lastKnownLocation;
-    private String[] workingAreas;
     private WorkingDay[] workingDays;
 
     public Tradesman() { }
@@ -58,30 +54,6 @@ public class Tradesman implements Parcelable {
         this.companyName = companyName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getLogoUrl() {
         return logoUrl;
     }
@@ -106,14 +78,6 @@ public class Tradesman implements Parcelable {
         this.lastKnownLocation = lastKnownLocation;
     }
 
-    public String[] getWorkingAreas() {
-        return workingAreas;
-    }
-
-    public void setWorkingAreas(String[] workingAreas) {
-        this.workingAreas = workingAreas;
-    }
-
     public WorkingDay[] getWorkingDays() {
         return workingDays;
     }
@@ -129,13 +93,9 @@ public class Tradesman implements Parcelable {
                 ", professionId=" + professionId +
                 ", contactName='" + contactName + '\'' +
                 ", companyName='" + companyName + '\'' +
-                ", email='" + email + '\'' +
-                ", telephone='" + telephone + '\'' +
-                ", password='" + password + '\'' +
                 ", logoUrl='" + logoUrl + '\'' +
                 ", rating=" + rating +
                 ", lastKnownLocation=" + lastKnownLocation +
-                ", workingAreas=" + Arrays.toString(workingAreas) +
                 ", workingDays=" + Arrays.toString(workingDays) +
                 '}';
     }
@@ -151,13 +111,9 @@ public class Tradesman implements Parcelable {
         dest.writeInt(this.professionId);
         dest.writeString(this.contactName);
         dest.writeString(this.companyName);
-        dest.writeString(this.email);
-        dest.writeString(this.telephone);
-        dest.writeString(this.password);
         dest.writeString(this.logoUrl);
         dest.writeFloat(this.rating);
         dest.writeParcelable(this.lastKnownLocation, flags);
-        dest.writeStringArray(this.workingAreas);
         dest.writeTypedArray(this.workingDays, flags);
     }
 
@@ -166,13 +122,9 @@ public class Tradesman implements Parcelable {
         this.professionId = in.readInt();
         this.contactName = in.readString();
         this.companyName = in.readString();
-        this.email = in.readString();
-        this.telephone = in.readString();
-        this.password = in.readString();
         this.logoUrl = in.readString();
         this.rating = in.readFloat();
         this.lastKnownLocation = in.readParcelable(MutableLatLng.class.getClassLoader());
-        this.workingAreas = in.createStringArray();
         this.workingDays = in.createTypedArray(WorkingDay.CREATOR);
     }
 

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFC107</color>
-    <color name="colorPrimaryDark">#FFA000</color>
-    <color name="colorAccent">#8BC34A</color>
+    <color name="colorPrimary">#10B3F0</color>
+    <color name="colorPrimaryDark">#1779BE</color>
+    <color name="colorAccent">#ffea00</color>
 
-    <color name="colorButton">@color/colorAccent</color>
+    <array name="loaderColors">
+        <item>#F44336</item>
+        <item>#2196F3</item>
+        <item>#4CAF50</item>
+        <item>#FFC107</item>
+    </array>
 
 </resources>

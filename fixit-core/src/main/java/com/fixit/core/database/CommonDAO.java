@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface CommonDAO<DMO extends DataModelObject> {
 
-    boolean insert(DMO obj);
+    long insert(DMO obj);
 
     /**
      * @param objs Objects to insert into database

@@ -12,14 +12,6 @@ public class SplashActivity extends LauncherActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
-        /*Bundle extras = new Bundle();
-        extras.putParcelableArrayList(Constants.ARG_TRADESMEN, ObjectGenerator.createTradesmenWrappers(3));
-
-        Intent intent = new Intent(this, OrderActivity.class);
-        intent.putExtras(extras);
-
-        startActivity(intent);*/
     }
 
     @Override

@@ -72,7 +72,7 @@ public class LoginActivity extends BaseAppActivity<RegistrationController>
 
     @Override
     public RegistrationController createController() {
-        return new RegistrationController((BaseApplication) getApplication());
+        return new RegistrationController((BaseApplication) getApplication(), this);
     }
 
     @Override

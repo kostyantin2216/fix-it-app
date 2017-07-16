@@ -21,6 +21,7 @@ public class JobLocation implements Parcelable {
     private double lng;
     private String mapAreaId;
     private String comment;
+    private String googleAddress;
 
     public JobLocation() { }
 
@@ -136,12 +137,31 @@ public class JobLocation implements Parcelable {
         this.comment = comment;
     }
 
+    public String getGoogleAddress() {
+        return googleAddress;
+    }
+
+    public void setGoogleAddress(String googleAddress) {
+        this.googleAddress = googleAddress;
+    }
+
     @Override
     public String toString() {
-        return "JobLocation [province=" + province + ", city=" + city + ", neighborhood=" + neighborhood + ", street="
-                + street + ", zipCode=" + zipCode + ", streetNum=" + streetNum + ", apartmentNum=" + apartmentNum
-                + ", floorNum=" + floorNum + ", lat=" + lat + ", lng=" + lng + ", mapAreaId=" + mapAreaId + ", comment="
-                + comment + "]";
+        return "JobLocation{" +
+                "province='" + province + '\'' +
+                ", city='" + city + '\'' +
+                ", neighborhood='" + neighborhood + '\'' +
+                ", street='" + street + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", streetNum=" + streetNum +
+                ", apartmentNum=" + apartmentNum +
+                ", floorNum=" + floorNum +
+                ", lat=" + lat +
+                ", lng=" + lng +
+                ", mapAreaId='" + mapAreaId + '\'' +
+                ", comment='" + comment + '\'' +
+                ", googleAddress='" + googleAddress + '\'' +
+                '}';
     }
 
     @Override
@@ -163,6 +183,7 @@ public class JobLocation implements Parcelable {
         dest.writeDouble(this.lng);
         dest.writeString(this.mapAreaId);
         dest.writeString(this.comment);
+        dest.writeString(this.googleAddress);
     }
 
     protected JobLocation(Parcel in) {
@@ -178,6 +199,7 @@ public class JobLocation implements Parcelable {
         this.lng = in.readDouble();
         this.mapAreaId = in.readString();
         this.comment = in.readString();
+        this.googleAddress = in.readString();
     }
 
     public static final Creator<JobLocation> CREATOR = new Creator<JobLocation>() {

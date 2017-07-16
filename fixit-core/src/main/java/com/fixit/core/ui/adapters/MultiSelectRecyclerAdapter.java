@@ -13,7 +13,6 @@ import com.fixit.core.ui.adapters.MultiSelectRecyclerAdapter.SelectItemViewHolde
 import com.fixit.core.ui.adapters.animations.RecyclerItemAnimation;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;

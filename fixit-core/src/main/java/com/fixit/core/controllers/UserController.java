@@ -19,8 +19,8 @@ public class UserController extends BaseController {
 
     private final UserServiceAPI mUserApi;
 
-    public UserController(BaseApplication baseApplication) {
-        super(baseApplication);
+    public UserController(BaseApplication baseApplication, UiCallback uiCallback) {
+        super(baseApplication, uiCallback);
         mUserApi = getServerApiFactory().createUserServiceApi();
     }
 

@@ -1,5 +1,6 @@
 package com.fixit.core.utils;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 
@@ -135,6 +136,14 @@ public class CommonUtils {
         @SuppressWarnings("unchecked")
         C[] array = (C[]) Array.newInstance(componentType, list.size());
         return list.toArray(array);
+    }
+
+    public static Bundle toBundle(Map<String, String> map) {
+        Bundle bundle = new Bundle();
+        for(Map.Entry<String, String> entry : map.entrySet()) {
+            bundle.putString(entry.getKey(), entry.getValue());
+        }
+        return bundle;
     }
 
 }

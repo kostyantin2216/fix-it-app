@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <integer name="db_version">2</integer>
+
     <string name="twilio_base_url">https://api.twilio.com/2010-04-01/</string>
     <!-- TESTING
     <string name="twilio_account_sid">AC5a4333803bea0ed40ae07b99e3448628</string>
@@ -12,7 +14,7 @@
     <string name="twilio_auth_token">79b52bae36be72678c0a18a9ae022ac7</string>
     <string name="verification_from_number">+18325643384</string>
 
-    <string name="server_api_base_url">http://fixxit.co.za/rest/</string>
+    <string name="server_api_base_url">http://fixxit-web.co.za/rest/</string>
     <string name="api_key">TlKm7GFjtGVD2YoQruca9emGfSz9j323</string>
     <string name="user_agent">Fix-It-Android</string>
 

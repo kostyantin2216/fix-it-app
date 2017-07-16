@@ -19,7 +19,7 @@ public abstract class LauncherActivity extends BaseActivity<LauncherController> 
 
     @Override
     public LauncherController createController() {
-        return new LauncherController((BaseApplication) getApplication());
+        return new LauncherController((BaseApplication) getApplication(), this);
     }
 
     @Override
@@ -44,6 +44,13 @@ public abstract class LauncherActivity extends BaseActivity<LauncherController> 
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        getController().stopInitializationTask();
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     public void onInitializationComplete(AppInitializationTask.InitializationCompleteEvent completeEvent) {
@@ -63,5 +70,10 @@ public abstract class LauncherActivity extends BaseActivity<LauncherController> 
     @Override
     public Class<?> getLoginActivity() {
         throw new UnsupportedOperationException("LauncherActivity does not support login requests");
+    }
+
+    @Override
+    public void restartApp(boolean skipSplash) {
+        throw new UnsupportedOperationException("LauncherActivity does not support app restarts");
     }
 }

@@ -58,7 +58,7 @@ public class AddressValidator {
                 if(geocodeResponse.getStatus().equals("OK")) {
                     for(GeocodeResult result : geocodeResponse.getResults()) {
                         if(result.getTypes().contains("street_address")) {
-                            return new AddressValidationResult(geocodeResponse);
+                            return new AddressValidationResult(address, geocodeResponse);
                         }
                     }
                 }
@@ -66,7 +66,7 @@ public class AddressValidator {
                 mCallback.onValidationError("Could not execute request to google apis geocoder.", e);
             }
 
-            return new AddressValidationResult(null);
+            return new AddressValidationResult(null, null);
         }
 
         @Override
@@ -78,7 +78,7 @@ public class AddressValidator {
     public static class AddressValidationResult {
         public final JobLocation jobLocation;
 
-        private AddressValidationResult(GeocodeResponse geocodeResponse) {
+        private AddressValidationResult(String address, GeocodeResponse geocodeResponse) {
             if(geocodeResponse != null && geocodeResponse.getStatus().equals("OK")) {
                 List<GeocodeResult> results = geocodeResponse.getResults();
                 GeocodeResult result = null;
@@ -91,6 +91,7 @@ public class AddressValidator {
 
                 if(result != null) {
                     jobLocation = new JobLocation();
+                    jobLocation.setGoogleAddress(address);
 
                     Map<AddressComponent.Type, AddressComponent> addressComponentsByType = AddressComponent.sortByType(result.getAddress_components());
 

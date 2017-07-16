@@ -17,8 +17,8 @@ public class SearchController extends BaseController {
     private final SearchManager mSearchManager;
     private final ProfessionDAO mProfessionDao;
 
-    public SearchController(BaseApplication baseApplication) {
-        super(baseApplication);
+    public SearchController(BaseApplication baseApplication, UiCallback uiCallback) {
+        super(baseApplication, uiCallback);
         mSearchManager = new SearchManager(getServerApiFactory().createSearchServiceApi());
         mProfessionDao = getDaoFactory().createProfessionDao();
     }

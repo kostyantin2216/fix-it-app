@@ -25,6 +25,8 @@ public abstract class CommonRecyclerAdapter<E, VH extends CommonRecyclerAdapter.
     private List<E> adapterItems;
     private final Comparator<E> comparator;
 
+    private boolean notifyOnClick = false;
+
     public CommonRecyclerAdapter(RecyclerItemAnimation itemAnimation, E[] items, CommonRecyclerViewInteractionListener<E> listener, Comparator<E> comparator) {
         super(itemAnimation);
         this.items = Arrays.asList(items);
@@ -61,6 +63,10 @@ public abstract class CommonRecyclerAdapter<E, VH extends CommonRecyclerAdapter.
         this(context, items, null);
     }
 
+    void setNotifyOnClick(boolean notifyOnClick) {
+        this.notifyOnClick = notifyOnClick;
+    }
+
     @Override
     public int getItemCount() {
         return adapterItems.size();
@@ -78,7 +84,7 @@ public abstract class CommonRecyclerAdapter<E, VH extends CommonRecyclerAdapter.
         return items.indexOf(item);
     }
 
-    public List<E> getAdapterItem() {
+    public List<E> getAdapterItems() {
         return adapterItems;
     }
 
@@ -98,19 +104,28 @@ public abstract class CommonRecyclerAdapter<E, VH extends CommonRecyclerAdapter.
 
     protected void attachItemClickListener(View v, VH vh) {
         v.setTag(vh);
-        if(listener != null) {
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                @SuppressWarnings("unchecked")
-                public void onClick(View v) {
-                    VH vh = (VH) v.getTag();
-                    int position = vh.getAdapterPosition();
-                    if(position != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(getAdapterItem(position));
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public void onClick(View v) {
+                VH vh = (VH) v.getTag();
+                int position = vh.getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    E item = getAdapterItem(position);
+                    if (listener != null) {
+                        listener.onItemClick(vh, item);
+                    }
+                    if(notifyOnClick) {
+                        onItemClick(vh, item);
                     }
                 }
-            });
-        }
+            }
+        });
+
+    }
+
+    void onItemClick(RecyclerView.ViewHolder vh, E item) {
+        // override if needed
     }
 
     public <V> void filter(AdapterFilterer<E> filterer) {
@@ -138,7 +153,7 @@ public abstract class CommonRecyclerAdapter<E, VH extends CommonRecyclerAdapter.
     }
 
     public interface CommonRecyclerViewInteractionListener<E> {
-        void onItemClick(E item);
+        void onItemClick(RecyclerView.ViewHolder vh, E item);
     }
 
     public interface AdapterFilterer<E> {

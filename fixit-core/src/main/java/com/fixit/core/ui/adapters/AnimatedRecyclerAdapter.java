@@ -10,7 +10,7 @@ import com.fixit.core.ui.adapters.animations.RecyclerItemAnimation;
  */
 public abstract class AnimatedRecyclerAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
-    protected RecyclerItemAnimation itemAnimation;
+    protected final RecyclerItemAnimation itemAnimation;
 
     private int lastPosition = -1;
 
@@ -24,7 +24,7 @@ public abstract class AnimatedRecyclerAdapter<VH extends RecyclerView.ViewHolder
     }
 
     public void setAnimation(final VH viewHolder, final int position) {
-        if(position > lastPosition) {
+        if(itemAnimation != null && position > lastPosition) {
             Animation animation = itemAnimation.getAnimation();
             viewHolder.itemView.startAnimation(animation);
             lastPosition = position;

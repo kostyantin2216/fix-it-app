@@ -81,7 +81,7 @@ public class SearchActivity extends BaseAppActivity<SearchController>
 
     @Override
     public SearchController createController() {
-        return new SearchController((BaseApplication) getApplication());
+        return new SearchController((BaseApplication) getApplication(), this);
     }
 
     private SearchFragment getSearchFragment() {
@@ -90,6 +90,7 @@ public class SearchActivity extends BaseAppActivity<SearchController>
 
     @Override
     public void showProfessionsList() {
+        getAnalyticsManager().trackShowProfessions();
         hideKeyboard(getSearchFragment().getView().getRootView().getWindowToken());
         getSupportFragmentManager()
                 .beginTransaction()
@@ -107,13 +108,14 @@ public class SearchActivity extends BaseAppActivity<SearchController>
 
     @Override
     public void showMap() {
+        getAnalyticsManager().trackShowMap();
         if(mGoogleClientManager.showPlacePicker(getSearchFragment())) {
             overridePendingTransition(R.anim.enter_from_right, R.anim.exit_out_left);
         }
     }
 
     @Override
-    public void performSearch(String professionName, String address) {
+    public void performSearch(String professionName, final String address) {
         mProfession = getController().getProfession(professionName);
         if(mProfession != null) {
             showLoader(getString(R.string.validating_address));
@@ -131,6 +133,7 @@ public class SearchActivity extends BaseAppActivity<SearchController>
                                 new MutableLatLng(lat, lng),
                                 SearchActivity.this
                         );
+                        getAnalyticsManager().trackSearch(mProfession.getName(), address);
                     } else {
                         invalidAddress();
                     }

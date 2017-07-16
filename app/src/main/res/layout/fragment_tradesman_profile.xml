@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:collapsedTitleTextAppearance="@style/collapsedAppBar"
-            app:contentScrim="?colorPrimary"
+            app:contentScrim="?colorPrimaryDark"
             app:expandedTitleTextAppearance="@style/expandedAppBar"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 

@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.Spannable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +33,8 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
                    RegistrationController.TelephoneVerificationCallback,
                    BaseActivity.OnBackPressListener {
 
+    private final static String TELEPHONE_NUMBER_PREFIX = "+972 ";
+
     private TelephoneVerificationListener mListener;
 
     private ViewHolder mView;
@@ -40,7 +46,7 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
         CODE_INPUT
     }
 
-    private static class ViewHolder {
+    private static class ViewHolder implements TextWatcher {
         final TextView tvHint;
         final ProgressBar pbLoader;
         final TextInputLayout telephoneContainer;
@@ -61,6 +67,9 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
             codeContainer = (TextInputLayout) v.findViewById(R.id.container_code);
             etCode = (EditText) v.findViewById(R.id.et_verification_code);
             btnSubmit = (Button) v.findViewById(R.id.btn_submit);
+
+            etTelephone.setText(TELEPHONE_NUMBER_PREFIX);
+            etTelephone.addTextChangedListener(this);
 
             btnSubmit.setOnClickListener(onClickListener);
         }
@@ -124,6 +133,20 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
 
         String getTelephone() {
             return etTelephone.getText().toString();
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if(!s.toString().startsWith(TELEPHONE_NUMBER_PREFIX)) {
+                etTelephone.setText(TELEPHONE_NUMBER_PREFIX);
+                Selection.setSelection(etTelephone.getText(), TELEPHONE_NUMBER_PREFIX.length());
+            }
         }
     }
 

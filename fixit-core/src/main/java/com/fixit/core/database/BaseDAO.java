@@ -24,16 +24,16 @@ public abstract class BaseDAO<T extends DataModelObject> implements CommonDAO<T>
     }
 
     @Override
-    public boolean insert(T obj) {
+    public long insert(T obj) {
         SQLiteDatabase db = dbManager.openDatabase();
 
         ContentValues values = extractContentValues(obj);
 
-        boolean createSuccessful = db.insert(getTableName(), null, values) != -1;
+        long id = db.insert(getTableName(), null, values);
 
         dbManager.closeDatabase();
 
-        return createSuccessful;
+        return id;
     }
 
     @Override

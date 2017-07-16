@@ -2,6 +2,7 @@ package com.fixit.app.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +22,7 @@ import com.fixit.core.general.SearchManager;
 import com.fixit.core.ui.activities.BaseActivity;
 import com.fixit.core.ui.fragments.ErrorFragment;
 import com.fixit.core.utils.Constants;
+import com.fixit.core.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +35,7 @@ import java.util.Map;
 public class ResultsActivity extends BaseAppActivity<ResultsController>
     implements SearchManager.ResultCallback,
                TradesmenResultsFragment.TradesmenResultsInteractionListener,
-               TradesmanProfileFragment.TradesmanProfileInteractionListener,
-               BaseActivity.LoginRequester {
+               TradesmanProfileFragment.TradesmanProfileInteractionListener {
 
     private final static String FRAG_TAG_RESULTS_LIST = "results_list";
 
@@ -50,7 +51,8 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_appbar_fragment_holder);
 
-        setToolbar((Toolbar) findViewById(R.id.toolbar), false);
+        setToolbar((Toolbar) findViewById(R.id.toolbar), true);
+        setToolbarTitleTextSize(22);
         setToolbarTitle(getString(R.string.no_tradesmen_selected));
 
         fabDone = (FloatingActionButton) findViewById(R.id.fab_done);
@@ -74,13 +76,14 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
 
     @Override
     public ResultsController createController() {
-        return new ResultsController((BaseApplication) getApplication());
+        return new ResultsController((BaseApplication) getApplication(), this);
     }
 
     @Override
     public void onResultsReceived(List<Tradesman> tradesmen, Map<String, Integer> reviewCountForTradesmen) {
         hideLoader();
         getTradesmenResultsFragment().setTradesmen(tradesmen, reviewCountForTradesmen);
+        getAnalyticsManager().trackSearchResults(mProfession.getName(), mJobLocation.getGoogleAddress(), tradesmen.size());
     }
 
     @Override
@@ -97,6 +100,7 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
                 .add(android.R.id.content, fragment)
                 .addToBackStack(null)
                 .commit();
+        getAnalyticsManager().trackTradesmanShown(tradesman.tradesman, mProfession.getName());
     }
 
     @Override
@@ -104,15 +108,20 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
         getSupportFragmentManager().popBackStack();
         int index = mTradesmenIdsForPositions.indexOfValue(tradesman.get_id());
         getTradesmenResultsFragment().selectTradesman(mTradesmenIdsForPositions.keyAt(index));
+        getAnalyticsManager().trackTradesmanSelected(tradesman, mProfession.getName());
     }
 
     @Override
     public void orderTradesmen(List<TradesmanWrapper> selectedTradesmen) {
-        if(isUserRegistered()) {
-            continueToOrder((ArrayList<TradesmanWrapper>) selectedTradesmen);
-        } else {
-            requestLogin(this, createOrderExtras((ArrayList<TradesmanWrapper>) selectedTradesmen));
-        }
+        getAnalyticsManager().trackResultsSelected(mProfession.getName(), selectedTradesmen.size());
+        Intent intent = new Intent(this, OrderActivity.class);
+        Bundle extras = new Bundle();
+        extras.putParcelableArrayList(Constants.ARG_TRADESMEN, (ArrayList<TradesmanWrapper>) selectedTradesmen);
+        extras.putParcelable(Constants.ARG_JOB_LOCATION, mJobLocation);
+        extras.putParcelable(Constants.ARG_PROFESSION, mProfession);
+        intent.putExtras(extras);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -128,34 +137,6 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
     @Override
     public void setDoneBtnClickListener(View.OnClickListener onClickListener) {
         fabDone.setOnClickListener(onClickListener);
-    }
-
-    @Override
-    public void loginComplete(boolean success, Bundle data) {
-        if(success) {
-            if (data.containsKey(Constants.ARG_TRADESMAN)) {
-                ArrayList<TradesmanWrapper> tradesmen = data.getParcelableArrayList(Constants.ARG_TRADESMEN);
-                continueToOrder(tradesmen);
-            } else {
-                notifyUser("no tradesmen");
-            }
-        } else {
-            showPrompt(getString(R.string.cannot_continue_without_login));
-        }
-    }
-
-    private void continueToOrder(ArrayList<TradesmanWrapper> tradesmen) {
-        Intent intent = new Intent(this, OrderActivity.class);
-        intent.putExtras(createOrderExtras(tradesmen));
-        startActivity(intent);
-    }
-
-    private Bundle createOrderExtras(ArrayList<TradesmanWrapper> tradesmen) {
-        Bundle extras = new Bundle();
-        extras.putParcelableArrayList(Constants.ARG_TRADESMEN, tradesmen);
-        extras.putParcelable(Constants.ARG_JOB_LOCATION, mJobLocation);
-        extras.putParcelable(Constants.ARG_PROFESSION, mProfession);
-        return extras;
     }
 
     private TradesmenResultsFragment getTradesmenResultsFragment() {

@@ -98,7 +98,7 @@
         android:layout_margin="18dp"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:buttonColor="?colorAccent"
+        app:buttonColor="@color/colorButton"
         app:buttonIcon="@drawable/ic_search_white_24dp"
         app:buttonText="@string/search"
         app:buttonTextColor="@android:color/white"
