@@ -32,6 +32,9 @@
             android:name=".ui.activities.OrderActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activities.OrderFeedbackActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activities.DeveloperSettingsActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -50,6 +53,15 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".ifs.notifications.OrderFeedbackNotificationReceiver"
+            android:exported="false"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="com.fixit.app.order.feedback.notifier" />
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

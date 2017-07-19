@@ -19,9 +19,9 @@ import java.util.Date;
 
 public class OrderDAO extends BaseDAO<Order> {
 
-    public final static String TABLE_NAME = "Order";
+    public final static String TABLE_NAME = "Orders";
 
-    public final static String KEY_ID = "id";
+    public final static String KEY_ID = "_id";
     public final static String KEY_JOB_LOCATION = "jobLocation";
     public final static String KEY_PROFESSION = "profession";
     public final static String KEY_TRADESMEN = "tradesmen";
@@ -33,7 +33,7 @@ public class OrderDAO extends BaseDAO<Order> {
             + KEY_JOB_LOCATION + " TEXT, "
             + KEY_PROFESSION + " TEXT, "
             + KEY_TRADESMEN + " TEXT, "
-            + KEY_JOB_LOCATION + " INTEGER, "
+            + KEY_JOB_REASONS + " TEXT, "
             + KEY_CREATION_DATE + " INTEGER);";
 
     private final Gson gson;
@@ -69,7 +69,7 @@ public class OrderDAO extends BaseDAO<Order> {
     @Override
     protected Order getObject(Cursor c) {
         return new Order(
-                c.getInt(c.getColumnIndex(KEY_ID)),
+                (long) c.getInt(c.getColumnIndex(KEY_ID)),
                 extractJsonValue(c, KEY_JOB_LOCATION, JobLocation.class),
                 extractJsonValue(c, KEY_PROFESSION, Profession.class),
                 extractJsonValue(c, KEY_TRADESMEN, Tradesman[].class),

@@ -17,7 +17,7 @@ public interface CommonDAO<DMO extends DataModelObject> {
      * @return amount of objects unsuccessfully inserted
      */
     int insert(List<DMO> objs);
-    DMO findById(Integer id);
+    DMO findById(long id);
     DMO[] findByQuery(String query, String[] values);
     DMO findOneByProperty(String property, String value);
     DMO[] findByProperty(String property, String value);

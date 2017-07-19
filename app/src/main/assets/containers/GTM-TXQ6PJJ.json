@@ -1,10 +1,19 @@
 {
 
-"fingerprint":"MQ$0",
+"fingerprint":"Mg$0",
 
 "resource": {
-  "version":"1",
+  "version":"2",
   "macros":[
+    {
+      "function":"__md",
+      "instance_name":"Search Event",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_searchParam":"search_term",
+      "vtp_suggestedEvent":"search",
+      "vtp_eventType":"SUGGESTED"
+    },
     {
       "function":"__e",
       "instance_name":"Event Name",
@@ -69,7 +78,7 @@
 
 
 
-
+[50,"__md_main",[46,"a"],[41,"b","c","d","e"],[22,[12,[17,[15,"a"],"eventType"],"CUSTOM"],[46,[3,"b",[16,[15,"a"],"key"]]],[46,[22,[12,[17,[15,"a"],"eventType"],"SUGGESTED"],[46,[47,"c",[15,"a"],[46,[3,"d",[2,[15,"c"],"lastIndexOf",[7,"Param"]]],[22,[1,[29,[15,"d"],[27,1]],[12,[15,"d"],[37,[17,[15,"c"],"length"],5]]],[46,[22,[20,[15,"b"],[44]],[46,[3,"b",[16,[15,"a"],[15,"c"]]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e",[0,[0,[0,"Ignoring unexpected additional parameter ","key in the data (key \u003d \""],[15,"c"]],"\")."]]]]]]]]]],[46,[22,[20,[17,[15,"a"],"eventType"],[44]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"w","Missing expected eventType param"]],[3,"b",[16,[15,"a"],"key"]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e",[0,"Unexpected eventType param value: ",[17,[15,"a"],"eventType"]]]],[36]]]]]]],[22,[20,[15,"b"],[44]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e","No parameter key specified in the data."]],[36]]],[22,[29,[2,[7,"_sn","_sc","_si"],"indexOf",[7,[15,"b"]]],[27,1]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e","Invalid event parameter."]],[36]]],[3,"e",[16,[30,[2,[17,[15,"gtmUtils"],"mobile"],"eventParameters",[7]],[8]],[15,"b"]]],[22,[21,[15,"e"],[44]],[46,[36,[15,"e"]]],[46,[22,[21,[17,[15,"a"],"defaultValue"],[44]],[46,[36,[17,[15,"a"],"defaultValue"]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"w",[0,[0,"Event does not have parameter \"",[15,"b"]],"\" and no default value was defined. Returning \"undefined\"."]]]]]]]],[50,"__md",[46,"data"],[36,["__md_main",[15,"data"]]]],
 
 
 

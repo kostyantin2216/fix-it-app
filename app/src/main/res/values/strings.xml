@@ -72,4 +72,7 @@
     <string name="exit_app">Exit Application</string>
     <string name="finished">Finished</string>
 
+    <string name="order_notification_title">Order Check-Up</string>
+    <string name="order_notification_message">Have you been contacted by any of the tradesmen you ordered?</string>
+
 </resources>

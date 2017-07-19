@@ -17,6 +17,11 @@ public class Constants {
     public final static String ARG_EMAIL_EXISTS = "email_exists";
     public final static String ARG_PROFESSION_ID = "profession_id";
     public final static String ARG_PROFESSION = "profession";
+    public final static String ARG_ORDER_ID = "orderId";
+    public final static String ARG_FROM_ACTION = "fromAction";
+    public final static String ARG_SELECTED_YES = "selectedYes";
+    public final static String ARG_SELECTION_CODE = "selectionCode";
+    public final static String ARG_TITLE = "title";
 
     public final static int HTTP_INTERNAL_SERVER_ERROR = 500;
 

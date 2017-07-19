@@ -55,6 +55,7 @@ public class OrderActivity extends BaseAppActivity<OrderController>
             mTradesmen = TradesmanWrapper.unwrap(tradesmen);
             getSupportFragmentManager()
                     .beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left)
                     .add(com.fixit.core.R.id.fragment_holder, OrderDetailsFragment.newInstance(tradesmen), FRAG_TAG_ORDER_DETAILS)
                     .commit();
         }
@@ -70,6 +71,7 @@ public class OrderActivity extends BaseAppActivity<OrderController>
         getAnalyticsManager().trackShowReasons();
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left)
                 .add(R.id.fragment_holder, JobReasonsSelectionFragment.newInstance(mProfession.getId()))
                 .addToBackStack(null)
                 .commit();
@@ -90,6 +92,7 @@ public class OrderActivity extends BaseAppActivity<OrderController>
         if(isUserRegistered()) {
             getSupportFragmentManager()
                     .beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left)
                     .add(R.id.fragment_holder, OrderCompletionFragment.newInstance(), FRAG_TAG_ORDER_COMPLETE)
                     .addToBackStack(null)
                     .commit();
@@ -109,7 +112,7 @@ public class OrderActivity extends BaseAppActivity<OrderController>
             fragment.onOrderComplete();
         }
         Order order = getController().saveOrder(mJobLocation, mProfession, mTradesmen, mJobReasons);
-        OrderNotificationManager.createNewOrderNotification(order);
+        OrderNotificationManager.registerOrderFeedbackNotification(this, order);
     }
 
     @Override

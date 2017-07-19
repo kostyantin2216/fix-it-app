@@ -55,7 +55,7 @@ public abstract class BaseDAO<T extends DataModelObject> implements CommonDAO<T>
     }
 
     @Override
-    public T findById(Integer id) {
+    public T findById(long id) {
         SQLiteDatabase db = dbManager.openDatabase();
 
         String where = getIdKey() + " = '" + id + "'";

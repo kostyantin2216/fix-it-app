@@ -58,6 +58,10 @@ public class FILog {
         log(Level.ERROR, tag, message, new Throwable(message), null);
     }
 
+    public static void e(String tag, String message, Context context) {
+        log(Level.ERROR, tag, message, new Throwable(message), context);
+    }
+
     public static void e(String tag, String message, Throwable cause) {
         log(Level.ERROR, tag, message, cause, null);
     }

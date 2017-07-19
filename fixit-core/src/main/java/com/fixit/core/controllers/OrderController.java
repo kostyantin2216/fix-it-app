@@ -69,6 +69,10 @@ public class OrderController extends BaseController {
         return order;
     }
 
+    public Order getOrder(long id) {
+        return mOrderDao.findById(id);
+    }
+
     public interface JobReasonsCallback extends UnexpectedErrorCallback {
         void onReceiveJobReasons(List<JobReason> reasons);
     }

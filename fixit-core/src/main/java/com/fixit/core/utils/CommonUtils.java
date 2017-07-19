@@ -107,7 +107,7 @@ public class CommonUtils {
 
 
     public final static boolean isValidPhoneNumber(CharSequence phone) {
-        return phone != null && !(phone.length() < 6 || phone.length() > 13) && android.util.Patterns.PHONE.matcher(phone).matches();
+        return phone != null && !(phone.length() < 6 || phone.length() > 14) && android.util.Patterns.PHONE.matcher(phone).matches();
     }
 
     public static boolean isEmpty(List<?> l) {
