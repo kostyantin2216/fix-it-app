@@ -33,7 +33,7 @@ public class TradesmenResultsFragment extends StaticRecyclerListFragment<Results
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mMaxTradesmanSelection = AppConfig.getInt(getContext(), AppConfig.KEY_MAX_TRADESMEN_SELECTION, 3);
+        mMaxTradesmanSelection = AppConfig.getInteger(getContext(), AppConfig.KEY_MAX_TRADESMEN_SELECTION, 3);
     }
 
     @Override

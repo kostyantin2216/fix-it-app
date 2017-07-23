@@ -6,7 +6,6 @@ import com.fixit.core.config.AppConfig;
 import com.fixit.core.rest.adapters.SynchronizationResultDeserializer;
 import com.fixit.core.synchronization.SynchronizationResult;
 import com.fixit.core.utils.DateUtils;
-import com.fixit.core.utils.FILog;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
@@ -77,15 +76,15 @@ public class RetrofitFactory {
     private static OkHttpClient.Builder initHttpClientBuilder(Context context) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(
-                        AppConfig.getInt(context, AppConfig.KEY_RETROFIT_C_TO, 30).longValue(),
+                        AppConfig.getInteger(context, AppConfig.KEY_RETROFIT_C_TO, 30).longValue(),
                         TimeUnit.SECONDS
                 )
                 .readTimeout(
-                        AppConfig.getInt(context, AppConfig.KEY_RETROFIT_R_TO, 30).longValue(),
+                        AppConfig.getInteger(context, AppConfig.KEY_RETROFIT_R_TO, 30).longValue(),
                         TimeUnit.SECONDS
                 )
                 .writeTimeout(
-                        AppConfig.getInt(context, AppConfig.KEY_RETROFIT_W_TO, 30).longValue(),
+                        AppConfig.getInteger(context, AppConfig.KEY_RETROFIT_W_TO, 30).longValue(),
                         TimeUnit.SECONDS
                 );
 

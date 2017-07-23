@@ -5,13 +5,12 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 
 import com.fixit.app.R;
 import com.fixit.app.ui.activities.OrderFeedbackActivity;
-import com.fixit.app.ui.activities.SearchActivity;
+import com.fixit.core.config.AppConfig;
 import com.fixit.core.data.Order;
 import com.fixit.core.utils.Constants;
 
@@ -24,14 +23,23 @@ import java.util.concurrent.TimeUnit;
 public class OrderNotificationManager {
 
     public static void registerOrderFeedbackNotification(Context context, Order order) {
+        registerOrderFeedbackNotification(context, order, false);
+    }
+
+    public static void registerOrderFeedbackNotification(Context context, Order order, boolean sendImmediately) {
         Intent intent = new Intent();
         intent.setAction(OrderFeedbackNotificationReceiver.ACTION);
         intent.putExtra(Constants.ARG_ORDER_ID, order.getId());
 
-        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        if(sendImmediately) {
+            context.sendBroadcast(intent);
+        } else {
+            AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-        alarmMgr.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + TimeUnit.MINUTES.toMillis(2), alarmIntent);
+            Integer delayMin = AppConfig.getInteger(context, AppConfig.KEY_ORDER_FEEDBACK_NOTIFICATION_DELAY, 30);
+            alarmMgr.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + TimeUnit.MINUTES.toMillis(delayMin), alarmIntent);
+        }
     }
 
     static Notification createOrderFeedbackNotification(Context context, long orderId) {

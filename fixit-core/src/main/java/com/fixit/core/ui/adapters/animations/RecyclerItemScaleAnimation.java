@@ -19,7 +19,7 @@ public class RecyclerItemScaleAnimation implements RecyclerItemAnimation {
     }
 
     public RecyclerItemScaleAnimation(Context context) {
-        duration = AppConfig.getInt(context, "default_recycler_item_animation_time_millis", 1000);
+        duration = AppConfig.getInteger(context, "default_recycler_item_animation_time_millis", 1000);
     }
 
     @Override

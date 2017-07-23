@@ -16,6 +16,7 @@ import com.fixit.core.rest.callbacks.ManagedServiceCallback;
 import com.fixit.core.rest.callbacks.RetryingCallback;
 import com.fixit.core.rest.requests.data.TradesmenOrderRequestData;
 import com.fixit.core.rest.responses.data.TradesmenOrderResponseData;
+import com.fixit.core.utils.GlobalPreferences;
 
 import java.util.List;
 
@@ -66,6 +67,7 @@ public class OrderController extends ReviewController {
     public Order saveOrder(JobLocation location, Profession profession, Tradesman[] tradesmen, JobReason[] jobReasons) {
         Order order = Order.newOrder(location, profession, tradesmen, jobReasons);
         order.setId(mOrderDao.insert(order));
+        GlobalPreferences.setLastOrderId(getApplicationContext(), order.getId());
         return order;
     }
 

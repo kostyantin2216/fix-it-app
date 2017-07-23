@@ -37,7 +37,7 @@ import com.fixit.core.rest.callbacks.GeneralServiceErrorCallback;
 import com.fixit.core.ui.fragments.BaseFragment;
 import com.fixit.core.ui.fragments.ErrorFragment;
 import com.fixit.core.utils.Constants;
-import com.fixit.core.utils.PrefUtils;
+import com.fixit.core.utils.GlobalPreferences;
 
 import java.util.HashSet;
 import java.util.List;
@@ -194,7 +194,7 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
     public abstract Class<?> getLoginActivity();
 
     public boolean isUserRegistered() {
-        return !TextUtils.isEmpty(PrefUtils.getUserId(this));
+        return !TextUtils.isEmpty(GlobalPreferences.getUserId(this));
     }
 
     public void requestLogin(LoginRequester requester, @Nullable Bundle data) {

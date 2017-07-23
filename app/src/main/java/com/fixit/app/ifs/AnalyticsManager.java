@@ -1,15 +1,13 @@
 package com.fixit.app.ifs;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.fixit.core.data.Profession;
 import com.fixit.core.data.Tradesman;
 import com.fixit.core.utils.CommonUtils;
-import com.fixit.core.utils.PrefUtils;
+import com.fixit.core.utils.GlobalPreferences;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.HashMap;
@@ -46,7 +44,7 @@ public class AnalyticsManager {
         mAnswers = Answers.getInstance();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         mFirebaseAnalytics.setUserProperty(UP_IS_REGISTERED, String.valueOf(
-                !TextUtils.isEmpty(PrefUtils.getUserId(context))
+                !TextUtils.isEmpty(GlobalPreferences.getUserId(context))
         ));
     }
 

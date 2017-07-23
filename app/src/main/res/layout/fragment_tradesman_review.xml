@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="12dp"
+    tools:background="@drawable/bg_transparent_black">
 
     <TextView
         android:id="@+id/tv_review_status"
@@ -14,9 +14,9 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="8dp"
+        android:text="@string/create_new_review"
         android:textColor="@android:color/white"
         android:textSize="@dimen/standard_text_size"
-        android:text="@string/create_new_review"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -48,7 +48,7 @@
         android:id="@+id/tv_label_rating"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="@dimen/standard_text_size"
@@ -82,8 +82,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/review_title"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionNext"
             android:inputType="text"
+            android:nextFocusDown="@+id/et_review_content"
             android:textColor="@android:color/white" />
 
     </android.support.design.widget.TextInputLayout>
@@ -104,16 +105,17 @@
             android:id="@+id/et_review_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/review_content"
+            android:hint="@string/review_description"
             android:imeOptions="actionDone"
             android:inputType="textMultiLine"
+            android:maxLines="8"
             android:textColor="@android:color/white" />
 
     </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/btn_submit"
-        style="@style/rounded_dark_button"
+        style="@style/rounded_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/submit"

@@ -28,10 +28,10 @@ public abstract class RetryingCallback<T> implements Callback<T> {
     /* package */ volatile boolean isCanceled = false;
 
     public RetryingCallback(Context context) {
-        this.retryLimit = AppConfig.getInt(
+        this.retryLimit = AppConfig.getInteger(
                 context, AppConfig.KEY_SERVER_CONNECTION_RETRY_LIMIT, DEFAULT_RETRIES
         );
-        this.retryIntervalMs = AppConfig.getInt(
+        this.retryIntervalMs = AppConfig.getInteger(
                 context, AppConfig.KEY_SERVER_CONNECTION_RETRY_INTERVAL_MS, DEFAULT_RETRY_INTERVAL_MS
         );
     }

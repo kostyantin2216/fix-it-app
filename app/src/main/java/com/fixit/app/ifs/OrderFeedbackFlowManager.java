@@ -33,7 +33,7 @@ public class OrderFeedbackFlowManager implements SingleChoiceSelectionFragment.S
         if (fromAction) {
             hasBeenContacted(yesAction);
         } else {
-            mView.transitionTo(SingleChoiceSelectionFragment.newInstance(mView.getString(R.string.order_notification_title), SELECTION_CODE_CONTACTED));
+            mView.transitionTo(SingleChoiceSelectionFragment.newInstance(mView.getString(R.string.order_notification_message), SELECTION_CODE_CONTACTED));
         }
     }
 
@@ -104,7 +104,11 @@ public class OrderFeedbackFlowManager implements SingleChoiceSelectionFragment.S
 
     private void tradesmanArrived(boolean arrived) {
         if(arrived) {
-            transitionToSingleChoiceSelection(mView.getString(R.string.who_fixed_the_problem), SELECTION_CODE_TRADESMAN);
+            if(mOrder.getTradesmen().length > 1) {
+                transitionToSingleChoiceSelection(mView.getString(R.string.who_fixed_the_problem), SELECTION_CODE_TRADESMAN);
+            } else {
+                tradesmanSelected(mOrder.getTradesmen()[0]);
+            }
         } else {
             transitionToSingleChoiceSelection(mView.getString(R.string.like_to_start_a_new_search), SELECTION_CODE_NEW_SEARCH);
         }

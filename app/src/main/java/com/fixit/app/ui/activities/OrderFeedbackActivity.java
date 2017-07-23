@@ -43,7 +43,7 @@ public class OrderFeedbackActivity extends BaseAppActivity<OrderController>
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.fixit.core.R.layout.layout_fragment_holder);
+        setContentView(R.layout.activity_login);
 
         Intent intent = getIntent();
         long orderId = intent.getLongExtra(Constants.ARG_ORDER_ID, -1);
@@ -65,7 +65,7 @@ public class OrderFeedbackActivity extends BaseAppActivity<OrderController>
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(com.fixit.core.R.anim.enter_from_right, com.fixit.core.R.anim.exit_out_left)
-                .replace(com.fixit.core.R.id.fragment_holder, fragment)
+                .replace(R.id.fragment_container, fragment)
                 .commit();
     }
 

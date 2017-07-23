@@ -7,4 +7,7 @@
     <item android:id="@+id/restart"
         android:title="Restart App"
         app:showAsAction="never" />
+    <item android:id="@+id/send_order_notification"
+        android:title="Send Order Notification"
+        app:showAsAction="never" />
 </menu>

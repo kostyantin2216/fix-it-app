@@ -12,7 +12,7 @@ import com.fixit.core.BaseApplication;
 import com.fixit.core.controllers.RegistrationController;
 import com.fixit.core.controllers.UserController;
 import com.fixit.core.data.UserAccountDetails;
-import com.fixit.core.utils.PrefUtils;
+import com.fixit.core.utils.GlobalPreferences;
 
 /**
  * Created by konstantin on 5/11/2017.
@@ -131,7 +131,7 @@ public class LoginActivity extends BaseAppActivity<RegistrationController>
 
     @Override
     public void onRegistrationSuccess(String userId) {
-        PrefUtils.setUserId(this, userId);
+        GlobalPreferences.setUserId(this, userId);
         setResult(RESULT_OK, getIntent());
         finish();
     }

@@ -23,7 +23,7 @@ import com.fixit.core.rest.APIError;
 import com.fixit.core.utils.Constants;
 import com.fixit.core.utils.ErrorUtils;
 import com.fixit.core.utils.FILog;
-import com.fixit.core.utils.PrefUtils;
+import com.fixit.core.utils.GlobalPreferences;
 
 import java.util.Iterator;
 import java.util.List;
@@ -135,7 +135,7 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
         Context context = getContext();
         return AppConfig.getVersionInfo(context).toString() + "\n\n"
                 + AppConfig.getDeviceInfo(context).toString() + "\n\n"
-                + "UserId = " + PrefUtils.getUserId(context) + ", InstallationId = " + PrefUtils.getInstallationId(context) + "\n\n"
+                + "UserId = " + GlobalPreferences.getUserId(context) + ", InstallationId = " + GlobalPreferences.getInstallationId(context) + "\n\n"
                 + "logMessage = " + mParams.logMsg + "\n"
                 + "StackTrace = \n" + Log.getStackTraceString(mParams.cause);
     }

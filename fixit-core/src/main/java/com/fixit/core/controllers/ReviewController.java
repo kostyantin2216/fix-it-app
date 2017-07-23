@@ -7,10 +7,9 @@ import com.fixit.core.general.UnexpectedErrorCallback;
 import com.fixit.core.rest.apis.ReviewDataAPI;
 import com.fixit.core.rest.callbacks.EmptyCallback;
 import com.fixit.core.rest.callbacks.RetryingCallback;
-import com.fixit.core.rest.queries.DataApiQuery;
 import com.fixit.core.rest.queries.DataQueryCriteria;
 import com.fixit.core.rest.queries.DataQueryRestrictions;
-import com.fixit.core.utils.PrefUtils;
+import com.fixit.core.utils.GlobalPreferences;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class ReviewController extends BaseController {
     }
 
     public void loadReviewForTradesmanByUser(Tradesman tradesman, final LoadReviewsCallback callback) {
-        String userId = PrefUtils.getUserId(getApplicationContext());
+        String userId = GlobalPreferences.getUserId(getApplicationContext());
         Call<List<Review>> call = mReviewDataApi.query(DataQueryCriteria.create()
                 .add(DataQueryRestrictions.eq("tradesmanId", tradesman.get_id()))
                 .add(DataQueryRestrictions.eq("userId", userId))

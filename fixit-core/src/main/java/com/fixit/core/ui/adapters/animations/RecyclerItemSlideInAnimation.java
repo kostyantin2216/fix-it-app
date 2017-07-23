@@ -30,7 +30,7 @@ public class RecyclerItemSlideInAnimation implements RecyclerItemAnimation {
     }
 
     public RecyclerItemSlideInAnimation(Context context, Direction direction, boolean fade) {
-        this(direction, AppConfig.getInt(context, "default_recycler_item_animation_time_millis", 1000), fade);
+        this(direction, AppConfig.getInteger(context, "default_recycler_item_animation_time_millis", 1000), fade);
     }
 
     public RecyclerItemSlideInAnimation(Context context, Direction direction) {

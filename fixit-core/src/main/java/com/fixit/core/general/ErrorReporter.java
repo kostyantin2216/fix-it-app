@@ -8,7 +8,7 @@ import com.fixit.core.factories.RetrofitFactory;
 import com.fixit.core.rest.apis.ServerLogDataAPI;
 import com.fixit.core.rest.callbacks.EmptyCallback;
 import com.fixit.core.rest.services.ServerLogDataService;
-import com.fixit.core.utils.PrefUtils;
+import com.fixit.core.utils.GlobalPreferences;
 
 import java.util.Date;
 
@@ -39,7 +39,7 @@ public class ErrorReporter {
                 new Date()
         );
 
-        PrefUtils.fillServerLog(context, log);
+        GlobalPreferences.fillServerLog(context, log);
 
         mServerApi.create(log).enqueue(new EmptyCallback<ServerLog>());
     }

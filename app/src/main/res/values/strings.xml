@@ -88,6 +88,7 @@
     <string name="submit">Submit</string>
     <string name="review">Review</string>
     <string name="review_content">Review Content</string>
+    <string name="review_description">Review Description</string>
     <string name="review_title">Review Title</string>
     <string name="leave_review">Leave a review</string>
     <string name="format_rate_name">Rate %1$s</string>

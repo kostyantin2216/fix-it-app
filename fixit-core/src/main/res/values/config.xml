@@ -18,6 +18,8 @@
     <string name="api_key">TlKm7GFjtGVD2YoQruca9emGfSz9j323</string>
     <string name="user_agent">Fix-It-Android</string>
 
+    <integer name="order_feedback_notification_delay_min">30</integer>
+
     <string name="email_for_support">kostya2216@gmail.com</string>
     <string name="subject_for_error_report">Report error</string>
 

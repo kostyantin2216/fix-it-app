@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.fixit.core.config.AppConfig;
-import com.fixit.core.data.Profession;
 
 /**
  * Created by Kostyantin on 7/29/2016.
@@ -21,7 +20,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private int dbOpenCounter = 0;
 
     public DatabaseManager(Context context) {
-        super(context, DB_NAME, null, AppConfig.getInt(context, AppConfig.KEY_DB_VERSION, 0));
+        super(context, DB_NAME, null, AppConfig.getInteger(context, AppConfig.KEY_DB_VERSION, 0));
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.fixit.core.rest.callbacks.GeneralServiceErrorCallback;
 import com.fixit.core.rest.callbacks.ManagedServiceCallback;
 import com.fixit.core.rest.requests.data.UserRegistrationRequestData;
 import com.fixit.core.rest.responses.data.UserRegistrationResponseData;
-import com.fixit.core.utils.PrefUtils;
+import com.fixit.core.utils.GlobalPreferences;
 
 /**
  * Created by konstantin on 5/8/2017.
@@ -25,7 +25,7 @@ public class UserController extends BaseController {
     }
 
     public boolean isUserRegistered() {
-        return !TextUtils.isEmpty(PrefUtils.getUserId(getApplicationContext()));
+        return !TextUtils.isEmpty(GlobalPreferences.getUserId(getApplicationContext()));
     }
 
     public void registerUser(UserAccountDetails accountDetails, final UserRegistrationCallback callback) {

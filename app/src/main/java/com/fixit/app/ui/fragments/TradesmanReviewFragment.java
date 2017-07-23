@@ -3,8 +3,6 @@ package com.fixit.app.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +13,13 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.fixit.app.R;
-import com.fixit.core.controllers.ActivityController;
 import com.fixit.core.controllers.ReviewController;
 import com.fixit.core.data.Review;
 import com.fixit.core.data.Tradesman;
 import com.fixit.core.ui.fragments.BaseFragment;
 import com.fixit.core.utils.Constants;
-import com.fixit.core.utils.PrefUtils;
+import com.fixit.core.utils.GlobalPreferences;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.Date;
 import java.util.List;
@@ -91,7 +86,7 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
         if(v.getId() == R.id.btn_submit) {
             Review review = mView.fieldsToReview();
             review.setTradesmanId(tradesman.get_id());
-            review.setUserId(PrefUtils.getUserId(getContext()));
+            review.setUserId(GlobalPreferences.getUserId(getContext()));
             review.setOnDisplay(true);
             review.setCreatedAt(new Date());
 
@@ -137,7 +132,7 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
             tvStatus = (TextView) v.findViewById(R.id.tv_review_status);
             ivTradesmanLogo = (ImageView) v.findViewById(R.id.iv_tradesman_logo);
             tvCompanyName = (TextView) v.findViewById(R.id.tv_company_name);
-            rbRating = (RatingBar) v.findViewById(R.id.rb_review_rating);
+            rbRating = (RatingBar) v.findViewById(R.id.rb_rating);
             etReviewTitle = (EditText) v.findViewById(R.id.et_review_title);
             etReview = (EditText) v.findViewById(R.id.et_review_content);
             btnSubmit = (Button) v.findViewById(R.id.btn_submit);
@@ -160,7 +155,7 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
 
         @Override
         public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-            btnSubmit.setVisibility(View.VISIBLE);
+            btnSubmit.setVisibility(rating > 0.0f ? View.VISIBLE : View.INVISIBLE);
         }
 
         Review fieldsToReview() {

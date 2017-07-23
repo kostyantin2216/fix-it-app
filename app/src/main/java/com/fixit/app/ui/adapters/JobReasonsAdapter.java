@@ -36,7 +36,7 @@ public class JobReasonsAdapter extends MultiSelectRecyclerAdapter {
         super(
                 new RecyclerItemSlideInAnimation(context, RecyclerItemSlideInAnimation.Direction.RIGHT),
                 selectItems,
-                AppConfig.getInt(context, AppConfig.KEY_MAX_JOB_REASON_SELECTION, -1)
+                AppConfig.getInteger(context, AppConfig.KEY_MAX_JOB_REASON_SELECTION, -1)
         );
 
         mJobReasons = items;

@@ -10,7 +10,7 @@ import android.os.Build;
 import com.fixit.core.data.DeviceInfo;
 import com.fixit.core.data.VersionInfo;
 import com.fixit.core.utils.FILog;
-import com.fixit.core.utils.PrefUtils;
+import com.fixit.core.utils.GlobalPreferences;
 import com.google.gson.Gson;
 
 import java.util.HashSet;
@@ -50,6 +50,7 @@ public class AppConfig {
     public final static String KEY_TWILIO_AUTH_TOKEN = "twilio_auth_token";
     public final static String KEY_VERIFICATION_FROM_TELEPHONE = "verification_from_number";
     public final static String KEY_MAX_JOB_REASON_SELECTION = "max_job_reason_selection";
+    public final static String KEY_ORDER_FEEDBACK_NOTIFICATION_DELAY = "order_feedback_notification_delay_min";
 
     private final static String KEY_IS_PRODUCTION = "is_production";
     private final static String KEY_DEVICE_INFO = "device_info";
@@ -75,7 +76,7 @@ public class AppConfig {
         return defaultColor;
     }
 
-    public static Integer getInt(Context context, String code, Integer defaultVal) {
+    public static Integer getInteger(Context context, String code, Integer defaultVal) {
         Integer override = Overrides.getInteger(context, code);
         if(override != null) {
             return override;
@@ -174,7 +175,7 @@ public class AppConfig {
         String deviceInformation = (String) configurations.get(KEY_DEVICE_INFO);
         if(deviceInformation == null) {
             deviceInfo = new DeviceInfo(
-                    PrefUtils.getDeviceId(context),
+                    GlobalPreferences.getDeviceId(context),
                     Build.BRAND,
                     Build.MODEL,
                     Build.MANUFACTURER,

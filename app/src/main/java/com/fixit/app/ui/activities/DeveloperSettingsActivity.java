@@ -8,9 +8,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.fixit.app.R;
+import com.fixit.app.ifs.notifications.OrderNotificationManager;
 import com.fixit.core.BaseApplication;
 import com.fixit.core.config.AppConfig;
+import com.fixit.core.data.Order;
+import com.fixit.core.database.OrderDAO;
 import com.fixit.core.ui.activities.BaseDeveloperSettingsActivity;
+import com.fixit.core.utils.GlobalPreferences;
 
 /**
  * Created by Kostyantin on 7/5/2017.
@@ -31,7 +35,7 @@ public class DeveloperSettingsActivity extends BaseDeveloperSettingsActivity {
                     value = AppConfig.getString(this, configuration.key, null);
                     break;
                 case INT:
-                    value = AppConfig.getInt(this, configuration.key, null);
+                    value = AppConfig.getInteger(this, configuration.key, null);
                     break;
                 case BOOLEAN:
                     value = AppConfig.getBoolean(this, configuration.key, null);
@@ -68,8 +72,27 @@ public class DeveloperSettingsActivity extends BaseDeveloperSettingsActivity {
                 restartApp(false);
 
                 return true;
+            case R.id.send_order_notification:
+                sendOrderNotification();
+
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void sendOrderNotification() {
+        long orderId = GlobalPreferences.getLastOrderId(this);
+        if(orderId > -1) {
+            OrderDAO orderDao =((BaseApplication) getApplication()).getDaoFactory().createOrderDao();
+            Order order = orderDao.findById(orderId);
+            if(order != null) {
+                OrderNotificationManager.registerOrderFeedbackNotification(this, order, true);
+            } else {
+                notifyUser("Could not find order with id " + orderId + ", create a new order and try again");
+            }
+        } else {
+            notifyUser("Cannot send notification without creating at least one order");
         }
     }
 
@@ -95,7 +118,6 @@ public class DeveloperSettingsActivity extends BaseDeveloperSettingsActivity {
 
     @Override
     public void restartApp(boolean skipSplash) {
-        //
         startActivity(new Intent(this, SplashActivity.class));
         finishAffinity();
     }

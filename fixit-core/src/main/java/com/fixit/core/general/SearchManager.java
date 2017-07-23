@@ -97,10 +97,10 @@ public class SearchManager {
             this.resultCallback = resultCallback;
             this.handler = new Handler(Looper.getMainLooper());
 
-            this.pollingRetryLimit = AppConfig.getInt(context, AppConfig.KEY_SEARCH_RESULT_POLLING_RETRY_LIMIT, 5);
-            this.pollingRetryIntervalMs = AppConfig.getInt(context, AppConfig.KEY_SEARCH_RESULT_POLLING_RETRY_INTERVAL_MS, 800);
-            this.errorRetryLimit = AppConfig.getInt(context, AppConfig.KEY_SERVER_CONNECTION_RETRY_LIMIT, 5);
-            this.errorRetryIntervalMs = AppConfig.getInt(context, AppConfig.KEY_SERVER_CONNECTION_RETRY_INTERVAL_MS, 800);
+            this.pollingRetryLimit = AppConfig.getInteger(context, AppConfig.KEY_SEARCH_RESULT_POLLING_RETRY_LIMIT, 5);
+            this.pollingRetryIntervalMs = AppConfig.getInteger(context, AppConfig.KEY_SEARCH_RESULT_POLLING_RETRY_INTERVAL_MS, 800);
+            this.errorRetryLimit = AppConfig.getInteger(context, AppConfig.KEY_SERVER_CONNECTION_RETRY_LIMIT, 5);
+            this.errorRetryIntervalMs = AppConfig.getInteger(context, AppConfig.KEY_SERVER_CONNECTION_RETRY_INTERVAL_MS, 800);
         }
 
         @Override

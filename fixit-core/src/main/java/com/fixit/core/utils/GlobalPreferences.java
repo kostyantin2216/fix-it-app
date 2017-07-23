@@ -18,12 +18,13 @@ import java.util.UUID;
  * Created by Kostyantin on 12/24/2016.
  */
 
-public class PrefUtils {
+public class GlobalPreferences {
 
     private final static String PREF_GROUP_GLOBAL = "global_prefs";
     private final static String PREF_USER_ID = "pref_user_id";
     private final static String PREF_INSTALLATION_ID = "pref_installation_id";
     private final static String PREF_DEVICE_ID = "pref_device_id";
+    private final static String PREF_LAST_ORDER_ID = "pref_last_order_id";
 
     // GETTERS
 
@@ -33,9 +34,13 @@ public class PrefUtils {
     }
 
     public static String getInstallationId(Context context) {
-        String installationId = context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
+        return context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
                 .getString(PREF_INSTALLATION_ID, "");
-        return installationId;
+    }
+
+    public static long getLastOrderId(Context context) {
+        return context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
+                .getLong(PREF_LAST_ORDER_ID, -1);
     }
 
     public static String getDeviceId(Context context) {
@@ -51,6 +56,12 @@ public class PrefUtils {
     }
 
     // SETTERS
+
+    public static void setLastOrderId(Context context, long orderId) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
+                .edit().putLong(PREF_LAST_ORDER_ID, orderId);
+        editor.apply();
+    }
 
     public static void setUserId(Context context, String userId) {
         SharedPreferences.Editor editor = context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)

@@ -28,7 +28,7 @@ import com.fixit.core.rest.services.ServerLogDataService;
 import com.fixit.core.rest.services.SynchronizationService;
 import com.fixit.core.rest.services.TwilioExternalService;
 import com.fixit.core.rest.services.UserService;
-import com.fixit.core.utils.PrefUtils;
+import com.fixit.core.utils.GlobalPreferences;
 
 import retrofit2.Retrofit;
 
@@ -45,7 +45,7 @@ public class APIFactory {
         String baseUrl = AppConfig.getString(context, AppConfig.KEY_SERVER_API_BASE_URL, "");
         mClient = RetrofitFactory.createServerRetrofitClient(context, baseUrl);
         mHeader = new APIRequestHeader();
-        PrefUtils.fillApiRequestHeader(context, mHeader);
+        GlobalPreferences.fillApiRequestHeader(context, mHeader);
     }
 
     public void updateLatestScreen(String latestScreen) {

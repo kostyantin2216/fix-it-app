@@ -14,7 +14,7 @@ import com.fixit.core.rest.apis.AppInstallationDataAPI;
 import com.fixit.core.rest.apis.SynchronizationServiceAPI;
 import com.fixit.core.synchronization.SynchronizationTask;
 import com.fixit.core.utils.FILog;
-import com.fixit.core.utils.PrefUtils;
+import com.fixit.core.utils.GlobalPreferences;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -79,7 +79,7 @@ public class AppInitializationTask extends Thread {
             DAOFactory daoFactory = mCallback.getDaoFactory();
 
             if(!mStopped) {
-                if (TextUtils.isEmpty(PrefUtils.getInstallationId(context))) {
+                if (TextUtils.isEmpty(GlobalPreferences.getInstallationId(context))) {
                     sendInstallation(context, serverAPIFactory.createAppInstallationApi());
                 }
 
@@ -109,7 +109,7 @@ public class AppInitializationTask extends Thread {
             Response<AppInstallation> response = api.create(appInstallation).execute();
             if(!mStopped && response != null) {
                 String appInstallationId = response.body().getId();
-                PrefUtils.setInstallationId(context, appInstallationId);
+                GlobalPreferences.setInstallationId(context, appInstallationId);
                 if(!mStopped) {
                     mCallback.updateInstallationId(appInstallationId);
                 }

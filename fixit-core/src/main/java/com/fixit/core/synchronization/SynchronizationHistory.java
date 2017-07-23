@@ -36,7 +36,7 @@ public class SynchronizationHistory {
         this.preferences = context.getSharedPreferences(PREF_GROUP_SYNC_HISTORY, Context.MODE_PRIVATE);
         this.supportedTables = supportedTables;
 
-        long syncMinIntervalMs = AppConfig.getInt(context, AppConfig.KEY_SYNCHRONIZATION_MIN_INTERVAL_MS, 3600000);
+        long syncMinIntervalMs = AppConfig.getInteger(context, AppConfig.KEY_SYNCHRONIZATION_MIN_INTERVAL_MS, 3600000);
         long lastSyncTime = preferences.getLong(PREF_LAST_SYNC, 0);
         long syncAfter = lastSyncTime + syncMinIntervalMs;
 

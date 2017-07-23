@@ -68,7 +68,6 @@ public class SingleChoiceSelectionFragment extends BaseFragment<ActivityControll
         List<Selection> selections = mListener.getSelections(mSelectionCode).selections;
 
         Context context = getContext();
-        StyleHolder<Button> styleHolder = new ButtonStyleHolder(context);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         int buttonMargin = UIUtils.dpToPx(context, 6);
         lp.setMargins(buttonMargin, buttonMargin, buttonMargin, buttonMargin);
@@ -77,7 +76,7 @@ public class SingleChoiceSelectionFragment extends BaseFragment<ActivityControll
             btnSelection.setText(selection.display);
             btnSelection.setTag(selection.value);
             btnSelection.setOnClickListener(this);
-            styleHolder.applyStyle(btnSelection);
+            new ButtonStyleHolder(context).applyStyle(btnSelection);
             mRoot.addView(btnSelection, lp);
         }
     }
