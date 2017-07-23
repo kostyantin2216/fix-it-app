@@ -71,8 +71,29 @@
     <string name="search">Search</string>
     <string name="exit_app">Exit Application</string>
     <string name="finished">Finished</string>
+    <string name="later">Later</string>
 
     <string name="order_notification_title">Order Check-Up</string>
     <string name="order_notification_message">Have you been contacted by any of the tradesmen you ordered?</string>
+
+    <string name="arrived_to_fix_problem">Have any of the tradesmen arrived to fix your problem?</string>
+    <string name="leave_review_on_contacted_tradesmen">Would you like to leave a review on any of the tradesmen that have contacted you?</string>
+    <string name="who_fixed_the_problem">Which tradesman arrived to fix your problem?</string>
+    <string name="like_to_start_a_new_search">Would you like to start a new search?</string>
+    <string name="use_same_profession_and_location">Search for %1$s at location %2$s</string>
+    <string name="has_the_job_been_complete_to_your_liking">Has the job been completed to your liking?</string>
+    <string name="please_rate_us_on_play_store">Please rate us on Google Play store.</string>
+    <string name="okay">Okay</string>
+    <string name="not_now">Not now</string>
+    <string name="submit">Submit</string>
+    <string name="review">Review</string>
+    <string name="review_content">Review Content</string>
+    <string name="review_title">Review Title</string>
+    <string name="leave_review">Leave a review</string>
+    <string name="format_rate_name">Rate %1$s</string>
+    <string name="loading_reviews">Loading Reviews…</string>
+    <string name="create_new_review">Create a new review</string>
+    <string name="update_existing_review">Update existing review</string>
+    <string name="checking_review_history">Checking review history</string>
 
 </resources>

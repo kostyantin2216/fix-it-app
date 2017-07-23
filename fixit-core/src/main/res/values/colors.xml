@@ -3,6 +3,7 @@
 
 
     <color name="colorButton">#10B3F0</color>
+    <color name="colorDarkButton">#146ba7</color>
 
     <color name="light_text">@color/grey_100</color>
     <color name="dark_text">@color/grey_900</color>

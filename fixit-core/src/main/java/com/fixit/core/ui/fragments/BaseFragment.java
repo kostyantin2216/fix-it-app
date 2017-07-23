@@ -51,6 +51,18 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         }
     }
 
+    public void showLoader(String message) {
+        if(mListener != null) {
+            mListener.showLoader(message);
+        }
+    }
+
+    public void hideLoader() {
+        if(mListener != null) {
+            mListener.hideLoader();
+        }
+    }
+
     public void hideKeyboard(View rootView) {
         if(mListener != null) {
             mListener.hideKeyboard(rootView.getWindowToken());
@@ -135,6 +147,8 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         C getController();
         void showError(String displayMsg);
         void showPrompt(String displayMsg);
+        void showLoader(String message);
+        void hideLoader();
         void setToolbar(Toolbar toolbar, boolean homeAsUpEnabled);
         void setToolbarTitle(String title);
         void startChrome(String url);

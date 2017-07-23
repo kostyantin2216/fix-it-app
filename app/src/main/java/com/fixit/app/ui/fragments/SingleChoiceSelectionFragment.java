@@ -10,12 +10,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.fixit.app.R;
 import com.fixit.app.ui.styleholders.ButtonStyleHolder;
-import com.fixit.core.R;
 import com.fixit.core.controllers.ActivityController;
 import com.fixit.core.ui.fragments.BaseFragment;
 import com.fixit.core.ui.styleholders.StyleHolder;
 import com.fixit.core.utils.Constants;
+import com.fixit.core.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,6 @@ import java.util.List;
 /**
  * Created by konstantin on 7/19/2017.
  */
-
 public class SingleChoiceSelectionFragment extends BaseFragment<ActivityController> implements View.OnClickListener {
 
     private SingleChoiceSelectionListener mListener;
@@ -70,6 +70,8 @@ public class SingleChoiceSelectionFragment extends BaseFragment<ActivityControll
         Context context = getContext();
         StyleHolder<Button> styleHolder = new ButtonStyleHolder(context);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int buttonMargin = UIUtils.dpToPx(context, 6);
+        lp.setMargins(buttonMargin, buttonMargin, buttonMargin, buttonMargin);
         for(Selection selection : selections) {
             Button btnSelection = new Button(context);
             btnSelection.setText(selection.display);

@@ -44,9 +44,9 @@ public class OrderNotificationManager {
                 .setContentText(message)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setAutoCancel(true)
-                .setContentIntent(createPendingIntent(context, orderId, false, false))
-                .addAction(createAction(context, orderId, true))
-                .addAction(createAction(context, orderId, false))
+                .setContentIntent(createPendingIntent(context, 1, orderId, false, false))
+                .addAction(createAction(context, 2, orderId, true))
+                .addAction(createAction(context, 3, orderId, false))
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setVibrate(new long[] {1, 1, 1})
                 .build();
@@ -56,7 +56,7 @@ public class OrderNotificationManager {
         return notification;
     }
 
-    private static NotificationCompat.Action createAction(Context context, long orderId, boolean yesAction) {
+    private static NotificationCompat.Action createAction(Context context, int requestCode, long orderId, boolean yesAction) {
         int drawableId;
         int textId;
         if(yesAction) {
@@ -69,11 +69,11 @@ public class OrderNotificationManager {
         return new NotificationCompat.Action.Builder(
                 drawableId,
                 context.getString(textId),
-                createPendingIntent(context, orderId, true, yesAction)
+                createPendingIntent(context, requestCode, orderId, true, yesAction)
         ).build();
     }
 
-    private static PendingIntent createPendingIntent(Context context, long orderId, boolean fromAction, boolean yesAction) {
+    private static PendingIntent createPendingIntent(Context context, int requestCode, long orderId, boolean fromAction, boolean yesAction) {
         Intent intent;
         if(!fromAction) {
             intent = createDefaultIntent(context, orderId);
@@ -81,7 +81,7 @@ public class OrderNotificationManager {
             intent = createActionIntent(context, orderId, yesAction);
         }
 
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return PendingIntent.getActivity(context, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     private static Intent createActionIntent(Context context, long orderId, boolean yesAction) {
