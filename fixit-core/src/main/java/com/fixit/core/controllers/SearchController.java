@@ -12,7 +12,7 @@ import com.fixit.core.general.SearchManager;
  * Created by konstantin on 3/29/2017.
  */
 
-public class SearchController extends BaseController {
+public class SearchController extends OrderController {
 
     private final SearchManager mSearchManager;
     private final ProfessionDAO mProfessionDao;

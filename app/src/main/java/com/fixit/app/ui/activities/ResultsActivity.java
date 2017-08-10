@@ -83,7 +83,7 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
     public void onResultsReceived(List<Tradesman> tradesmen, Map<String, Integer> reviewCountForTradesmen) {
         hideLoader();
         getTradesmenResultsFragment().setTradesmen(tradesmen, reviewCountForTradesmen);
-        getAnalyticsManager().trackSearchResults(mProfession.getName(), mJobLocation.getGoogleAddress(), tradesmen.size());
+        getAnalyticsManager().trackSearchResults(mProfession.getName(), mJobLocation.getGoogleAddress(), tradesmen != null ? tradesmen.size() : 0);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
     @Override
     public void showTradesman(int fromAdapterPosition, TradesmanWrapper tradesman) {
         mTradesmenIdsForPositions.put(fromAdapterPosition, tradesman.tradesman.get_id());
-        TradesmanProfileFragment fragment = TradesmanProfileFragment.newInstance(tradesman.tradesman);
+        TradesmanProfileFragment fragment = TradesmanProfileFragment.newInstance(tradesman.tradesman, true);
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(android.R.id.content, fragment)

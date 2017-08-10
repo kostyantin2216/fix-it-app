@@ -114,6 +114,7 @@ public class GoogleClientManager implements GoogleApiClient.OnConnectionFailedLi
                 if(result.isSuccess()) {
                     mSignInCallback.onSignInSuccess(result.getSignInAccount());
                 } else {
+                    FILog.e("Google login", result.getStatus().getStatusCode() + " : " + result.getStatus().getStatusMessage());
                     mSignInCallback.onSignInError(result.getStatus().getStatusCode() == GoogleSignInStatusCodes.SIGN_IN_CANCELLED);
                 }
                 mSignInCallback = null;

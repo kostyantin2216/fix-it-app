@@ -96,5 +96,14 @@
     <string name="create_new_review">Create a new review</string>
     <string name="update_existing_review">Update existing review</string>
     <string name="checking_review_history">Checking review history</string>
+    <string name="open">Open</string>
+
+    <string name="ongoing_order">On-Going Order</string>
+    <string name="format_ongoing_order">On-Going %1$s Order</string>
+    <string name="order_history">Order History</string>
+    <string name="view">View</string>
+    <string name="format_ordered_x_tradesmen">Ordered %1$d tradesmen</string>
+    <string name="format_at_x">At %1$s</string>
+    <string name="no_orders_made_yet">You haven\'t made any orders yet!</string>
 
 </resources>

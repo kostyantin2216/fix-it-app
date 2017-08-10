@@ -37,10 +37,12 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
 
     private boolean newReview = true;
 
-    public static TradesmanReviewFragment newInstance(Tradesman tradesman) {
+    public static TradesmanReviewFragment newInstance(Tradesman tradesman, @Nullable Integer backgroundColor) {
         Bundle args = new Bundle();
         args.putParcelable(Constants.ARG_TRADESMAN, tradesman);
-
+        if(backgroundColor != null) {
+            args.putInt(Constants.ARG_BACKGROUND_COLOR, backgroundColor);
+        }
         TradesmanReviewFragment fragment = new TradesmanReviewFragment();
         fragment.setArguments(args);
         return fragment;
@@ -58,7 +60,13 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_tradesman_review, container, false);
 
-        mView = new ViewHolder(v, this);
+        Integer backgroundColor = null;
+        Bundle args = getArguments();
+        if(args.containsKey(Constants.ARG_BACKGROUND_COLOR)) {
+            backgroundColor = args.getInt(Constants.ARG_BACKGROUND_COLOR);
+        }
+
+        mView = new ViewHolder(v, this, backgroundColor);
         mView.populate(tradesman);
 
         return v;
@@ -89,6 +97,12 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
             review.setUserId(GlobalPreferences.getUserId(getContext()));
             review.setOnDisplay(true);
             review.setCreatedAt(new Date());
+
+            if(newReview) {
+                getController().saveReview(review);
+            } else {
+                getController().updateReview(review);
+            }
 
             if(mListener != null) {
                 mListener.onTradesmanReviewed(newReview, review);
@@ -128,7 +142,7 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
         final EditText etReview;
         final Button btnSubmit;
 
-        ViewHolder(View v, View.OnClickListener submitClickListener) {
+        ViewHolder(View v, View.OnClickListener submitClickListener, Integer backgroundColor) {
             tvStatus = (TextView) v.findViewById(R.id.tv_review_status);
             ivTradesmanLogo = (ImageView) v.findViewById(R.id.iv_tradesman_logo);
             tvCompanyName = (TextView) v.findViewById(R.id.tv_company_name);
@@ -139,6 +153,10 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
 
             btnSubmit.setOnClickListener(submitClickListener);
             rbRating.setOnRatingBarChangeListener(this);
+
+            if(backgroundColor != null) {
+                v.findViewById(R.id.root).setBackgroundColor(backgroundColor);
+            }
         }
 
         void populate(Tradesman tradesman) {

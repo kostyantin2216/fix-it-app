@@ -35,6 +35,9 @@
             android:name=".ui.activities.OrderFeedbackActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activities.OrderHistoryActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activities.DeveloperSettingsActivity"
             android:screenOrientation="portrait" />
         <activity

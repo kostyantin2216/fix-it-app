@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
@@ -124,6 +125,19 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(homeAsUpEnabled);
         }
+    }
+
+    public Toolbar findToolbar(@NonNull ViewGroup viewGroup) {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View view = viewGroup.getChildAt(i);
+            if (view.getClass().getName().equals("android.support.v7.widget.Toolbar")
+                    || view.getClass().getName().equals("android.widget.Toolbar")) {
+                return (Toolbar) view;
+            } else if (view instanceof ViewGroup) {
+                return findToolbar((ViewGroup) view);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -266,13 +280,19 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         showLoader(getString(R.string.loading));
     }
 
+    @Override
     public void showLoader(String message) {
+        showLoader(message, false);
+    }
+
+    public void showLoader(String message, boolean cancelable) {
         if(mLoaderDialog == null) {
             mLoaderDialog = new MaterialDialog.Builder(this)
                     .title(R.string.please_wait)
                     .content(message)
                     .progress(true, 0)
                     .progressIndeterminateStyle(true)
+                    .cancelable(cancelable)
                     .show();
         } else {
             mLoaderDialog.setContent(message);

@@ -20,7 +20,7 @@ import retrofit2.Response;
  * Created by konstantin on 7/23/2017.
  */
 
-public class ReviewController extends BaseController {
+public class ReviewController extends TradesmenController {
 
     private ReviewDataAPI mReviewDataApi;
 

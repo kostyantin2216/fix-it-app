@@ -3,19 +3,36 @@ package com.fixit.app.ui.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.fixit.app.R;
 import com.fixit.app.ifs.external.google.GoogleClientManager;
 import com.fixit.app.ifs.validation.AddressValidator;
+import com.fixit.app.ui.components.OngoingOrderView;
+import com.fixit.app.ui.helpers.OrderedTradesmanInteractionHandler;
 import com.fixit.app.ui.fragments.ProfessionsListFragment;
 import com.fixit.app.ui.fragments.SearchFragment;
+import com.fixit.app.ui.fragments.TradesmanProfileFragment;
+import com.fixit.app.ui.fragments.TradesmanReviewFragment;
+import com.fixit.app.ui.helpers.TradesmanActionHandler;
 import com.fixit.core.BaseApplication;
 import com.fixit.core.controllers.SearchController;
 import com.fixit.core.data.JobLocation;
 import com.fixit.core.data.MutableLatLng;
+import com.fixit.core.data.Order;
 import com.fixit.core.data.Profession;
+import com.fixit.core.data.Review;
+import com.fixit.core.data.Tradesman;
 import com.fixit.core.general.SearchManager;
 import com.fixit.core.utils.Constants;
 import com.fixit.core.utils.FILog;
@@ -30,7 +47,10 @@ public class SearchActivity extends BaseAppActivity<SearchController>
         implements SearchFragment.SearchFragmentInteractionListener,
                    SearchManager.SearchCallback,
                    ProfessionsListFragment.ProfessionSelectionListener,
-                   GoogleClientManager.GoogleManagerCallback {
+                   GoogleClientManager.GoogleManagerCallback,
+                   NavigationView.OnNavigationItemSelectedListener,
+                   OrderedTradesmanInteractionHandler.OrderedTradesmanInteractionListener,
+                   TradesmanReviewFragment.TradesmanReviewListener {
 
     private static final String LOG_TAG = "#" + SearchActivity.class.getSimpleName();
     private static final String FRAG_TAG_SEARCH = "searchFrag";
@@ -42,10 +62,12 @@ public class SearchActivity extends BaseAppActivity<SearchController>
     private JobLocation mJobLocation;
     private Profession mProfession;
 
+    private boolean navInitialized = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_fragment_holder);
+        setContentView(R.layout.activity_drawer_layout);
 
         if(savedInstanceState == null) {
             getSupportFragmentManager()
@@ -67,10 +89,69 @@ public class SearchActivity extends BaseAppActivity<SearchController>
     }
 
     @Override
+    public void setToolbar(Toolbar toolbar, boolean homeAsUpEnabled) {
+        super.setToolbar(toolbar, homeAsUpEnabled);
+
+        if(!navInitialized) {
+            initNavigationDrawer(toolbar);
+            navInitialized = true;
+        }
+    }
+
+    private void initNavigationDrawer(Toolbar toolbar) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.open, R.string.close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        invalidateNavigationHeader(navigationView);
+    }
+
+    private void invalidateNavigationHeader(NavigationView navigationView) {
+        Order order = getController().getLatestOrder();
+
+        View headerView = navigationView.getHeaderView(0);
+        if(order != null && !order.isComplete()) {
+            OngoingOrderView ongoingOrderView = (OngoingOrderView) headerView.findViewById(R.id.ongoing_order_view);
+            ongoingOrderView.setOrder(order);
+            ongoingOrderView.setInteractionHandler(new OrderedTradesmanInteractionHandler(this));
+        } else {
+            headerView.setVisibility(View.GONE);
+        }
+    }
+
+    private void closeNavigationDrawer() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
 
         getSearchFragment().setGoogleApiClient(mGoogleClientManager.mClient);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(navInitialized) {
+            invalidateNavigationHeader((NavigationView) findViewById(R.id.nav_view));
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -177,4 +258,32 @@ public class SearchActivity extends BaseAppActivity<SearchController>
         return this;
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        closeNavigationDrawer();
+        if(item.getItemId() == R.id.order_history) {
+            startActivity(new Intent(this, OrderHistoryActivity.class));
+        }
+        return true;
+    }
+
+    @Override
+    public void onOrderViewInteraction() {
+        closeNavigationDrawer();
+    }
+
+    @Override
+    public void showTradesman(Tradesman tradesman) {
+        TradesmanActionHandler.showTradesman(getSupportFragmentManager(), tradesman);
+    }
+
+    @Override
+    public void reviewTradesman(Tradesman tradesman) {
+        TradesmanActionHandler.reviewTradesman(this, getSupportFragmentManager(), tradesman);
+    }
+
+    @Override
+    public void onTradesmanReviewed(boolean isNewReview, Review review) {
+        onBackPressed();
+    }
 }

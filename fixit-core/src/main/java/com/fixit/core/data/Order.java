@@ -1,6 +1,7 @@
 package com.fixit.core.data;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -10,8 +11,15 @@ import java.util.Date;
 public class Order implements DataModelObject {
 
     public static Order newOrder(JobLocation jobLocation, Profession profession, Tradesman[] tradesmen, JobReason[] jobReasons) {
-        return new Order(null, jobLocation, profession, tradesmen, jobReasons, new Date());
+        return new Order(null, jobLocation, profession, tradesmen, jobReasons, new Date(), false);
     }
+
+    public static final Comparator<Order> CREATION_DATE_COMPARATOR = new Comparator<Order>() {
+        @Override
+        public int compare(Order o1, Order o2) {
+            return (int) (o2.creationDate.getTime() - o1.creationDate.getTime());
+        }
+    };
 
     private Long id;
     private JobLocation jobLocation;
@@ -19,14 +27,16 @@ public class Order implements DataModelObject {
     private Tradesman[] tradesmen;
     private JobReason[] jobReasons;
     private Date creationDate;
+    private boolean complete;
 
-    public Order(Long id, JobLocation jobLocation, Profession profession, Tradesman[] tradesmen, JobReason[] jobReasons, Date creationDate) {
+    public Order(Long id, JobLocation jobLocation, Profession profession, Tradesman[] tradesmen, JobReason[] jobReasons, Date creationDate, boolean complete) {
         this.id = id;
         this.jobLocation = jobLocation;
         this.profession = profession;
         this.tradesmen = tradesmen;
         this.jobReasons = jobReasons;
         this.creationDate = creationDate;
+        this.complete = complete;
     }
 
     public Long getId() {
@@ -77,6 +87,14 @@ public class Order implements DataModelObject {
         this.creationDate = creationDate;
     }
 
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete(boolean complete) {
+        this.complete = complete;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -86,6 +104,7 @@ public class Order implements DataModelObject {
                 ", tradesmen=" + Arrays.toString(tradesmen) +
                 ", jobReasons=" + Arrays.toString(jobReasons) +
                 ", creationDate=" + creationDate +
+                ", complete=" + complete +
                 '}';
     }
 }

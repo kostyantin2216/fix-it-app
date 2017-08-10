@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:background="@drawable/thin_grey_border">
+
+    <TextView
+        android:id="@+id/tv_company_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_more"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_more"
+        tools:text="Joe's Plumbing"
+        android:gravity="center"/>
+
+    <ImageView
+        android:id="@+id/iv_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_more_vert_grey_24dp"
+        app:layout_constraintStart_toEndOf="@id/tv_company_name"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/iv_call"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_phone_grey_24dp"
+        android:padding="8dp"
+        android:background="@drawable/thin_grey_border"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_more"
+        app:layout_constraintEnd_toStartOf="@+id/iv_msg"/>
+
+    <ImageView
+        android:id="@+id/iv_msg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_sms_grey_24dp"
+        android:padding="8dp"
+        android:background="@drawable/thin_grey_border"
+        app:layout_constraintStart_toEndOf="@id/iv_call"
+        app:layout_constraintTop_toBottomOf="@id/iv_more"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+</android.support.constraint.ConstraintLayout>

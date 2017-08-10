@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,13 +52,11 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
         final TextView tvNoReviews;
         final ProgressBar pbLoader;
 
-        public ViewHolder(Context context, View v, Tradesman tradesman, View.OnClickListener clickListener) {
+        ViewHolder(Context context, View v, Tradesman tradesman, boolean selectable, View.OnClickListener clickListener) {
             svProfileScroller = (NestedScrollView) v.findViewById(R.id.sv_profile_scroller);
             rvReviews = (RecyclerView) v.findViewById(R.id.review_list);
             tvNoReviews = (TextView) v.findViewById(R.id.tv_empty_list);
             pbLoader = (ProgressBar) v.findViewById(R.id.loader);
-
-            v.findViewById(R.id.btn_select_tradesman).setOnClickListener(clickListener);
 
             rvReviews.setNestedScrollingEnabled(false);
             rvReviews.setLayoutManager(new LinearLayoutManager(context));
@@ -72,6 +71,13 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
             ratingView.setRating(tradesman.getRating());
 
             changeListState(ListState.LOADING);
+
+            if(!selectable) {
+                v.findViewById(R.id.btn_select_tradesman).setVisibility(View.GONE);
+                ((CoordinatorLayout.LayoutParams) svProfileScroller.getLayoutParams()).bottomMargin = 0;
+            } else {
+                v.findViewById(R.id.btn_select_tradesman).setOnClickListener(clickListener);
+            }
         }
 
         void setRecyclerAdapter(RecyclerView.Adapter adapter) {
@@ -103,10 +109,11 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
         }
     }
 
-    public static TradesmanProfileFragment newInstance(Tradesman tradesman) {
+    public static TradesmanProfileFragment newInstance(Tradesman tradesman, boolean selectable) {
         TradesmanProfileFragment fragment = new TradesmanProfileFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constants.ARG_TRADESMAN, tradesman);
+        args.putBoolean(Constants.ARG_SELECTABLE, selectable);
         fragment.setArguments(args);
         return fragment;
     }
@@ -125,7 +132,8 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
 
         setToolbar((Toolbar) v.findViewById(R.id.toolbar), true);
 
-        mView = new ViewHolder(getContext(), v, mTradesman, this);
+        boolean selectable = getArguments().getBoolean(Constants.ARG_SELECTABLE);
+        mView = new ViewHolder(getContext(), v, mTradesman, selectable, this);
 
         return v;
     }
@@ -150,8 +158,6 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
 
         if(context instanceof TradesmanProfileInteractionListener) {
             mListener = (TradesmanProfileInteractionListener) context;
-        } else {
-            throw new IllegalArgumentException("context needs to implement " + TradesmanProfileInteractionListener.class.getName());
         }
     }
 

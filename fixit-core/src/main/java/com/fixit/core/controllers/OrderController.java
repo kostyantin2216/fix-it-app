@@ -1,5 +1,8 @@
 package com.fixit.core.controllers;
 
+import android.app.Application;
+import android.content.Context;
+
 import com.fixit.core.BaseApplication;
 import com.fixit.core.data.JobLocation;
 import com.fixit.core.data.JobReason;
@@ -73,6 +76,20 @@ public class OrderController extends ReviewController {
 
     public Order getOrder(long id) {
         return mOrderDao.findById(id);
+    }
+
+    public Order getLatestOrder() {
+        long lastOrderId = GlobalPreferences.getLastOrderId(getApplicationContext());
+
+        if(lastOrderId > -1) {
+            return mOrderDao.findById(lastOrderId);
+        } else {
+            return null;
+        }
+    }
+
+    public Order[] getAllOrders() {
+        return mOrderDao.findAll();
     }
 
     public interface JobReasonsCallback extends UnexpectedErrorCallback {

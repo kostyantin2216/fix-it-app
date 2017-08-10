@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_profession_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_plumber"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_date_line"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_profession_line"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent_black_AA"
+        android:paddingBottom="2dp"
+        android:paddingEnd="2dp"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/extra_large_text_size"
+        app:layout_constraintEnd_toStartOf="@+id/expand_indicator_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Plumber" />
+
+    <FrameLayout
+        android:id="@+id/expand_indicator_container"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/transparent_black_AA"
+        android:paddingEnd="8dp"
+        android:paddingTop="8dp"
+        android:paddingStart="2dp"
+        android:paddingBottom="2dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_profession_line"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_profession_line"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_expand_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_drop_down_circle_accent_24dp" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_tradesmen_line"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent_black_AA"
+        android:paddingBottom="2dp"
+        android:paddingEnd="2dp"
+        android:paddingStart="8dp"
+        android:paddingTop="2dp"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/standard_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_profession_line"
+        tools:text="Order of 3 tradesmen" />
+
+    <TextView
+        android:id="@+id/tv_location_line"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent_black_AA"
+        android:paddingBottom="8dp"
+        android:paddingEnd="2dp"
+        android:paddingStart="8dp"
+        android:paddingTop="2dp"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/standard_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_tradesmen_line"
+        tools:text="At 12 Fox St Johannesburg" />
+
+    <TextView
+        android:id="@+id/tv_date_line"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent_black_AA"
+        android:gravity="end"
+        android:paddingBottom="8dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="2dp"
+        android:paddingTop="2dp"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/small_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_location_line"
+        tools:text="12/08/17 at 05:35 PM" />
+
+</android.support.constraint.ConstraintLayout>

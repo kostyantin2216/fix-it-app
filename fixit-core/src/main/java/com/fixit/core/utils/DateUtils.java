@@ -15,6 +15,7 @@ public class DateUtils {
     public final static String FORMAT_RFC_2822 = "EEE, dd MMM yyyy HH:mm:ss Z";
     public final static String FORMAT_REST_DATE = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     public final static String FORMAT_DMY = "dd/MM/yyyy";
+    public final static String FORMAT_DMY_AT_HM = "dd/MM/yyy 'at' hh:mm a";
 
     public static Date stringToDate(String format, String dateString) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);

@@ -145,6 +145,10 @@ public class JobLocation implements Parcelable {
         this.googleAddress = googleAddress;
     }
 
+    public String toShortAddress() {
+        return streetNum + " " + street + ", " + neighborhood + ", " + city;
+    }
+
     @Override
     public String toString() {
         return "JobLocation{" +

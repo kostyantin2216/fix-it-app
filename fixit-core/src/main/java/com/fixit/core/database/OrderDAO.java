@@ -27,6 +27,7 @@ public class OrderDAO extends BaseDAO<Order> {
     public final static String KEY_TRADESMEN = "tradesmen";
     public final static String KEY_JOB_REASONS = "jobReasons";
     public final static String KEY_CREATION_DATE = "creationDate";
+    public final static String KEY_COMPLETE = "complete";
 
     public final static String CMD_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
             + KEY_ID + " INTEGER PRIMARY KEY, "
@@ -34,7 +35,8 @@ public class OrderDAO extends BaseDAO<Order> {
             + KEY_PROFESSION + " TEXT, "
             + KEY_TRADESMEN + " TEXT, "
             + KEY_JOB_REASONS + " TEXT, "
-            + KEY_CREATION_DATE + " INTEGER);";
+            + KEY_CREATION_DATE + " INTEGER, "
+            + KEY_COMPLETE + " INTEGER);";
 
     private final Gson gson;
 
@@ -62,6 +64,7 @@ public class OrderDAO extends BaseDAO<Order> {
         putJsonValue(cv, KEY_TRADESMEN, obj.getTradesmen());
         putJsonValue(cv, KEY_JOB_REASONS, obj.getJobReasons());
         cv.put(KEY_CREATION_DATE, obj.getCreationDate().getTime());
+        cv.put(KEY_COMPLETE, obj.isComplete() ? 1 : 0);
 
         return cv;
     }
@@ -74,7 +77,8 @@ public class OrderDAO extends BaseDAO<Order> {
                 extractJsonValue(c, KEY_PROFESSION, Profession.class),
                 extractJsonValue(c, KEY_TRADESMEN, Tradesman[].class),
                 extractJsonValue(c, KEY_JOB_REASONS, JobReason[].class),
-                new Date(c.getLong(c.getColumnIndex(KEY_CREATION_DATE)))
+                new Date(c.getLong(c.getColumnIndex(KEY_CREATION_DATE))),
+                c.getInt(c.getColumnIndex(KEY_COMPLETE)) == 1
         );
     }
 

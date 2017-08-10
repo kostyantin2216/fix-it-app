@@ -6,19 +6,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.fixit.app.R;
-import com.fixit.app.ifs.OrderFeedbackFlowManager;
+import com.fixit.app.ifs.feedback.OrderFeedbackFlowManager;
 import com.fixit.app.ui.fragments.TradesmanReviewFragment;
 import com.fixit.core.BaseApplication;
 import com.fixit.core.controllers.OrderController;
-import com.fixit.core.controllers.ReviewController;
 import com.fixit.core.data.Order;
 import com.fixit.app.ui.fragments.SingleChoiceSelectionFragment;
 import com.fixit.core.data.Review;
 import com.fixit.core.utils.Constants;
 import com.fixit.core.utils.FILog;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by konstantin on 7/19/2017.
@@ -86,12 +82,6 @@ public class OrderFeedbackActivity extends BaseAppActivity<OrderController>
 
     @Override
     public void onTradesmanReviewed(boolean isNewReview, Review review) {
-        ReviewController controller = getController();
-        if(isNewReview) {
-            controller.saveReview(review);
-        } else {
-            controller.updateReview(review);
-        }
         mFlowManager.tradesmanReviewed();
     }
 }

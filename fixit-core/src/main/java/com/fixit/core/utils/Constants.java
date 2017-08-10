@@ -22,6 +22,8 @@ public class Constants {
     public final static String ARG_SELECTED_YES = "selectedYes";
     public final static String ARG_SELECTION_CODE = "selectionCode";
     public final static String ARG_TITLE = "title";
+    public final static String ARG_SELECTABLE = "selectable";
+    public final static String ARG_BACKGROUND_COLOR = "background_color";
 
     public final static int HTTP_INTERNAL_SERVER_ERROR = 500;
 

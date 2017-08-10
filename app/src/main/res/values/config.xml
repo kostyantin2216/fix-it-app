@@ -6,7 +6,7 @@
     <string name="google_geo_api_key">AIzaSyBqA5tZjB_QeP7ONTgDQURWcafuavNVzNE</string>
     <string name="facebook_app_id">259875731141973</string>
     <string name="fb_login_protocol_scheme">fb259875731141973</string>
-    <integer name="db_version">3</integer>
+    <integer name="db_version">4</integer>
 
     <integer name="max_tradesmen_selection">3</integer>
     <integer name="max_job_reason_selection">6</integer>
