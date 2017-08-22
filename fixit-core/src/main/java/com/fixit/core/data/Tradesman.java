@@ -8,14 +8,15 @@ import java.util.Arrays;
 /**
  * Created by konstantin on 4/2/2017.
  */
-
 public class Tradesman implements Parcelable {
 
     private String _id;
     private int professionId;
     private String contactName;
     private String companyName;
+    private String telephone;
     private String logoUrl;
+    private String featureImageUrl;
     private float rating;
     private MutableLatLng lastKnownLocation;
     private WorkingDay[] workingDays;
@@ -52,6 +53,22 @@ public class Tradesman implements Parcelable {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getFeatureImageUrl() {
+        return featureImageUrl;
+    }
+
+    public void setFeatureImageUrl(String featureImageUrl) {
+        this.featureImageUrl = featureImageUrl;
     }
 
     public String getLogoUrl() {
@@ -93,7 +110,9 @@ public class Tradesman implements Parcelable {
                 ", professionId=" + professionId +
                 ", contactName='" + contactName + '\'' +
                 ", companyName='" + companyName + '\'' +
+                ", telephone='" + telephone + '\'' +
                 ", logoUrl='" + logoUrl + '\'' +
+                ", featureImageUrl='" + featureImageUrl + '\'' +
                 ", rating=" + rating +
                 ", lastKnownLocation=" + lastKnownLocation +
                 ", workingDays=" + Arrays.toString(workingDays) +
@@ -103,7 +122,7 @@ public class Tradesman implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
-    }
+    }  
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {

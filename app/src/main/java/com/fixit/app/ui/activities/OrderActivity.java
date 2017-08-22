@@ -112,7 +112,7 @@ public class OrderActivity extends BaseAppActivity<OrderController>
             fragment.onOrderComplete();
         }
         Order order = getController().saveOrder(mJobLocation, mProfession, mTradesmen, mJobReasons);
-        OrderNotificationManager.registerOrderFeedbackNotification(this, order);
+        OrderNotificationManager.initiateOrderFeedback(this, order);
     }
 
     @Override

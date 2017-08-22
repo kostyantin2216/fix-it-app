@@ -60,7 +60,7 @@ public class ProfessionDAO extends BaseDAO<Profession> {
     }
 
     public Profession findProfessionByName(String name) {
-        return findOneByProperty(KEY_NAME, CommonUtils.capitalize(name));
+        return findOneByProperty(KEY_NAME, name);
     }
 
     @Override

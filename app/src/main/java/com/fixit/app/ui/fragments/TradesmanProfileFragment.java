@@ -36,7 +36,9 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
     private TradesmanProfileInteractionListener mListener;
 
     private Tradesman mTradesman;
+    private ReviewData[] mReviewData;
 
+    private ReviewRecyclerAdapter mAdapter;
     private ViewHolder mView;
 
     private static class ViewHolder {
@@ -146,6 +148,15 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        if(mAdapter == null && mReviewData != null) {
+            createAdapter(mReviewData);
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         if(mListener != null && v.getId() == R.id.btn_select_tradesman) {
             mListener.onTradesmanSelected(mTradesman);
@@ -170,8 +181,15 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
 
     @Override
     public void onReviewsLoaded(ReviewData[] reviewData) {
-        ReviewRecyclerAdapter adapter = new ReviewRecyclerAdapter(getContext(), reviewData);
-        mView.setRecyclerAdapter(adapter);
+        mReviewData = reviewData;
+        if(getContext() != null) {
+            createAdapter(reviewData);
+        }
+    }
+
+    private void createAdapter(ReviewData[] reviewData) {
+        mAdapter = new ReviewRecyclerAdapter(getContext(), reviewData);
+        mView.setRecyclerAdapter(mAdapter);
     }
 
     public interface TradesmanProfileInteractionListener {

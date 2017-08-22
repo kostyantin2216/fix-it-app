@@ -1,21 +1,62 @@
 package com.fixit.app.ifs.feedback;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
+import android.content.res.Resources;
 
 import com.fixit.app.R;
-import com.fixit.app.ui.fragments.SingleChoiceSelectionFragment;
-import com.fixit.app.ui.fragments.TradesmanReviewFragment;
 import com.fixit.core.data.Order;
-import com.fixit.core.data.Tradesman;
-import com.fixit.core.utils.Constants;
 
 /**
  * Created by konstantin on 7/23/2017.
  */
 
-public class OrderFeedbackFlowManager implements SingleChoiceSelectionFragment.SingleChoiceSelectionListener {
+public class OrderFeedbackFlowManager {
 
-    private final static int SELECTION_CODE_CONTACTED = 1;
+    public final static int FLOW_CODE_IMMEDIATE = 1;
+    public final static int FLOW_CODE_DELAYED = 2;
+
+    public static OrderFeedbackNotificationData[] createNotificationData(Context context, Order order, int... forFlows) {
+        if(forFlows.length == 0) {
+            forFlows = new int[] {FLOW_CODE_IMMEDIATE, FLOW_CODE_DELAYED};
+        }
+
+        OrderFeedbackNotificationData[] data = new OrderFeedbackNotificationData[forFlows.length];
+
+        Resources resources = context.getResources();
+
+        String title = resources.getString(R.string.order_notification_title);
+        long orderId = order.getId();
+
+        for(int i = 0; i < forFlows.length; i++) {
+            switch (forFlows[i]) {
+                case FLOW_CODE_DELAYED:
+                    String delayFlowMessage = resources.getString(R.string.order_notification_delayed_flow_message);
+                    long delayedFlowDelayMinutes = resources.getInteger(R.integer.order_delayed_feedback_notification_delay_min);
+                    data[i] = new OrderFeedbackNotificationData(orderId, title,  delayFlowMessage, FLOW_CODE_DELAYED, delayedFlowDelayMinutes);
+                    break;
+                case FLOW_CODE_IMMEDIATE:
+                    String immediateFlowMessage = resources.getString(R.string.order_notification_immediate_flow_message);
+                    long immediateFlowDelayMinutes = resources.getInteger(R.integer.order_immediate_feedback_notification_delay_min);
+                    data[i] = new OrderFeedbackNotificationData(orderId, title, immediateFlowMessage, FLOW_CODE_IMMEDIATE, immediateFlowDelayMinutes);
+                    break;
+            }
+        }
+
+        return data;
+    }
+
+    public static BaseOrderFeedbackFlow createFlow(int flowCode, Order order, OrderFeedbackView view, boolean fromAction, boolean actionYes) {
+        switch (flowCode) {
+            case FLOW_CODE_IMMEDIATE:
+                return new OrderImmediateFeedbackFlow(order, view, fromAction, actionYes);
+            case FLOW_CODE_DELAYED:
+                return new OrderDelayedFeedbackFlow(order, view, fromAction, actionYes);
+            default:
+                throw new IllegalArgumentException("Unsupported flow code(" + flowCode + ")");
+        }
+    }
+
+    /*private final static int SELECTION_CODE_CONTACTED = 1;
     private final static int SELECTION_CODE_ARRIVED = 2;
     private final static int SELECTION_CODE_NEW_SEARCH = 3;
     private final static int SELECTION_CODE_TRADESMAN = 4;
@@ -38,7 +79,7 @@ public class OrderFeedbackFlowManager implements SingleChoiceSelectionFragment.S
     }
 
     @Override
-    public SingleChoiceSelectionFragment.SelectionBuilder getSelections(int selectionCode) {
+    public SingleChoiceSelectionFragment.SelectionBuilder build(int selectionCode) {
         switch (selectionCode) {
             case SELECTION_CODE_CONTACTED:
             case SELECTION_CODE_ARRIVED:
@@ -168,6 +209,6 @@ public class OrderFeedbackFlowManager implements SingleChoiceSelectionFragment.S
         String getString(int resId);
         String getString(int resId, Object... formatArgs);
         void closeApp();
-    }
+    }*/
 
 }

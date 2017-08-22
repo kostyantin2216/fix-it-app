@@ -1,6 +1,8 @@
 package com.fixit.core.ui.activities;
 
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -170,6 +172,27 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
     public void hideKeyboard(IBinder windowToken) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(windowToken, 0);
+    }
+
+    @Override
+    public void copyToClipboard(String label, String text) {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(label, text);
+        clipboard.setPrimaryClip(clip);
+        notifyUser(getString(R.string.copied_format, label));
+    }
+
+    @Override
+    public boolean composeEmail(String[] addresses, String subject) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+            return true;
+        }
+        return false;
     }
 
     public boolean isNetworkConnected() {

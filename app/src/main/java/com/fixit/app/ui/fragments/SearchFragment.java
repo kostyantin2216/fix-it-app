@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.fixit.app.ui.adapters.PlaceAutocompleteAdapter;
 import com.fixit.core.controllers.SearchController;
 import com.fixit.core.data.Profession;
 import com.fixit.core.ui.fragments.BaseFragment;
+import com.fixit.core.utils.Constants;
 import com.fixit.core.utils.DataUtils;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.AutocompleteFilter;
@@ -37,6 +39,21 @@ public class SearchFragment extends BaseFragment<SearchController>
     private CoordinatorLayout root;
     private AutoCompleteTextView actvProfessions;
     private AutoCompleteTextView actvAddress;
+
+
+
+    public static SearchFragment newInstance(@Nullable String defaultProfession, @Nullable String defaultAddress) {
+        SearchFragment frag = new SearchFragment();
+        Bundle args = new Bundle();
+        if(!TextUtils.isEmpty(defaultProfession)) {
+            args.putString(Constants.ARG_DEFAULT_PROFESSION, defaultProfession);
+        }
+        if(!TextUtils.isEmpty(defaultAddress)) {
+            args.putString(Constants.ARG_DEFAULT_ADDRESS, defaultAddress);
+        }
+        frag.setArguments(args);
+        return frag;
+    }
 
     @Nullable
     @Override
@@ -69,6 +86,20 @@ public class SearchFragment extends BaseFragment<SearchController>
                 android.R.id.text1,
                 DataUtils.toAutoCompleteList(professions)
         ));
+
+        checkDefaults();
+    }
+
+    private void checkDefaults() {
+        Bundle args = getArguments();
+        if(args != null) {
+            if (args.containsKey(Constants.ARG_DEFAULT_PROFESSION)) {
+                actvProfessions.setText(args.getString(Constants.ARG_DEFAULT_PROFESSION));
+            }
+            if (args.containsKey(Constants.ARG_DEFAULT_ADDRESS)) {
+                actvAddress.setText(args.getString(Constants.ARG_DEFAULT_ADDRESS));
+            }
+        }
     }
 
     public void setGoogleApiClient(GoogleApiClient googleApiClient) {

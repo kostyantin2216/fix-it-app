@@ -41,7 +41,6 @@
             style="@style/errorFragmentButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/error_fragment_item_spacing"
             android:text="@string/report_error" />
 
         <Button
@@ -49,7 +48,6 @@
             style="@style/errorFragmentButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/error_fragment_item_spacing"
             android:text="@string/wifi_settings" />
 
         <Button
@@ -57,7 +55,6 @@
             style="@style/errorFragmentButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/error_fragment_item_spacing"
             android:text="@string/mobile_networks" />
 
         <Button
@@ -65,7 +62,7 @@
             style="@style/errorFragmentButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/close"/>s
+            android:text="@string/close"/>
 
         <Button
             android:id="@+id/btn_continue"

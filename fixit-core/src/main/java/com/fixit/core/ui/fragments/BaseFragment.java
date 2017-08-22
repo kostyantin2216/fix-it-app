@@ -69,6 +69,20 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         }
     }
 
+    public void copyToClipboard(String label, String text) {
+        if(mListener != null) {
+            mListener.copyToClipboard(label, text);
+        }
+    }
+
+
+    public boolean composeEmail(String[] addresses, String subject) {
+        if(mListener != null) {
+            return mListener.composeEmail(addresses, subject);
+        }
+        return false;
+    }
+
     @Override
     public void onUnexpectedErrorOccurred(String msg, Throwable t) {
         if(mListener != null) {
@@ -155,6 +169,8 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         void notifyUser(String msg);
         void notifyUser(String msg, View v);
         void hideKeyboard(IBinder windowToken);
+        void copyToClipboard(String label, String text);
+        boolean composeEmail(String[] addresses, String subject);
         void restartApp(boolean skipSplash);
     }
 

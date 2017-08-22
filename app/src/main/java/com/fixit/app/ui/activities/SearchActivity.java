@@ -3,6 +3,8 @@ package com.fixit.app.ui.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -19,6 +21,7 @@ import com.fixit.app.R;
 import com.fixit.app.ifs.external.google.GoogleClientManager;
 import com.fixit.app.ifs.validation.AddressValidator;
 import com.fixit.app.ui.components.OngoingOrderView;
+import com.fixit.app.ui.fragments.AboutFragment;
 import com.fixit.app.ui.helpers.OrderedTradesmanInteractionHandler;
 import com.fixit.app.ui.fragments.ProfessionsListFragment;
 import com.fixit.app.ui.fragments.SearchFragment;
@@ -56,6 +59,8 @@ public class SearchActivity extends BaseAppActivity<SearchController>
     private static final String FRAG_TAG_SEARCH = "searchFrag";
     private static final String FRAG_TAG_PROFESSIONS = "professionsFrag";
 
+    public static final int DELEGATE_ORDER_HISTORY = 0;
+
     private GoogleClientManager mGoogleClientManager;
     private AddressValidator mAddressValidator;
 
@@ -69,12 +74,9 @@ public class SearchActivity extends BaseAppActivity<SearchController>
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer_layout);
 
+
         if(savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left)
-                    .add(R.id.fragment_holder, new SearchFragment(), FRAG_TAG_SEARCH)
-                    .commit();
+            createSearchFragment();
         }
 
         mGoogleClientManager = new GoogleClientManager(new GoogleApiClient
@@ -86,6 +88,38 @@ public class SearchActivity extends BaseAppActivity<SearchController>
         );
 
         mAddressValidator = new AddressValidator();
+
+        checkDelegate();
+    }
+
+    private void checkDelegate() {
+        Bundle extras = getIntent().getExtras();
+        if(extras != null && extras.containsKey(Constants.ARG_DELEGATE)) {
+            switch (extras.getInt(Constants.ARG_DELEGATE)) {
+                case DELEGATE_ORDER_HISTORY:
+                    startActivity(new Intent(this, OrderHistoryActivity.class));
+                    break;
+            }
+        }
+    }
+
+    private void createSearchFragment() {
+        String profession = null;
+        String address = null;
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null && extras.containsKey(Constants.ARG_ORDER_TO_RESTORE)) {
+            long orderId = extras.getLong(Constants.ARG_ORDER_TO_RESTORE);
+            Order order = getController().getOrder(orderId);
+            profession = order.getProfession().getName();
+            address = order.getJobLocation().getGoogleAddress();
+        }
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left)
+                .add(R.id.fragment_holder, SearchFragment.newInstance(profession, address), FRAG_TAG_SEARCH)
+                .commit();
     }
 
     @Override
@@ -101,7 +135,13 @@ public class SearchActivity extends BaseAppActivity<SearchController>
     private void initNavigationDrawer(Toolbar toolbar) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.open, R.string.close);
+                this, drawer, toolbar, R.string.open, R.string.close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                hideKeyboard(getSearchFragment().getView().getRootView().getWindowToken());
+            }
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -261,8 +301,18 @@ public class SearchActivity extends BaseAppActivity<SearchController>
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         closeNavigationDrawer();
-        if(item.getItemId() == R.id.order_history) {
-            startActivity(new Intent(this, OrderHistoryActivity.class));
+        switch (item.getItemId()) {
+            case R.id.order_history:
+                startActivity(new Intent(this, OrderHistoryActivity.class));
+                break;
+            case R.id.about:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .addToBackStack(null)
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left, R.anim.enter_from_left, R.anim.exit_out_right)
+                        .add(R.id.fragment_holder, AboutFragment.newInstance())
+                        .commit();
+                break;
         }
         return true;
     }
@@ -286,4 +336,5 @@ public class SearchActivity extends BaseAppActivity<SearchController>
     public void onTradesmanReviewed(boolean isNewReview, Review review) {
         onBackPressed();
     }
+
 }

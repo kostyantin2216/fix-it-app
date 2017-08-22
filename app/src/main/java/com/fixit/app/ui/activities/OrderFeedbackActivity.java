@@ -6,30 +6,34 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.fixit.app.R;
+import com.fixit.app.ifs.feedback.BaseOrderFeedbackFlow;
+import com.fixit.app.ifs.feedback.ChoiceSelection;
 import com.fixit.app.ifs.feedback.OrderFeedbackFlowManager;
+import com.fixit.app.ifs.feedback.OrderFeedbackView;
 import com.fixit.app.ui.fragments.TradesmanReviewFragment;
+import com.fixit.app.ui.fragments.feedback.ChoiceSelectionFragment;
+import com.fixit.app.ui.fragments.feedback.MultiChoiceSelectionFragment;
 import com.fixit.core.BaseApplication;
 import com.fixit.core.controllers.OrderController;
 import com.fixit.core.data.Order;
-import com.fixit.app.ui.fragments.SingleChoiceSelectionFragment;
+import com.fixit.app.ui.fragments.feedback.SingleChoiceSelectionFragment;
 import com.fixit.core.data.Review;
 import com.fixit.core.utils.Constants;
 import com.fixit.core.utils.FILog;
+
+import java.util.List;
 
 /**
  * Created by konstantin on 7/19/2017.
  */
 
 public class OrderFeedbackActivity extends BaseAppActivity<OrderController>
-        implements SingleChoiceSelectionFragment.SingleChoiceSelectionListener,
-                   OrderFeedbackFlowManager.OrderFeedbackView,
+        implements ChoiceSelectionFragment.ChoiceSelectionListener,
+                   OrderFeedbackView,
                    TradesmanReviewFragment.TradesmanReviewListener {
 
-
-    private final static int SELECTION_CODE_CONTACTED = 1;
-
     private Order mOrder;
-    private OrderFeedbackFlowManager mFlowManager;
+    private BaseOrderFeedbackFlow mFeedbackFlow;
 
     @Override
     public OrderController createController() {
@@ -43,16 +47,21 @@ public class OrderFeedbackActivity extends BaseAppActivity<OrderController>
 
         Intent intent = getIntent();
         long orderId = intent.getLongExtra(Constants.ARG_ORDER_ID, -1);
+        int flowCode = intent.getIntExtra(Constants.ARG_FLOW_CODE, -1);
 
-        mOrder = getController().getOrder(orderId);
-        if (mOrder == null) {
-            FILog.e(OrderFeedbackActivity.class.getName(), "Could not find order with id " + orderId + " for feedback flow.", this);
-            startActivity(new Intent(this, SearchActivity.class));
-            finishAffinity();
+        if(flowCode > -1) {
+            mOrder = getController().getOrder(orderId);
+            if (mOrder == null) {
+                FILog.e(OrderFeedbackActivity.class.getName(), "Could not find order with id " + orderId + " for feedback flow.", this);
+                startActivity(new Intent(this, SearchActivity.class));
+                finishAffinity();
+            } else {
+                boolean fromAction = intent.getBooleanExtra(Constants.ARG_FROM_ACTION, false);
+                boolean actionYes = intent.getBooleanExtra(Constants.ARG_SELECTED_YES, false);
+                mFeedbackFlow = OrderFeedbackFlowManager.createFlow(flowCode, mOrder, this, fromAction, actionYes);
+            }
         } else {
-            boolean fromAction = intent.getBooleanExtra(Constants.ARG_FROM_ACTION, false);
-            boolean yesAction = intent.getBooleanExtra(Constants.ARG_SELECTED_YES, false);
-            mFlowManager = new OrderFeedbackFlowManager(mOrder, this, fromAction, yesAction);
+            FILog.e("Cannot start feedback flow without a flow code.", this);
         }
     }
 
@@ -66,13 +75,13 @@ public class OrderFeedbackActivity extends BaseAppActivity<OrderController>
     }
 
     @Override
-    public SingleChoiceSelectionFragment.SelectionBuilder getSelections(int selectionCode) {
-        return mFlowManager.getSelections(selectionCode);
+    public ChoiceSelection.Builder getSelections(int selectionCode) {
+        return mFeedbackFlow.getSelections(selectionCode);
     }
 
     @Override
     public void onSelectionMade(int selectionCode, Object selection) {
-        mFlowManager.onSelectionMade(selectionCode, selection);
+        mFeedbackFlow.onSelectionMade(selectionCode, selection);
     }
 
     @Override
@@ -81,7 +90,12 @@ public class OrderFeedbackActivity extends BaseAppActivity<OrderController>
     }
 
     @Override
+    public Intent createIntent(Class<?> forClass) {
+        return new Intent(this, forClass);
+    }
+
+    @Override
     public void onTradesmanReviewed(boolean isNewReview, Review review) {
-        mFlowManager.tradesmanReviewed();
+        mFeedbackFlow.onTradesmanReviewed();
     }
 }

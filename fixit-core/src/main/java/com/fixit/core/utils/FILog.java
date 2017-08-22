@@ -50,6 +50,10 @@ public class FILog {
         log(Level.WARN, tag, message, null, context);
     }
 
+    public static void e(String message, Context context) {
+        log(Level.ERROR, null, message, null, context);
+    }
+
     public static void e(String message, Throwable t) {
         log(Level.ERROR, null, message, t , null);
     }

@@ -6,8 +6,11 @@ import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.fixit.app.R;
+import com.fixit.app.ifs.feedback.OrderFeedbackFlowManager;
 import com.fixit.app.ifs.notifications.OrderNotificationManager;
 import com.fixit.core.BaseApplication;
 import com.fixit.core.config.AppConfig;
@@ -49,7 +52,7 @@ public class DeveloperSettingsActivity extends BaseDeveloperSettingsActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setToolbar(R.layout.layout_toolbar);
+        setToolbar(R.layout.layout_search_toolbar);
     }
 
     @Override
@@ -73,21 +76,37 @@ public class DeveloperSettingsActivity extends BaseDeveloperSettingsActivity {
 
                 return true;
             case R.id.send_order_notification:
-                sendOrderNotification();
-
+                new MaterialDialog.Builder(this)
+                        .items("immediate", "delayed")
+                        .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                                switch (which) {
+                                    case 0:
+                                        sendOrderNotification(OrderFeedbackFlowManager.FLOW_CODE_IMMEDIATE);
+                                        return true;
+                                    case 1:
+                                        sendOrderNotification(OrderFeedbackFlowManager.FLOW_CODE_DELAYED);
+                                        return true;
+                                }
+                                return false;
+                            }
+                        })
+                        .positiveText(R.string.done)
+                        .show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void sendOrderNotification() {
+    private void sendOrderNotification(int flowCode) {
         long orderId = GlobalPreferences.getLastOrderId(this);
         if(orderId > -1) {
             OrderDAO orderDao =((BaseApplication) getApplication()).getDaoFactory().createOrderDao();
             Order order = orderDao.findById(orderId);
             if(order != null) {
-                OrderNotificationManager.registerOrderFeedbackNotification(this, order, true);
+                OrderNotificationManager.registerOrderFeedbackNotification(this, order, true, flowCode);
             } else {
                 notifyUser("Could not find order with id " + orderId + ", create a new order and try again");
             }

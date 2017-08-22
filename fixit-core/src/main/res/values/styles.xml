@@ -9,6 +9,7 @@
     </style>
 
     <style name="errorFragmentButton">
+        <item name="android:layout_marginBottom">6dp</item>
         <item name="android:background">@drawable/button</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:visibility">gone</item>

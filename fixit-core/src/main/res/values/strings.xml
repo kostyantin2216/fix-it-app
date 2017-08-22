@@ -42,4 +42,6 @@
     <string name="hide">Hide</string>
     <string name="complete">Complete</string>
 
+    <string name="copied_format">Copied %1$s</string>
+
 </resources>

@@ -24,6 +24,12 @@ public class Constants {
     public final static String ARG_TITLE = "title";
     public final static String ARG_SELECTABLE = "selectable";
     public final static String ARG_BACKGROUND_COLOR = "background_color";
+    public final static String ARG_NOTIFICATION_DATA = "notification_data";
+    public final static String ARG_FLOW_CODE = "flow_code";
+    public final static String ARG_DEFAULT_PROFESSION = "default_profession";
+    public final static String ARG_DEFAULT_ADDRESS = "default_address";
+    public final static String ARG_ORDER_TO_RESTORE = "order_to_restore";
+    public final static String ARG_DELEGATE = "delegate";
 
     public final static int HTTP_INTERNAL_SERVER_ERROR = 500;
 

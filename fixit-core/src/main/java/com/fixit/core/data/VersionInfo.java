@@ -37,9 +37,6 @@ public class VersionInfo {
 
 	@Override
 	public String toString() {
-		return "VersionInfo{" +
-				"name='" + name + '\'' +
-				", code=" + code +
-				'}';
+		return name + "(" + code + ")";
 	}
 }

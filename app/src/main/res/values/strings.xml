@@ -74,9 +74,11 @@
     <string name="later">Later</string>
 
     <string name="order_notification_title">Order Check-Up</string>
-    <string name="order_notification_message">Have you been contacted by any of the tradesmen you ordered?</string>
+    <string name="order_notification_immediate_flow_message">Have you been contacted by any of the tradesmen you ordered?</string>
+    <string name="order_notification_delayed_flow_message">Was yesterday\'s order completed?</string>
 
     <string name="arrived_to_fix_problem">Have any of the tradesmen arrived to fix your problem?</string>
+    <string name="pick_tradesmen_who_contacted_you">Pick the tradesmen that have contacted you.</string>
     <string name="leave_review_on_contacted_tradesmen">Would you like to leave a review on any of the tradesmen that have contacted you?</string>
     <string name="who_fixed_the_problem">Which tradesman arrived to fix your problem?</string>
     <string name="like_to_start_a_new_search">Would you like to start a new search?</string>
@@ -105,5 +107,18 @@
     <string name="format_ordered_x_tradesmen">Ordered %1$d tradesmen</string>
     <string name="format_at_x">At %1$s</string>
     <string name="no_orders_made_yet">You haven\'t made any orders yet!</string>
+    <string name="contact_us_at">Contact us at: <b><i>%1$s</i></b></string>
+    <string name="fixxit_contact_email">Fixxit contact email</string>
+    <string name="fixxit_version">Fixxit version</string>
+    <string name="inquiry_from_app_version">Inquiry from app version %1$s</string>
+    <string name="find_email_intent_msg">Send email…</string>
+    <string name="about">About</string>
+    <string name="plural_answered_to_your_satisfaction">Have the tradesmen answered to your satisfaction?</string>
+    <string name="singular_answered_to_your_satisfaction">Has the tradesman answered to your satisfaction?</string>
+    <string name="view_order_history">View order history</string>
+    <string name="leave_app">Leave application</string>
+    <string name="what_would_you_like_to_do_next">What would you like to do next?</string>
+    <string name="why_not_answered_to_satisfaction">Could you tell us why the tradesmen didn\'t answer to your satisfaction?</string>
+
 
 </resources>

@@ -3,6 +3,7 @@ package com.fixit.app.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -40,6 +41,7 @@ public class OrderHistoryFragment extends BaseFragment<OrderController>  {
         v.findViewById(R.id.root).setBackgroundResource(R.drawable.bg_corner_nuts);
 
         TextView tvEmptyList = (TextView) v.findViewById(R.id.tv_empty_list);
+        tvEmptyList.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_text));
 
         Order[] orders = getController().getAllOrders();
 

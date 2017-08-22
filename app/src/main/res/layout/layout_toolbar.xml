@@ -19,19 +19,6 @@
             android:layout_height="match_parent"
             android:text="@string/app_name" />
 
-        <com.fixit.core.ui.components.CancelableEditText
-            android:id="@+id/et_search"
-            style="@style/toolbar_search"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="12dp"
-            app:cancelDrawable="@drawable/ic_close_light"
-            app:clearButtonMode="whileEditing"
-            android:inputType="text"
-            android:imeOptions="actionDone"/>
-
     </LinearLayout>
 
 </android.support.v7.widget.Toolbar>

@@ -11,8 +11,6 @@ import android.widget.EditText;
 
 import com.fixit.app.R;
 import com.fixit.core.controllers.ActivityController;
-import com.fixit.core.data.Profession;
-import com.fixit.core.ui.adapters.CommonRecyclerAdapter;
 import com.fixit.core.ui.fragments.StaticRecyclerListFragment;
 
 /**
@@ -27,7 +25,7 @@ public abstract class SearchableStaticRecyclerListFragment<C extends ActivityCon
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        AppBarLayout appBarLayout = setAppBarToolBar(R.layout.layout_appbar_toolbar, R.id.toolbar, true);
+        AppBarLayout appBarLayout = setAppBarToolBar(R.layout.layout_appbar_search_toolbar, R.id.toolbar, true);
         etSearch = (EditText) appBarLayout.findViewById(R.id.et_search);
         etSearch.setVisibility(View.VISIBLE);
 
