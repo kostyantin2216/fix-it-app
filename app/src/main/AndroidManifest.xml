@@ -5,14 +5,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".FixItApplication"
+        android:name="com.fixit.FixItApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="${applicationLabel}"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activities.SplashActivity">
+        <activity android:name="com.fixit.ui.activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,25 +20,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.SearchActivity"
+            android:name="com.fixit.ui.activities.SearchActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.ResultsActivity"
+            android:name="com.fixit.ui.activities.ResultsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.LoginActivity"
+            android:name="com.fixit.ui.activities.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.OrderActivity"
+            android:name="com.fixit.ui.activities.OrderActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.OrderFeedbackActivity"
+            android:name="com.fixit.ui.activities.OrderFeedbackActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.OrderHistoryActivity"
+            android:name="com.fixit.ui.activities.OrderHistoryActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.DeveloperSettingsActivity"
+            android:name="com.fixit.ui.activities.DeveloperSettingsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -58,7 +58,7 @@
         </activity>
 
         <receiver
-            android:name=".ifs.notifications.OrderFeedbackNotificationReceiver"
+            android:name="com.fixit.notifications.OrderFeedbackNotificationReceiver"
             android:exported="false"
             android:enabled="true" >
             <intent-filter>

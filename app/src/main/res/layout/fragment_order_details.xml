@@ -22,7 +22,7 @@
             android:paddingRight="16dp"
             android:paddingTop="@dimen/activity_vertical_margin">
 
-            <com.fixit.core.ui.components.ExpandablePanel
+            <com.fixit.ui.components.ExpandablePanel
                 android:id="@+id/panel_tradesmen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

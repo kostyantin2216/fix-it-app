@@ -25,7 +25,7 @@
             android:text="@string/i_need_a"
             android:textSize="@dimen/large_text_size" />
 
-        <com.fixit.core.ui.components.InstantAutoComplete
+        <com.fixit.ui.components.InstantAutoComplete
             android:id="@+id/actv_professions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
             android:text="@string/at_location"
             android:textSize="@dimen/large_text_size" />
 
-        <com.fixit.core.ui.components.CancelableAutoCompleteTextView
+        <com.fixit.ui.components.CancelableAutoCompleteTextView
             android:id="@+id/actv_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
 
     </LinearLayout>
 
-    <com.fixit.core.ui.components.FloatingTextButton
+    <com.fixit.ui.components.FloatingTextButton
         android:id="@+id/fab_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -102,6 +102,6 @@
         app:buttonIcon="@drawable/ic_search_white_24dp"
         app:buttonText="@string/search"
         app:buttonTextColor="@android:color/white"
-        app:layout_behavior="com.fixit.core.ui.behaviours.SnackbarBehavior" />
+        app:layout_behavior="com.fixit.ui.behaviours.SnackbarBehavior" />
 
 </android.support.design.widget.CoordinatorLayout>

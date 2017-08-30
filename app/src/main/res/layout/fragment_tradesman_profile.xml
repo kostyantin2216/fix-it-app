@@ -83,7 +83,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_editor_absoluteX="3dp" />
 
-            <com.fixit.core.ui.components.WorkingDaysView
+            <com.fixit.ui.components.WorkingDaysView
                 android:id="@+id/working_days"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/horizontal_divider_1"
                 tools:layout_editor_absoluteX="3dp" />
 
-            <com.fixit.core.ui.components.SimpleRatingView
+            <com.fixit.ui.components.SimpleRatingView
                 android:id="@+id/tradesman_rating"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

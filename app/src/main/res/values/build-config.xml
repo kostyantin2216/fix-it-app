@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <bool name="is_production">false</bool>
+
+    <string name="server_api_base_url">http://10.0.0.7/rest/</string>
+
+    <integer name="retrofit_connect_timeout_seconds">90</integer>
+    <integer name="retrofit_read_timeout_seconds">90</integer>
+    <integer name="retrofit_write_timeout_seconds">90</integer>
+
+</resources>

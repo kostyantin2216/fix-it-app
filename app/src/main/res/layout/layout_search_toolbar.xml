@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:text="@string/app_name" />
 
-        <com.fixit.core.ui.components.CancelableEditText
+        <com.fixit.ui.components.CancelableEditText
             android:id="@+id/et_search"
             style="@style/toolbar_search"
             android:layout_width="0dp"

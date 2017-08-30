@@ -79,4 +79,54 @@
 
     <!-- LISTS END -->
 
+    <style name="errorFragmentText">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/large_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="errorFragmentButton">
+        <item name="android:layout_marginBottom">6dp</item>
+        <item name="android:background">@drawable/button</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="emptyListText">
+        <item name="android:textSize">@dimen/large_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center|top</item>
+        <item name="android:padding">@dimen/empty_list_padding</item>
+    </style>
+
+    <style name="standard_progress">
+
+    </style>
+
+    <style name="dark_bg_title_text">
+        <item name="android:textSize">@dimen/extra_large_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="dark_bg_content_text">
+        <item name="android:textSize">@dimen/large_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="list">
+        <item name="android:padding">@dimen/list_padding</item>
+    </style>
+
+    <style name="listItem">
+        <item name="android:layout_margin">@dimen/list_padding</item>
+    </style>
+
+    <style name="horizontal_divider">
+        <item name="android:background">@color/grey_400</item>
+    </style>
+
 </resources>
