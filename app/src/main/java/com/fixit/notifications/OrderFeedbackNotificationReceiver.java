@@ -24,11 +24,12 @@ public class OrderFeedbackNotificationReceiver extends BaseBroadcastReceiver {
         OrderFeedbackNotificationData data = intent.getParcelableExtra(Constants.ARG_NOTIFICATION_DATA);
 
         if(data != null) {
-            Notification notification = OrderNotificationManager.createOrderFeedbackNotification(context, data);
+            int requestCode = data.orderId.hashCode();
+            Notification notification = OrderNotificationManager.createOrderFeedbackNotification(context, data, requestCode);
             NotificationManager mNotificationManager =
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-            mNotificationManager.notify(0, notification);
+            mNotificationManager.notify(requestCode, notification);
         } else {
             FILog.w(OrderFeedbackNotificationReceiver.class.getName(), "Cannot create notification without notification data", context);
         }

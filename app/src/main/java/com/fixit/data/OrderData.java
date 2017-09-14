@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class OrderData implements DataModelObject {
 
-    private String id;
+    private String _id;
     private String[] tradesmen;
     private long professionId;
     private JobLocation location;
@@ -20,8 +20,8 @@ public class OrderData implements DataModelObject {
 
     public OrderData() { }
 
-    public OrderData(String id, String[] tradesmen, long professionId, JobLocation location, long[] jobReasons, String comment, boolean feedbackProvided, Date createdAt) {
-        this.id = id;
+    public OrderData(String _id, String[] tradesmen, long professionId, JobLocation location, long[] jobReasons, String comment, boolean feedbackProvided, Date createdAt) {
+        this._id = _id;
         this.tradesmen = tradesmen;
         this.professionId = professionId;
         this.location = location;
@@ -31,12 +31,12 @@ public class OrderData implements DataModelObject {
         this.createdAt = createdAt;
     }
 
-    public String getId() {
-        return id;
+    public String get_id() {
+        return _id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String[] getTradesmen() {
@@ -98,7 +98,7 @@ public class OrderData implements DataModelObject {
     @Override
     public String toString() {
         return "OrderData{" +
-                "id='" + id + '\'' +
+                "_id='" + _id + '\'' +
                 ", tradesmen=" + Arrays.toString(tradesmen) +
                 ", professionId=" + professionId +
                 ", location=" + location +

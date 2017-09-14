@@ -1,13 +1,16 @@
 buildscript {
     repositories {
+        mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:3.6.1'
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 
 repositories {
@@ -30,8 +33,8 @@ android {
         applicationId "com.fixit.app"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 5
-        versionName "0.0.2"
+        versionCode 7
+        versionName "0.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -53,19 +56,24 @@ android {
             versionNameSuffix '-r'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 ext {
+    androidSupport = '25.3.1'
     googleServices = '9.6.0'
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support:support-v13:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
+    compile "com.android.support:appcompat-v7:${androidSupport}"
+    compile "com.android.support:design:${androidSupport}"
+    compile "com.android.support:support-v4:${androidSupport}"
+    compile "com.android.support:support-v13:${androidSupport}"
+    compile "com.android.support:recyclerview-v7:${androidSupport}"
+    compile "com.android.support:cardview-v7:${androidSupport}"
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
@@ -77,11 +85,11 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
 
-    compile 'com.afollestad.material-dialogs:core:0.9.4.2'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.5'
 
     compile 'org.greenrobot:eventbus:3.0.0'
 
-    compile 'com.facebook.android:facebook-android-sdk:4.22.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.26.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.wang.avi:library:2.1.3'
     compile 'com.squareup.picasso:picasso:2.5.2'

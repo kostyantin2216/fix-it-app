@@ -14,6 +14,9 @@ import com.fixit.rest.requests.data.SynchronizationRequestData;
 import com.fixit.rest.responses.APIResponse;
 import com.fixit.rest.responses.APIResponseHeader;
 import com.fixit.rest.responses.data.SynchronizationResponseData;
+import com.fixit.utils.CommonUtils;
+import com.fixit.utils.Constants;
+import com.fixit.utils.FILog;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,8 +34,8 @@ import retrofit2.Response;
 public class SynchronizationTask extends Thread {
 
     private final static String[] SYNCHRONIZATION_TARGETS = new String[] {
-            Profession.class.getSimpleName().toLowerCase(),
-            JobReason.class.getSimpleName().toLowerCase()
+            Profession.class.getSimpleName(),
+            JobReason.class.getSimpleName()
     };
 
     private final SynchronizationCallback mCallback;
@@ -64,6 +67,8 @@ public class SynchronizationTask extends Thread {
         Map<String, Set<SynchronizationAction>> history = mHistory.getHistory();     // create request data and get response body.
         SynchronizationRequestData requestData = new SynchronizationRequestData(mHistory.getLastUpdate(), history);
 
+        FILog.i(Constants.LOG_TAG_SYNCHRONIZATION, "beginning synchronization...");
+
         if(!mStopped) {
             try {
                 Response<APIResponse<SynchronizationResponseData>> response = mServiceApi.synchronize(requestData).execute();
@@ -77,12 +82,18 @@ public class SynchronizationTask extends Thread {
                     // check for errors from server.
                     APIResponseHeader header = apiResponse.getHeader();
                     if (header.hasErrors()) {
+                        String error = header.getErrors().get(0).getDescription();
+                        FILog.i(Constants.LOG_TAG_SYNCHRONIZATION, "error while synchronizing: " + error);
+
                         if (!mStopped) {
-                            mCallback.onSynchronizationError(header.getErrors().get(0).getDescription(), null);
+                            mCallback.onSynchronizationError(error, null);
                         }
                     } else {
                         // no errors, great! let's start synchronizing.
                         SynchronizationResponseData responseData = apiResponse.getData();
+
+                        FILog.i(Constants.LOG_TAG_SYNCHRONIZATION, "synchronizing  " + responseData.getDescription());
+
                         synchronize(responseData);
 
                         // update synchronization history for future synchronizations.
@@ -123,8 +134,9 @@ public class SynchronizationTask extends Thread {
                         SynchronizationAction action = result.getAction();
                         switch (action.getActionEnum()) {
                             case OVERRIDE:
-                                dao.truncate();
+                                // FIXME: inserting existing records prints ugly log error messages, for now we truncate before we insert.
                             case INSERT:
+                                dao.truncate();
                                 dao.insert(result.getData());
                                 break;
                             case UPDATE:
@@ -138,6 +150,8 @@ public class SynchronizationTask extends Thread {
                                 break;
                         }
                     }
+                } else {
+                    FILog.e(Constants.LOG_TAG_SYNCHRONIZATION, "missing dao for " + syncResult.getName());
                 }
             }
         }

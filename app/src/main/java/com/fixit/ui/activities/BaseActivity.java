@@ -35,6 +35,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.fixit.config.AppConfig;
 import com.fixit.controllers.ActivityController;
 import com.fixit.app.R;
+import com.fixit.general.AnalyticsManager;
 import com.fixit.rest.APIError;
 import com.fixit.rest.callbacks.GeneralServiceErrorCallback;
 import com.fixit.ui.fragments.BaseFragment;
@@ -104,14 +105,14 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
             onBackPressed();
             return true;
         } else if(itemId == R.id.open_developer_settings) {
-            openDeveloperSettings();
+            startActivity(new Intent(this, DeveloperSettingsActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void openDeveloperSettings() {
-        // Override if needed.
+    public AnalyticsManager getAnalyticsManager() {
+        return getController().getAnalyticsManager();
     }
 
     public abstract C createController();
@@ -144,7 +145,17 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
 
     @Override
     public void setToolbarTitle(String title) {
-        throw new UnsupportedOperationException("must override this method if you need to use it");
+        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        if(toolbarTitle != null) {
+            toolbarTitle.setText(title);
+        }
+    }
+
+    public void setToolbarTitleTextSize(float sp) {
+        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        if(toolbarTitle != null) {
+            toolbarTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp);
+        }
     }
 
     @Override
@@ -200,6 +211,20 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
 
         return cm.getActiveNetworkInfo() != null;
     }
+
+    @Override
+    public void restartApp(boolean skipSplash) {
+        Intent intent;
+        if(skipSplash) {
+            intent = new Intent(this, SearchActivity.class);
+        } else {
+            intent = new Intent(this, SplashActivity.class);
+        }
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+    }
+
     /**
      *  Override for enabling/disabling user notifications.
      */
@@ -228,19 +253,27 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
     }
 
     // USER MANAGEMENT
-    public abstract Class<?> getLoginActivity();
 
     public boolean isUserRegistered() {
         return !TextUtils.isEmpty(GlobalPreferences.getUserId(this));
     }
 
-    public void requestLogin(LoginRequester requester, @Nullable Bundle data) {
+    @Override
+    public void requestLogin(@Nullable String message, @Nullable String promptOnBackPressMessage, @Nullable Bundle data, LoginRequester requester) {
         mLoginRequester = requester;
 
-        Intent intent = new Intent(this, getLoginActivity());
-        if(data != null) {
-            intent.putExtras(data);
+        Intent intent = new Intent(this, LoginActivity.class);
+        if(data == null) {
+            data = new Bundle();
         }
+        if(!TextUtils.isEmpty(message)) {
+            data.putString(Constants.ARG_LOGIN_MESSAGE, message);
+        }
+        if(!TextUtils.isEmpty(promptOnBackPressMessage)) {
+            data.putBoolean(Constants.ARG_PROMPT_ON_BACK_PRESS_MESSAGE, true);
+        }
+        intent.putExtras(data);
+
         startActivityForResult(intent, Constants.RC_LOGIN);
     }
 

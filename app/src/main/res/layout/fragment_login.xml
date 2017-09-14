@@ -7,33 +7,48 @@
     android:padding="16dp"
     tools:background="@drawable/bg_transparent_black">
 
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_gravity="center"
+        android:layout_margin="70dp"
+        android:layout_weight="1"
+        android:src="@drawable/ic_large_yellow_logo_white_border"
+        android:visibility="visible" />
+
     <TextView
         android:id="@+id/tv_login_text"
         style="@style/dark_bg_content_text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="30dp"
         android:layout_weight="1"
-        android:text="@string/login_text"/>
+        android:text="@string/login_for_order"
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/loader"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_gravity="center"
         android:layout_weight="1"
         android:indeterminate="true"
-        android:layout_gravity="center"
         android:visibility="gone" />
 
     <Button
         android:id="@+id/btn_fb_login"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:drawableStart="@drawable/ic_fb_logo"
-        android:padding="8dp"
         android:layout_margin="4dp"
         android:background="@drawable/btn_facebook"
-        android:textColor="@color/light_text_color"
-        android:text="@string/com_facebook_loginview_log_in_button_long"/>
+        android:drawableStart="@drawable/ic_fb_logo"
+        android:padding="8dp"
+        android:text="@string/com_facebook_loginview_log_in_button_long"
+        android:textColor="@color/light_text_color" />
 
     <Button
         android:id="@+id/btn_google_login"
@@ -41,9 +56,9 @@
         android:layout_height="50dp"
         android:background="@drawable/btn_google_sign_in"
         android:padding="8dp"
-        android:text="@string/common_signin_button_text_long"
         android:paddingStart="32dp"
-        android:textColor="@color/dark_text_color"/>
+        android:text="@string/common_signin_button_text_long"
+        android:textColor="@color/dark_text_color" />
 
     <Button
         android:id="@+id/btn_register"
@@ -51,8 +66,8 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_margin="4dp"
-        android:drawableStart="@drawable/ic_edit_white_24dp"
         android:drawablePadding="-5dp"
+        android:drawableStart="@drawable/ic_edit_white_24dp"
         android:padding="8dp"
         android:text="@string/register" />
 

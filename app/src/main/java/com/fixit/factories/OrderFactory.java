@@ -17,6 +17,8 @@ import com.fixit.database.JobReasonDAO;
 import com.fixit.database.ProfessionDAO;
 import com.fixit.rest.APIError;
 import com.fixit.rest.callbacks.GeneralServiceErrorCallback;
+import com.fixit.utils.Constants;
+import com.fixit.utils.FILog;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
@@ -45,6 +47,7 @@ public class OrderFactory {
 
     public void createOrders(Context context, OrderData[] orderData, OrderFactoryCallback orderFactoryCallback) {
         mOrderGenerator = new OrderGenerator(context, orderData, orderFactoryCallback);
+        mOrderGenerator.start();
     }
 
     public void cleanGenerator() {
@@ -86,6 +89,8 @@ public class OrderFactory {
         public void run() {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
+            FILog.i(Constants.LOG_TAG_ORDER_FACTORY, "loading " + orderData.length + " orders");
+
             Set<String> tradesmenIds = new HashSet<>();
             Set<String> professionIds = new HashSet<>();
             Set<String> jobReasonIds = new HashSet<>();
@@ -104,9 +109,11 @@ public class OrderFactory {
                 if (context != null) {
                     mTradesmanCache.get(context, this, tradesmenIds.toArray(new String[tradesmenIds.size()]));
 
-                    JobReason[] jobReasons = mJobReasonDao.findIn(JobReasonDAO.KEY_ID, jobReasonIds.toArray(new String[jobReasonIds.size()]));
-                    for (JobReason jobReason : jobReasons) {
-                        mappedJobReasons.put((int) jobReason.getId(), jobReason);
+                    if(jobReasonIds.size() > 0) {
+                        JobReason[] jobReasons = mJobReasonDao.findIn(JobReasonDAO.KEY_ID, jobReasonIds.toArray(new String[jobReasonIds.size()]));
+                        for (JobReason jobReason : jobReasons) {
+                            mappedJobReasons.put((int) jobReason.getId(), jobReason);
+                        }
                     }
 
                     Profession[] professions = mProfessionDao.findIn(ProfessionDAO.KEY_ID, professionIds.toArray(new String[professionIds.size()]));
@@ -182,52 +189,32 @@ public class OrderFactory {
 
                 Profession profession = mappedProfessions.get((int) orderData.getProfessionId());
 
-                orders[i] = new Order(orderData.getId(), orderData.getLocation(), profession, tradesmen, jobReasons, orderData.getComment(), orderData.getCreatedAt());
+                orders[i] = new Order(orderData.get_id(), orderData.getLocation(), profession, tradesmen, jobReasons, orderData.getComment(), orderData.getCreatedAt());
             }
 
             if (!cancelled) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        callback.onOrdersCreated(orders);
-                    }
-                });
+                handler.post(() -> callback.onOrdersCreated(orders));
             }
         }
 
         @Override
         public void onUnexpectedErrorOccurred(final String msg, final Throwable t) {
             if(!cancelled) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        callback.onUnexpectedErrorOccurred(msg, t);
-                    }
-                });
+                handler.post(() -> callback.onUnexpectedErrorOccurred(msg, t));
             }
         }
 
         @Override
         public void onAppServiceError(final List<APIError> errors) {
             if(!cancelled) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        callback.onAppServiceError(errors);
-                    }
-                });
+                handler.post(() -> callback.onAppServiceError(errors));
             }
         }
 
         @Override
         public void onServerError() {
             if(!cancelled) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        callback.onServerError();
-                    }
-                });
+                handler.post(() -> callback.onServerError());
             }
         }
     }

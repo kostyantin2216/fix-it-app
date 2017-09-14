@@ -143,7 +143,7 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getController().getReviews(mTradesman.get_id(), this);
+        getController().loadReviews(mTradesman.get_id(), this);
     }
 
     @Override

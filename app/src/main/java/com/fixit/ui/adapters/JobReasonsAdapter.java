@@ -15,12 +15,12 @@ import java.util.List;
 
 public class JobReasonsAdapter extends MultiSelectRecyclerAdapter {
 
-    public static JobReasonsAdapter create(Context context, List<JobReason> jobReasons) {
-        int jobReasonCount = jobReasons.size();
+    public static JobReasonsAdapter create(Context context, JobReason[] jobReasons) {
+        int jobReasonCount = jobReasons.length;
         SelectItem[] selectItems = new SelectItem[jobReasonCount];
         SparseArray<JobReason> items = new SparseArray<>();
         for(int i = 0; i < jobReasonCount; i++) {
-            JobReason jobReason = jobReasons.get(i);
+            JobReason jobReason = jobReasons[i];
             int id = (int) jobReason.getId();
             selectItems[i] = new SelectItem(id, jobReason.getName());
             items.put(id, jobReason);

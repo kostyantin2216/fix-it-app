@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.view.WindowManager;
 
 import com.fixit.app.R;
-import com.fixit.BaseApplication;
+import com.fixit.FixItApplication;
 import com.fixit.controllers.OrderController;
 import com.fixit.data.JobLocation;
 import com.fixit.data.JobReason;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * Created by konstantin on 5/16/2017.
  */
 
-public class OrderActivity extends BaseAppActivity<OrderController>
+public class OrderActivity extends BaseActivity<OrderController>
     implements OrderDetailsFragment.OrderDetailsInteractionListener,
                OrderController.TradesmenOrderCallback,
                JobReasonsSelectionFragment.JobReasonsInteractionListener,
@@ -63,7 +63,7 @@ public class OrderActivity extends BaseAppActivity<OrderController>
 
     @Override
     public OrderController createController() {
-        return new OrderController((BaseApplication) getApplication(), this);
+        return new OrderController((FixItApplication) getApplication(), this);
     }
 
     @Override
@@ -83,12 +83,12 @@ public class OrderActivity extends BaseAppActivity<OrderController>
         getSupportFragmentManager().popBackStack();
         OrderDetailsFragment fragment = (OrderDetailsFragment) getSupportFragmentManager().findFragmentByTag(FRAG_TAG_ORDER_DETAILS);
         if(fragment != null) {
-            fragment.setReason(JobReason.toDescription(reasons));
+            fragment.onJobReasonSelectionChanged(reasons.length);
         }
     }
 
     @Override
-    public void completeOrder(String reason) {
+    public void completeOrder(String comment) {
         if(isUserRegistered()) {
             getSupportFragmentManager()
                     .beginTransaction()
@@ -97,12 +97,11 @@ public class OrderActivity extends BaseAppActivity<OrderController>
                     .addToBackStack(null)
                     .commit();
 
-            String comment = mJobReasons == null || mJobReasons.length == 0 ? reason : "";
             getController().orderTradesmen(mTradesmen, mJobLocation, mJobReasons, comment, this);
             setToolbarTitle(getString(R.string.order_complete));
-            getAnalyticsManager().trackJobReasonsSelected(!TextUtils.isEmpty(reason) && mJobReasons.length == 0, mJobReasons.length);
+            getAnalyticsManager().trackJobReasonsSelected(!TextUtils.isEmpty(comment), mJobReasons.length);
         } else{
-            requestLogin(this, null);
+            requestLogin(getString(R.string.login_for_order), getString(R.string.question_exit_without_login), null, this);
         }
     }
 
@@ -112,7 +111,7 @@ public class OrderActivity extends BaseAppActivity<OrderController>
         if(fragment != null) {
             fragment.onOrderComplete();
         }
-        Order order = getController().orderCompleted(orderData.getId(), mJobLocation, mProfession, mTradesmen, mJobReasons, orderData.getComment(), orderData.getCreatedAt());
+        Order order = getController().orderCompleted(orderData.get_id(), mJobLocation, mProfession, mTradesmen, mJobReasons, orderData.getComment(), orderData.getCreatedAt());
         OrderNotificationManager.initiateOrderFeedback(this, order.getId());
     }
 
@@ -120,13 +119,13 @@ public class OrderActivity extends BaseAppActivity<OrderController>
     public void loginComplete(boolean success, @Nullable Bundle data) {
         if(success) {
             OrderDetailsFragment orderDetailsFragment = getFragment(FRAG_TAG_ORDER_DETAILS, OrderDetailsFragment.class);
-            String reason;
+            String comment;
             if(orderDetailsFragment != null) {
-                reason = orderDetailsFragment.getReason();
+                comment = orderDetailsFragment.getComment();
             } else {
-                reason = JobReason.toDescription(mJobReasons);
+                comment = JobReason.toDescription(mJobReasons);
             }
-            completeOrder(reason);
+            completeOrder(comment);
         } else {
             showPrompt(getString(R.string.cannot_continue_without_login));
         }

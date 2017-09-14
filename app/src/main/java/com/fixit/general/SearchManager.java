@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.fixit.config.AppConfig;
+import com.fixit.data.JobLocation;
 import com.fixit.data.MutableLatLng;
 import com.fixit.data.Profession;
 import com.fixit.data.Tradesman;
@@ -37,12 +38,14 @@ public class SearchManager {
         this.mApi = api;
     }
 
-    public void sendSearch(Context context, Profession profession, MutableLatLng location, final SearchCallback searchCallback) {
-        SearchRequestData requestData = new SearchRequestData(profession.getId(), location);
+    public void sendSearch(Context context, final Profession profession, JobLocation location, final SearchCallback searchCallback) {
+        double lat = location.getLat();
+        double lng = location.getLng();
+        SearchRequestData requestData = new SearchRequestData(profession.getId(), new MutableLatLng(lat, lng));
         mApi.beginSearch(requestData, new ManagedServiceCallback<SearchResponseData>(context, searchCallback) {
             @Override
             public void onResponse(SearchResponseData responseData) {
-                searchCallback.onSearchStarted(responseData.getSearchKey());
+                searchCallback.onSearchStarted(profession, location, responseData.getSearchKey());
             }
 
             @Override
@@ -64,7 +67,7 @@ public class SearchManager {
 
     public interface SearchCallback extends GeneralServiceErrorCallback {
         void invalidAddress();
-        void onSearchStarted(String searchId);
+        void onSearchStarted(Profession profession, JobLocation location, String searchId);
     }
 
     public interface ResultCallback extends GeneralServiceErrorCallback {

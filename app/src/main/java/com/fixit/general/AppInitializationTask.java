@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Process;
 import android.text.TextUtils;
 
+import com.crashlytics.android.Crashlytics;
 import com.fixit.config.AppConfig;
 import com.fixit.data.AppInstallation;
 import com.fixit.factories.APIFactory;
@@ -75,6 +76,11 @@ public class AppInitializationTask extends Thread {
 
         Context context = getContext();
         if(context != null) {
+            String userId = GlobalPreferences.getUserId(context);
+            if(!TextUtils.isEmpty(userId)) {
+                Crashlytics.setUserIdentifier(userId);
+            }
+
             APIFactory serverAPIFactory = mCallback.getServerApiFactory();
             DAOFactory daoFactory = mCallback.getDaoFactory();
 

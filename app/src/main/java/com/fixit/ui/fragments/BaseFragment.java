@@ -1,6 +1,7 @@
 package com.fixit.ui.fragments;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -139,6 +140,19 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         }
     }
 
+    public void requestLogin(@Nullable String message, @Nullable String promptOnBackPressMessage, @Nullable Bundle data, BaseActivity.LoginRequester requester) {
+        if(mListener != null) {
+            mListener.requestLogin(message, promptOnBackPressMessage, data, requester);
+        }
+    }
+
+    public boolean isUserRegistered() {
+        if(mListener != null) {
+            return mListener.isUserRegistered();
+        }
+        return false;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -173,6 +187,8 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         void copyToClipboard(String label, String text);
         boolean composeEmail(String[] addresses, String subject);
         void restartApp(boolean skipSplash);
+        boolean isUserRegistered();
+        void requestLogin(@Nullable String message, @Nullable String promptOnBackPressMessage, @Nullable Bundle data, BaseActivity.LoginRequester requester);
     }
 
 }

@@ -1,14 +1,18 @@
 package com.fixit.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.test.suitebuilder.TestMethod;
+import android.text.TextUtils;
 
 import com.fixit.app.R;
-import com.fixit.BaseApplication;
+import com.fixit.FixItApplication;
 import com.fixit.controllers.RegistrationController;
 import com.fixit.controllers.UserController;
 import com.fixit.data.UserAccountDetails;
+import com.fixit.utils.Constants;
 import com.fixit.utils.GlobalPreferences;
 import com.fixit.ui.fragments.LoginFragment;
 import com.fixit.ui.fragments.TelephoneVerificationFragment;
@@ -18,7 +22,7 @@ import com.fixit.ui.fragments.UserRegistrationFragment;
  * Created by konstantin on 5/11/2017.
  */
 
-public class LoginActivity extends BaseAppActivity<RegistrationController>
+public class LoginActivity extends BaseActivity<RegistrationController>
     implements LoginFragment.LoginFragmentCallbacks,
                UserRegistrationFragment.UserRegistrationInteractionsListener,
                TelephoneVerificationFragment.TelephoneVerificationListener,
@@ -27,6 +31,8 @@ public class LoginActivity extends BaseAppActivity<RegistrationController>
     private final static String FRAG_TAG_NUMBER_VERIFICATION = "number_verification";
 
     private UserAccountDetails mUserAccountDetails;
+
+    private String mLoginMessage;
 
     private boolean isGoogleLoginEnabled = true;
     private boolean isFacebookLoginEnabled = true;
@@ -40,15 +46,23 @@ public class LoginActivity extends BaseAppActivity<RegistrationController>
 
         mUserAccountDetails = new UserAccountDetails();
 
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left, R.anim.enter_from_left, R.anim.exit_out_right)
-                .add(R.id.fragment_container, LoginFragment.newInstance())
-                .commit();
+        Intent intent = getIntent();
+        mLoginMessage = intent.getStringExtra(Constants.ARG_LOGIN_MESSAGE);
 
-        setActivityBackPressPrompt(new ActivityBackPressPrompt(
-                getString(R.string.question_exit_without_login),
-                getString(R.string.yes), getString(R.string.no)
-        ));
+        if(savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left, R.anim.enter_from_left, R.anim.exit_out_right)
+                    .add(R.id.fragment_container, LoginFragment.newInstance(mLoginMessage))
+                    .commit();
+        }
+
+        String backPressPromptMessage = intent.getStringExtra(Constants.ARG_PROMPT_ON_BACK_PRESS_MESSAGE);
+        if(!TextUtils.isEmpty(backPressPromptMessage)) {
+            setActivityBackPressPrompt(new ActivityBackPressPrompt(
+                    backPressPromptMessage, getString(R.string.yes), getString(R.string.no)
+            ));
+        }
     }
 
     @Override
@@ -72,7 +86,7 @@ public class LoginActivity extends BaseAppActivity<RegistrationController>
 
     @Override
     public RegistrationController createController() {
-        return new RegistrationController((BaseApplication) getApplication(), this);
+        return new RegistrationController((FixItApplication) getApplication(), this);
     }
 
     @Override
@@ -138,9 +152,10 @@ public class LoginActivity extends BaseAppActivity<RegistrationController>
 
     @Override
     public void emailAlreadyExists() {
-        getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager()
+                .beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left, R.anim.enter_from_left, R.anim.exit_out_right)
-                .add(R.id.fragment_container, LoginFragment.newInstance())
+                .add(R.id.fragment_container, LoginFragment.newInstance(mLoginMessage))
                 .addToBackStack(null)
                 .replace(R.id.fragment_container, UserRegistrationFragment.newInstance(mUserAccountDetails, true))
                 .commit();

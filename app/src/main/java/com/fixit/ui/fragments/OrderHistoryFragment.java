@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.fixit.app.R;
 import com.fixit.controllers.OrderController;
 import com.fixit.data.Order;
+import com.fixit.ui.activities.BaseActivity;
 import com.fixit.ui.adapters.groups.OrderGroup;
 import com.fixit.ui.helpers.OrderedTradesmanInteractionHandler;
 import com.xwray.groupie.GroupAdapter;
@@ -24,7 +25,7 @@ import java.util.Arrays;
  * Created by konstantin on 8/8/2017.
  */
 
-public class OrderHistoryFragment extends BaseFragment<OrderController> implements OrderController.OrderCallback {
+public class OrderHistoryFragment extends BaseFragment<OrderController> implements OrderController.OrderCallback, BaseActivity.LoginRequester {
 
     private OrderedTradesmanInteractionHandler tradesmanInteractionHandler;
 
@@ -36,6 +37,7 @@ public class OrderHistoryFragment extends BaseFragment<OrderController> implemen
     private RecyclerView rvOrders;
 
     private boolean ordersLoaded = false;
+    private boolean userRegistered = false;
 
     @Override
     public void onAttach(Context context) {
@@ -51,6 +53,13 @@ public class OrderHistoryFragment extends BaseFragment<OrderController> implemen
             throw new IllegalStateException("context must implement "
                     + OrderedTradesmanInteractionHandler.OrderedTradesmanInteractionListener.class.getName());
         }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        userRegistered = isUserRegistered();
     }
 
     @Nullable
@@ -73,7 +82,9 @@ public class OrderHistoryFragment extends BaseFragment<OrderController> implemen
     public void onResume() {
         super.onResume();
 
-        if(!ordersLoaded) {
+        if(!userRegistered) {
+            requestLogin(getString(R.string.login_for_order_history), null, null, this);
+        } else if(!ordersLoaded) {
             getController().loadOrderHistory(this);
         }
     }
@@ -82,7 +93,7 @@ public class OrderHistoryFragment extends BaseFragment<OrderController> implemen
     public void onPause() {
         super.onPause();
 
-        if(!ordersLoaded) {
+        if(!ordersLoaded && userRegistered) {
             getController().cleanOrderFactory();
         }
     }
@@ -112,7 +123,25 @@ public class OrderHistoryFragment extends BaseFragment<OrderController> implemen
             rvOrders.setAdapter(groupAdapter);
             rvOrders.setVisibility(View.VISIBLE);
         } else {
+            updateEmptyListText();
+        }
+    }
+
+    @Override
+    public void loginComplete(boolean success, @Nullable Bundle data) {
+        if(success) {
+            userRegistered = true;
+            getController().loadOrderHistory(this);
+        } else {
+            getActivity().finish();
+        }
+    }
+
+    private void updateEmptyListText() {
+        if(userRegistered) {
             tvEmptyList.setText(R.string.no_orders_made_yet);
+        } else {
+            tvEmptyList.setText(R.string.login_for_order_history);
         }
     }
 }

@@ -40,7 +40,7 @@ public class DAOFactory {
     }
 
     public CommonDAO<DataModelObject> createDaoForDmoName(String dmoName) {
-        return createDao(mDmoToDaoMappings.get(dmoName));
+        return createDao(mDmoToDaoMappings.get(dmoName.toLowerCase()));
     }
 
     public CommonDAO<DataModelObject> createDao(String daoClassName) {

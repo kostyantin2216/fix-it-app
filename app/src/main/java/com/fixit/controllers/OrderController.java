@@ -1,12 +1,13 @@
 package com.fixit.controllers;
 
-import com.fixit.BaseApplication;
+import com.fixit.FixItApplication;
 import com.fixit.data.JobLocation;
 import com.fixit.data.JobReason;
 import com.fixit.data.Order;
 import com.fixit.data.OrderData;
 import com.fixit.data.Profession;
 import com.fixit.data.Tradesman;
+import com.fixit.database.JobReasonDAO;
 import com.fixit.database.OrderDataDAO;
 import com.fixit.factories.APIFactory;
 import com.fixit.factories.DAOFactory;
@@ -20,6 +21,8 @@ import com.fixit.rest.callbacks.ManagedServiceCallback;
 import com.fixit.rest.callbacks.RetryingCallback;
 import com.fixit.rest.requests.data.TradesmenOrderRequestData;
 import com.fixit.rest.responses.data.TradesmenOrderResponseData;
+import com.fixit.utils.Constants;
+import com.fixit.utils.FILog;
 import com.fixit.utils.GlobalPreferences;
 
 import java.util.Arrays;
@@ -32,20 +35,20 @@ import retrofit2.Response;
 /**
  * Created by konstantin on 5/16/2017.
  */
-public class OrderController extends ReviewController {
+public class OrderController extends TradesmenController {
 
     private final OrderFactory mOrderFactory;
     private final OrderDataDAO mOrderDataDao;
     private final OrderServiceAPI mOrderApi;
-    private final JobReasonDataAPI mJobReasonApi;
+    private final JobReasonDAO mJobReasonDao;
 
-    public OrderController(BaseApplication baseApplication, UiCallback uiCallback) {
+    public OrderController(FixItApplication baseApplication, UiCallback uiCallback) {
         super(baseApplication, uiCallback);
         APIFactory apiFactory = getServerApiFactory();
-        mOrderDataDao = getDaoFactory().createOrderDataDao();
-        mOrderApi = apiFactory.createOrderServiceApi();
-        mJobReasonApi = apiFactory.createJobReasonApi();
         DAOFactory daoFactory = getDaoFactory();
+        mOrderDataDao = daoFactory.createOrderDataDao();
+        mOrderApi = apiFactory.createOrderServiceApi();
+        mJobReasonDao = daoFactory.createJobReasonDao();
 
         mOrderFactory = new OrderFactory(
                 getAppCache().getTradesmanCache(),
@@ -68,17 +71,7 @@ public class OrderController extends ReviewController {
     }
 
     public void findReasonsForProfession(final long professionId, final JobReasonsCallback callback) {
-        mJobReasonApi.findForProfession(professionId).enqueue(new RetryingCallback<List<JobReason>>(getApplicationContext()) {
-            @Override
-            public void onRetryFailure(Call<List<JobReason>> call, Throwable t) {
-                callback.onUnexpectedErrorOccurred("error while finding job reasons for profession " + professionId, t);
-            }
-
-            @Override
-            public void onResponse(Call<List<JobReason>> call, Response<List<JobReason>> response) {
-                callback.onReceiveJobReasons(response.body());
-            }
-        });
+        callback.onReceiveJobReasons(mJobReasonDao.findByProperty(JobReasonDAO.KEY_PROFESSION_ID, String.valueOf(professionId)));
     }
 
     public void saveOrder(OrderData orderData) {
@@ -91,7 +84,7 @@ public class OrderController extends ReviewController {
 
     public Order orderCompleted(String orderId, JobLocation location, Profession profession, Tradesman[] tradesmen, JobReason[] jobReasons, String comment, Date createdAt) {
         Order order = new Order(orderId, location, profession, tradesmen, jobReasons, comment, createdAt);
-        GlobalPreferences.setLastOrderId(getApplicationContext(), order.getId());
+        GlobalPreferences.setLastOrderId(getApplicationContext(), orderId);
         return order;
     }
 
@@ -157,6 +150,7 @@ public class OrderController extends ReviewController {
         OrderData[] orderHistory = mOrderDataDao.findAll();
 
         if(orderHistory.length == 0) {
+            FILog.i(Constants.LOG_TAG_ORDER_HISTORY, "could not find any order history");
             callback.onOrdersLoaded(new Order[0]);
         } else {
             mOrderFactory.createOrders(getApplicationContext(), orderHistory, new OrderFactory.OrderFactoryCallback() {
@@ -196,7 +190,7 @@ public class OrderController extends ReviewController {
     }
 
     public interface JobReasonsCallback extends UnexpectedErrorCallback {
-        void onReceiveJobReasons(List<JobReason> reasons);
+        void onReceiveJobReasons(JobReason[] reasons);
     }
 
     public interface TradesmenOrderCallback extends GeneralServiceErrorCallback {

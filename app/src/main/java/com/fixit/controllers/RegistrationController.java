@@ -1,6 +1,6 @@
 package com.fixit.controllers;
 
-import com.fixit.BaseApplication;
+import com.fixit.FixItApplication;
 import com.fixit.config.AppConfig;
 import com.fixit.app.R;
 import com.fixit.general.UnexpectedErrorCallback;
@@ -27,7 +27,7 @@ public class RegistrationController extends UserController {
 
     private String previousMsgSid;
 
-    public RegistrationController(BaseApplication baseApplication, UiCallback uiCallback) {
+    public RegistrationController(FixItApplication baseApplication, UiCallback uiCallback) {
         super(baseApplication, uiCallback);
 
         mTwilioApi = getServerApiFactory().createTwilioApi(baseApplication);

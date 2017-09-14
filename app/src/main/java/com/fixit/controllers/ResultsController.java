@@ -1,6 +1,6 @@
 package com.fixit.controllers;
 
-import com.fixit.BaseApplication;
+import com.fixit.FixItApplication;
 import com.fixit.general.SearchManager;
 
 /**
@@ -13,7 +13,7 @@ public class ResultsController extends TradesmenController {
 
     private SearchManager.ResultsFetcher mResultsFetcher;
 
-    public ResultsController(BaseApplication baseApplication, UiCallback uiCallback) {
+    public ResultsController(FixItApplication baseApplication, UiCallback uiCallback) {
         super(baseApplication, uiCallback);
         mSearchManager = new SearchManager(getServerApiFactory().createSearchServiceApi());
     }

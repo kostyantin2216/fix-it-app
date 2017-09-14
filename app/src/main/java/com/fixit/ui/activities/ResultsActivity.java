@@ -9,7 +9,7 @@ import android.util.SparseArray;
 import android.view.View;
 
 import com.fixit.app.R;
-import com.fixit.BaseApplication;
+import com.fixit.FixItApplication;
 import com.fixit.controllers.ResultsController;
 import com.fixit.data.JobLocation;
 import com.fixit.data.Profession;
@@ -29,7 +29,7 @@ import java.util.Map;
  * Created by konstantin on 3/30/2017.
  */
 
-public class ResultsActivity extends BaseAppActivity<ResultsController>
+public class ResultsActivity extends BaseActivity<ResultsController>
     implements SearchManager.ResultCallback,
                TradesmenResultsFragment.TradesmenResultsInteractionListener,
                TradesmanProfileFragment.TradesmanProfileInteractionListener {
@@ -73,7 +73,7 @@ public class ResultsActivity extends BaseAppActivity<ResultsController>
 
     @Override
     public ResultsController createController() {
-        return new ResultsController((BaseApplication) getApplication(), this);
+        return new ResultsController((FixItApplication) getApplication(), this);
     }
 
     @Override

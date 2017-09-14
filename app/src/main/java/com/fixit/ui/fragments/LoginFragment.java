@@ -7,10 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import com.fixit.app.R;
 import com.fixit.controllers.UserController;
 import com.fixit.external.google.FacebookClientManager;
 import com.fixit.external.google.GoogleClientManager;
+import com.fixit.utils.Constants;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -44,13 +47,17 @@ public class LoginFragment extends BaseFragment<UserController>
     private ViewHolder mView;
 
     private static class ViewHolder {
+        final ImageView ivLogo;
         final TextView tvText;
         final ProgressBar pbLoader;
         final Button btnFacebookLogin;
         final Button btnGoogleLogin;
         final Button btnRegister;
 
-        ViewHolder(View v, View.OnClickListener buttonClickListener) {
+        final boolean showingMessage;
+
+        ViewHolder(View v, View.OnClickListener buttonClickListener, String loginMessage) {
+            ivLogo = (ImageView) v.findViewById(R.id.iv_logo);
             tvText = (TextView) v.findViewById(R.id.tv_login_text);
             pbLoader = (ProgressBar) v.findViewById(R.id.loader);
             btnFacebookLogin = (Button) v.findViewById(R.id.btn_fb_login);
@@ -60,16 +67,33 @@ public class LoginFragment extends BaseFragment<UserController>
             btnFacebookLogin.setOnClickListener(buttonClickListener);
             btnGoogleLogin.setOnClickListener(buttonClickListener);
             btnRegister.setOnClickListener(buttonClickListener);
+
+            if(!TextUtils.isEmpty(loginMessage)) {
+                showingMessage = true;
+                ivLogo.setVisibility(View.GONE);
+                tvText.setVisibility(View.VISIBLE);
+                tvText.setText(loginMessage);
+            } else {
+                showingMessage = false;
+            }
         }
 
         void showLoader() {
-            tvText.setVisibility(View.GONE);
+            if(showingMessage) {
+                tvText.setVisibility(View.GONE);
+            } else {
+                ivLogo.setVisibility(View.GONE);
+            }
             pbLoader.setVisibility(View.VISIBLE);
             setClickable(false);
         }
 
         void hideLoader() {
-            tvText.setVisibility(View.VISIBLE);
+            if(showingMessage) {
+                tvText.setVisibility(View.VISIBLE);
+            } else {
+                ivLogo.setVisibility(View.VISIBLE);
+            }
             pbLoader.setVisibility(View.GONE);
             setClickable(true);
         }
@@ -81,8 +105,13 @@ public class LoginFragment extends BaseFragment<UserController>
         }
     }
 
-    public static LoginFragment newInstance() {
-        return new LoginFragment();
+    public static LoginFragment newInstance(String loginMessage) {
+        Bundle args = new Bundle();
+        args.putString(Constants.ARG_LOGIN_MESSAGE, loginMessage);
+
+        LoginFragment fragment = new LoginFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -107,7 +136,7 @@ public class LoginFragment extends BaseFragment<UserController>
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
-        mView = new ViewHolder(v, this);
+        mView = new ViewHolder(v, this, getArguments().getString(Constants.ARG_LOGIN_MESSAGE));
 
         return v;
     }

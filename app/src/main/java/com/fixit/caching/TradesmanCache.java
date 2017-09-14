@@ -7,6 +7,11 @@ import com.fixit.data.Tradesman;
 import com.fixit.rest.apis.DataServiceAPI;
 import com.fixit.rest.callbacks.ManagedServiceCallback;
 import com.fixit.rest.responses.data.TradesmenResponseData;
+import com.fixit.utils.Constants;
+import com.fixit.utils.FILog;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Kostyantin on 8/26/2017.
@@ -29,32 +34,38 @@ public class TradesmanCache {
 
     public void get(Context context, final CacheCallback<Tradesman> cacheCallback, String... tradesmenIds) {
         final Tradesman[] results = new Tradesman[tradesmenIds.length];
-        final SparseArray<String> missingTradesmen = new SparseArray<>();
+        final HashMap<String, Integer> missingTradesmen = new HashMap<>();
+
+        FILog.i(Constants.LOG_TAG_TRADESMAN_CACHE, "getting " + tradesmenIds.length + " tradesmen");
 
         for(int i = 0; i < tradesmenIds.length; i++) {
             Tradesman tradesman = mTradesmen.get(tradesmenIds[i].hashCode());
             if(tradesman != null) {
                 results[i] = tradesman;
             } else {
-                missingTradesmen.put(i, tradesmenIds[i]);
+                missingTradesmen.put(tradesmenIds[i], i);
             }
         }
 
         final int missingTradesmenCount = missingTradesmen.size();
         if(missingTradesmenCount == 0) {
+            FILog.i(Constants.LOG_TAG_TRADESMAN_CACHE, "perfect cache hit!");
+
             cacheCallback.onResult(results);
         } else {
+            FILog.i(Constants.LOG_TAG_TRADESMAN_CACHE, "fetching " + missingTradesmenCount + " missing tradesmen");
+
             String[] missingTradesmenIds = new String[missingTradesmenCount];
-            for(int i = 0; i < missingTradesmenCount; i++) {
-                missingTradesmenIds[i] = missingTradesmen.valueAt(i);
+            int index = 0;
+            for(Map.Entry<String, Integer> entry : missingTradesmen.entrySet()) {
+                missingTradesmenIds[index++] = entry.getKey();
             }
 
             mApi.getTradesmen(missingTradesmenIds, new ManagedServiceCallback<TradesmenResponseData>(context, cacheCallback) {
                 @Override
                 public void onResponse(TradesmenResponseData responseData) {
                     for(Tradesman tradesman : responseData.getTradesmen()) {
-                        int missingIndex = missingTradesmen.indexOfValue(tradesman.get_id());
-                        int resultIndex = missingTradesmen.keyAt(missingIndex);
+                        Integer resultIndex = missingTradesmen.get(tradesman.get_id());
                         results[resultIndex] = tradesman;
                     }
                     cacheCallback.onResult(results);

@@ -69,15 +69,9 @@ public class JobReasonsSelectionFragment extends SearchableStaticRecyclerListFra
     }
 
     @Override
-    public void onTextChanged(final String text) {
-        if(mAdapter != null) {
-            mAdapter.filter(new CommonRecyclerAdapter.AdapterFilterer<MultiSelectRecyclerAdapter.SelectItem>() {
-                @Override
-                public boolean filter(MultiSelectRecyclerAdapter.SelectItem data) {
-                    return !data.display.toLowerCase().contains(text.trim().toLowerCase());
-                }
-            });
-        }
+    public void onTextChanged(String text) {
+        if(mAdapter != null)
+            mAdapter.filter(data -> !data.display.toLowerCase().contains(text.trim().toLowerCase()));
     }
 
     private long getProfessionId() {
@@ -85,7 +79,7 @@ public class JobReasonsSelectionFragment extends SearchableStaticRecyclerListFra
     }
 
     @Override
-    public void onReceiveJobReasons(List<JobReason> reasons) {
+    public void onReceiveJobReasons(JobReason[] reasons) {
         mAdapter = JobReasonsAdapter.create(getContext(), reasons);
         mAdapter.setSelectItemChangeListener(this);
         if(mListener != null) {
@@ -142,11 +136,11 @@ public class JobReasonsSelectionFragment extends SearchableStaticRecyclerListFra
     }
 
     private void invalidateDoneBtn() {
-        if(mAdapter.getSelectedItemCount() > 0) {
+       // if(mAdapter.getSelectedItemCount() > 0) {
             fabDone.setVisibility(View.VISIBLE);
-        } else {
+       /* } else {
             fabDone.setVisibility(View.GONE);
-        }
+        }*/
     }
 
     public interface JobReasonsInteractionListener {

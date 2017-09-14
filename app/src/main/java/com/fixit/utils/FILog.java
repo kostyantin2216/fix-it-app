@@ -16,7 +16,8 @@ public class FILog {
     private enum Level {
         INFO,
         WARN,
-        ERROR
+        ERROR,
+        DEBUG
     }
 
 
@@ -72,6 +73,10 @@ public class FILog {
         log(Level.ERROR, tag, message, cause, context);
     }
 
+
+    public static void d(String tag, String message) {
+        log(Level.DEBUG, tag, message, null, null);
+    }
 
     private static void log(Level level, String tag, String message, Throwable cause, Context context) {
         if(tag == null) {

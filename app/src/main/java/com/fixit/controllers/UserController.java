@@ -2,7 +2,8 @@ package com.fixit.controllers;
 
 import android.text.TextUtils;
 
-import com.fixit.BaseApplication;
+import com.crashlytics.android.Crashlytics;
+import com.fixit.FixItApplication;
 import com.fixit.data.OrderData;
 import com.fixit.data.UserAccountDetails;
 import com.fixit.rest.apis.UserServiceAPI;
@@ -20,7 +21,7 @@ public class UserController extends OrderController {
 
     private final UserServiceAPI mUserApi;
 
-    public UserController(BaseApplication baseApplication, UiCallback uiCallback) {
+    public UserController(FixItApplication baseApplication, UiCallback uiCallback) {
         super(baseApplication, uiCallback);
         mUserApi = getServerApiFactory().createUserServiceApi();
     }
@@ -47,6 +48,7 @@ public class UserController extends OrderController {
                     callback.emailAlreadyExists();
                 } else {
                     String userId = responseData.getUserId();
+                    Crashlytics.setUserIdentifier(userId);
                     callback.onRegistrationSuccess(userId);
                     getServerApiFactory().updateUserId(userId);
 

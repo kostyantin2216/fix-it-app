@@ -1,6 +1,6 @@
 package com.fixit.controllers;
 
-import com.fixit.BaseApplication;
+import com.fixit.FixItApplication;
 import com.fixit.general.AppInitializationTask;
 
 import org.greenrobot.eventbus.EventBus;
@@ -19,7 +19,7 @@ public class LauncherController extends BaseController implements AppInitializat
 
     private AppInitializationTask initializationTask;
 
-    public LauncherController(BaseApplication baseApplication, UiCallback uiCallback) {
+    public LauncherController(FixItApplication baseApplication, UiCallback uiCallback) {
         super(baseApplication, uiCallback);
     }
 

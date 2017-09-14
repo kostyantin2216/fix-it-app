@@ -20,6 +20,7 @@ import com.fixit.config.AppConfig;
 import com.fixit.controllers.ActivityController;
 import com.fixit.app.R;
 import com.fixit.rest.APIError;
+import com.fixit.ui.activities.DeveloperSettingsActivity;
 import com.fixit.utils.Constants;
 import com.fixit.utils.ErrorUtils;
 import com.fixit.utils.FILog;
@@ -149,8 +150,7 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
     }
 
     private void openDeveloperSettings() {
-        // TODO: need to create developer settings intent.
-        //startActivity(new Intent(this, DeveloperSe));
+        startActivity(new Intent(getContext(), DeveloperSettingsActivity.class));
     }
 
     // VIEW

@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.fixit.BaseApplication;
+import com.fixit.FixItApplication;
 import com.fixit.app.R;
 import com.fixit.config.AppConfig;
 import com.fixit.controllers.OrderController;
@@ -71,7 +71,7 @@ public class DeveloperSettingsActivity extends BaseDeveloperSettingsActivity {
 
                 return true;
             case R.id.restart:
-                ((BaseApplication) getApplication()).onDeveloperSettingsChanged();
+                ((FixItApplication) getApplication()).onDeveloperSettingsChanged();
                 restartApp(false);
 
                 return true;
@@ -103,11 +103,11 @@ public class DeveloperSettingsActivity extends BaseDeveloperSettingsActivity {
     private void sendOrderNotification(int flowCode) {
         String orderId = GlobalPreferences.getLastOrderId(this);
         if(!TextUtils.isEmpty(orderId)) {
-            OrderController orderController = new OrderController((BaseApplication) getApplication(), this);
+            OrderController orderController = new OrderController((FixItApplication) getApplication(), this);
             OrderData latestOrder = orderController.getLatestOrder();
 
             if(latestOrder != null) {
-                OrderNotificationManager.registerOrderFeedbackNotification(this, latestOrder.getId(), true, flowCode);
+                OrderNotificationManager.registerOrderFeedbackNotification(this, latestOrder.get_id(), true, flowCode);
             } else {
                 notifyUser("Could not find order with id " + orderId + ", create a new order and try again");
             }
@@ -129,11 +129,6 @@ public class DeveloperSettingsActivity extends BaseDeveloperSettingsActivity {
                 AppConfig.Overrides.override(this, configuration.key, configuration.getValue().asString());
                 break;
         }
-    }
-
-    @Override
-    public Class<?> getLoginActivity() {
-        return null;
     }
 
     @Override

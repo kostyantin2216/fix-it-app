@@ -52,7 +52,7 @@ public class OrderNotificationManager {
         }
     }
 
-    static Notification createOrderFeedbackNotification(Context context, OrderFeedbackNotificationData data) {
+    static Notification createOrderFeedbackNotification(Context context, OrderFeedbackNotificationData data, int notificationRequestCode) {
         Notification notification = new NotificationCompat.Builder(context)
                 //.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_xl_yellow_logo_white_border))
                 .setSmallIcon(R.drawable.ic_large_yellow_logo_white_border)
@@ -60,19 +60,19 @@ public class OrderNotificationManager {
                 .setContentText(data.message)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(data.message))
                 .setAutoCancel(true)
-                .setContentIntent(createPendingIntent(context, 1, data.orderId, data.flowCode, false, false))
-                .addAction(createAction(context, 2, data.orderId, data.flowCode, true))
-                .addAction(createAction(context, 3, data.orderId, data.flowCode, false))
+                .setContentIntent(createPendingIntent(context, 1, data.orderId, data.flowCode, false, false, notificationRequestCode))
+                .addAction(createAction(context, 2, data.orderId, data.flowCode, true, notificationRequestCode))
+                .addAction(createAction(context, 3, data.orderId, data.flowCode, false, notificationRequestCode))
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setVibrate(new long[] {1, 1, 1})
                 .build();
 
-        notification.flags = Notification.FLAG_SHOW_LIGHTS | Notification.FLAG_ONLY_ALERT_ONCE;
+        notification.flags |= Notification.FLAG_SHOW_LIGHTS | Notification.FLAG_ONLY_ALERT_ONCE;
 
         return notification;
     }
 
-    private static NotificationCompat.Action createAction(Context context, int requestCode, String orderId, int flowCode, boolean yesAction) {
+    private static NotificationCompat.Action createAction(Context context, int requestCode, String orderId, int flowCode, boolean yesAction, int notificationRequestCode) {
         int drawableId;
         int textId;
         if(yesAction) {
@@ -85,17 +85,18 @@ public class OrderNotificationManager {
         return new NotificationCompat.Action.Builder(
                 drawableId,
                 context.getString(textId),
-                createPendingIntent(context, requestCode, orderId, flowCode, true, yesAction)
+                createPendingIntent(context, requestCode, orderId, flowCode, true, yesAction, notificationRequestCode)
         ).build();
     }
 
-    private static PendingIntent createPendingIntent(Context context, int requestCode, String orderId, int flowCode, boolean fromAction, boolean yesAction) {
+    private static PendingIntent createPendingIntent(Context context, int requestCode, String orderId, int flowCode, boolean fromAction, boolean yesAction, int notificationRequestCode) {
         Intent intent;
         if(!fromAction) {
             intent = createDefaultIntent(context, orderId, flowCode);
         } else {
             intent = createActionIntent(context, orderId, flowCode, yesAction);
         }
+        intent.putExtra(Constants.ARG_NOTIFICATION_REQUEST_CODE, notificationRequestCode);
 
         return PendingIntent.getActivity(context, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
@@ -117,7 +118,6 @@ public class OrderNotificationManager {
         Intent intent = new Intent(context, OrderFeedbackActivity.class);
         intent.putExtra(Constants.ARG_ORDER_ID, orderId);
         intent.putExtra(Constants.ARG_FLOW_CODE, flowCode);
-        intent.putExtra(Constants.ARG_FROM_NOTIFICATION, true);
         return intent;
     }
 

@@ -14,13 +14,13 @@ public class TradesmenOrderRequestData {
     private JobLocation jobLocation;
     private Tradesman[] tradesmen;
     private JobReason[] jobReasons;
-    private String reason;
+    private String comment;
 
-    public TradesmenOrderRequestData(Tradesman[] tradesmen, JobReason[] jobReasons, JobLocation jobLocation, String reason) {
+    public TradesmenOrderRequestData(Tradesman[] tradesmen, JobReason[] jobReasons, JobLocation jobLocation, String comment) {
         this.jobLocation = jobLocation;
         this.tradesmen = tradesmen;
         this.jobReasons = jobReasons;
-        this.reason = reason;
+        this.comment = comment;
     }
 
     public JobLocation getJobLocation() {
@@ -47,12 +47,12 @@ public class TradesmenOrderRequestData {
         this.jobReasons = jobReasons;
     }
 
-    public String getReason() {
-        return reason;
+    public String getComment() {
+        return comment;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class TradesmenOrderRequestData {
                 "jobLocation=" + jobLocation +
                 ", tradesmen=" + Arrays.toString(tradesmen) +
                 ", jobReasons=" + Arrays.toString(jobReasons) +
-                ", reason='" + reason + '\'' +
+                ", comment='" + comment + '\'' +
                 '}';
     }
 

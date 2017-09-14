@@ -1,6 +1,7 @@
 package com.fixit.ui.fragments;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -57,7 +58,7 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
     static class ViewHolder implements View.OnFocusChangeListener {
 
         final ExpandablePanel tradesmenPanel;
-        final EditText etReason;
+        final EditText etComment;
         final Button btnPickReason;
         final FloatingActionButton fabDone;
 
@@ -73,8 +74,8 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
             SnapHelper helper = new LinearSnapHelper();
             helper.attachToRecyclerView(rvTradesmen);
 
-            etReason = (EditText) v.findViewById(R.id.et_reason);
-            etReason.setOnFocusChangeListener(this);
+            etComment = (EditText) v.findViewById(R.id.et_comment);
+            etComment.setOnFocusChangeListener(this);
 
             btnPickReason = (Button) v.findViewById(R.id.btn_pick_a_reason);
             btnPickReason.setOnClickListener(onClickListener);
@@ -87,12 +88,12 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
             mState = state;
             switch (state) {
                 case BEFORE_ORDER:
-                    etReason.setEnabled(true);
+                    etComment.setEnabled(true);
                     btnPickReason.setVisibility(View.VISIBLE);
                     fabDone.setImageDrawable(ContextCompat.getDrawable(fabDone.getContext(), R.drawable.ic_check_white_24dp));
                     break;
                 case AFTER_ORDER:
-                    etReason.setEnabled(false);
+                    etComment.setEnabled(false);
                     btnPickReason.setVisibility(View.GONE);
                     fabDone.setImageDrawable(ContextCompat.getDrawable(fabDone.getContext(), R.drawable.ic_close_white_24dp));
                     break;
@@ -117,15 +118,26 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
         }
 
         void clearFocus() {
-            etReason.clearFocus();
+            etComment.clearFocus();
         }
 
-        String getReason() {
-            return etReason.getText().toString();
+        String getComment() {
+            return etComment.getText().toString();
         }
 
-        void setReason(String reason) {
-            etReason.setText(reason);
+        void setComment(String reason) {
+            etComment.setText(reason);
+        }
+
+        void setJobReasonCount(int count) {
+            String text;
+            Resources res = btnPickReason.getResources();
+            if(count == 0) {
+                text = res.getString(R.string.pick_a_reason);
+            } else {
+                text = res.getQuantityString(R.plurals.job_reasons_picked, count, count);
+            }
+            btnPickReason.setText(text);
         }
     }
 
@@ -184,7 +196,7 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
                 case R.id.fab_done:
                     switch (mView.mState) {
                         case BEFORE_ORDER:
-                            mListener.completeOrder(mView.getReason());
+                            mListener.completeOrder(mView.getComment());
                             mView.setState(ViewState.AFTER_ORDER);
                             mView.showTradesmen();
                             break;
@@ -207,12 +219,12 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
     @Override
     public void onPanelCollapsed(ExpandablePanel panel) { }
 
-    public void setReason(String reason) {
-        mView.setReason(reason);
+    public void onJobReasonSelectionChanged(int jobReasonCount) {
+        mView.setJobReasonCount(jobReasonCount);
     }
 
-    public String getReason() {
-        return mView.getReason();
+    public String getComment() {
+        return mView.getComment();
     }
 
     public interface OrderDetailsInteractionListener {

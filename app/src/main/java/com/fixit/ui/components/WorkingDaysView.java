@@ -24,7 +24,8 @@ public class WorkingDaysView extends LinearLayout implements View.OnClickListene
     private final TextView tvClosedToday;
     private final int today = DateUtils.getCurrentDayOfWeek();
 
-    private boolean isExpanded = true;
+    private boolean expanded = true;
+    private boolean unavailable = false;
 
     public WorkingDaysView(Context context) {
         this(context, null, 0);
@@ -41,7 +42,6 @@ public class WorkingDaysView extends LinearLayout implements View.OnClickListene
 
         final int padding = UIUtils.dpToPx(context, 8);
         tvClosedToday = new TextView(context);
-        tvClosedToday.setText(R.string.closed_today);
         tvClosedToday.setGravity(Gravity.CENTER);
         tvClosedToday.setPadding(padding, padding, padding, padding);
         tvClosedToday.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -55,30 +55,40 @@ public class WorkingDaysView extends LinearLayout implements View.OnClickListene
 
     public void setWorkingDays(WorkingDay[] workingDays) {
         removeAllViews();
-        final Context context = getContext();
-        final int padding = UIUtils.dpToPx(context, 4);
-        for(int i = 0; i < workingDays.length; i++) {
-            WorkingDay workingDay = workingDays[i];
-            if(workingDay != null) {
-                WorkingDayView dayView = new WorkingDayView(context);
-                dayView.setWorkingDay(workingDay);
-                dayView.setPadding(
-                        dayView.getPaddingLeft(),
-                        dayView.getPaddingTop() + (i == 0 ? padding : 0),
-                        dayView.getPaddingRight(),
-                        dayView.getPaddingBottom() + padding
-                );
+        if(workingDays != null && workingDays.length > 0) {
+            unavailable = false;
+            tvClosedToday.setText(R.string.closed_today);
+            final Context context = getContext();
+            final int padding = UIUtils.dpToPx(context, 4);
+            for(int i = 0; i < workingDays.length; i++) {
+                WorkingDay workingDay = workingDays[i];
+                if(workingDay != null) {
+                    WorkingDayView dayView = new WorkingDayView(context);
+                    dayView.setWorkingDay(workingDay);
+                    dayView.setPadding(
+                            dayView.getPaddingLeft(),
+                            dayView.getPaddingTop() + (i == 0 ? padding : 0),
+                            dayView.getPaddingRight(),
+                            dayView.getPaddingBottom() + padding
+                    );
 
-                addView(dayView, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    addView(dayView, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                }
             }
+            expanded = false;
+            toggleWorkingDaysVisibility();
+        } else {
+            unavailable = true;
+            tvClosedToday.setText(R.string.unavailable);
+            addView(tvClosedToday);
         }
-        isExpanded = false;
-        toggleWorkingDaysVisibility();
     }
 
     @Override
     public void onClick(View v) {
-        toggleWorkingDaysVisibility();
+        if(!unavailable) {
+            toggleWorkingDaysVisibility();
+        }
     }
 
     public void toggleWorkingDaysVisibility() {
@@ -89,7 +99,7 @@ public class WorkingDaysView extends LinearLayout implements View.OnClickListene
         for(int i = 0; i < childCount; i++) {
             WorkingDayView workingDayView = (WorkingDayView) getChildAt(i);
             if(workingDayView.getWorkingDay().getDayOfWeek() != today) {
-                if(isExpanded) {
+                if(expanded) {
                     //workingDayView.setVisibility(GONE);
                     if(workingDayView.getVisibility() == VISIBLE) {
                         UIUtils.collapse(workingDayView, 3);
@@ -104,7 +114,7 @@ public class WorkingDaysView extends LinearLayout implements View.OnClickListene
             }
         }
 
-        isExpanded = !isExpanded;
+        expanded = !expanded;
 
         if(hidden == childCount) {
             addView(tvClosedToday);

@@ -1,6 +1,6 @@
 package com.fixit.ui.activities;
 
-import com.fixit.BaseApplication;
+import com.fixit.FixItApplication;
 import com.fixit.controllers.LauncherController;
 import com.fixit.general.AppInitializationTask;
 import com.fixit.utils.FILog;
@@ -19,7 +19,7 @@ public abstract class LauncherActivity extends BaseActivity<LauncherController> 
 
     @Override
     public LauncherController createController() {
-        return new LauncherController((BaseApplication) getApplication(), this);
+        return new LauncherController((FixItApplication) getApplication(), this);
     }
 
     @Override
@@ -67,13 +67,4 @@ public abstract class LauncherActivity extends BaseActivity<LauncherController> 
 
     public abstract void onAppReady();
 
-    @Override
-    public Class<?> getLoginActivity() {
-        throw new UnsupportedOperationException("LauncherActivity does not support login requests");
-    }
-
-    @Override
-    public void restartApp(boolean skipSplash) {
-        throw new UnsupportedOperationException("LauncherActivity does not support app restarts");
-    }
 }

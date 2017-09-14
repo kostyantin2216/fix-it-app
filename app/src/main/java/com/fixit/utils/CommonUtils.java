@@ -59,6 +59,10 @@ public class CommonUtils {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1).toLowerCase();
     }
 
+    public static String deCapitalize(String line) {
+        return Character.toLowerCase(line.charAt(0)) + line.substring(1).toLowerCase();
+    }
+
     public static String capitalizeAllWords(String string) {
         if(!TextUtils.isEmpty(string)) {
             String[] arr = string.split(" ");

@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 
 import com.fixit.app.R;
-import com.fixit.BaseApplication;
+import com.fixit.FixItApplication;
 import com.fixit.controllers.OrderController;
 import com.fixit.data.Review;
 import com.fixit.data.Tradesman;
@@ -18,13 +18,13 @@ import com.fixit.ui.helpers.TradesmanActionHandler;
  * Created by konstantin on 8/8/2017.
  */
 
-public class OrderHistoryActivity extends BaseAppActivity<OrderController>
+public class OrderHistoryActivity extends BaseActivity<OrderController>
         implements OrderedTradesmanInteractionHandler.OrderedTradesmanInteractionListener,
                    TradesmanReviewFragment.TradesmanReviewListener {
 
     @Override
     public OrderController createController() {
-        return new OrderController((BaseApplication) getApplication(), this);
+        return new OrderController((FixItApplication) getApplication(), this);
     }
 
     @Override

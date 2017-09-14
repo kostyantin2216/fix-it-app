@@ -1,5 +1,7 @@
 package com.fixit.ui.activities;
 
+import android.app.NotificationManager;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +9,7 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import com.fixit.app.R;
-import com.fixit.BaseApplication;
+import com.fixit.FixItApplication;
 import com.fixit.controllers.OrderController;
 import com.fixit.data.Order;
 import com.fixit.data.Review;
@@ -24,7 +26,7 @@ import com.fixit.ui.fragments.feedback.ChoiceSelectionFragment;
  * Created by konstantin on 7/19/2017.
  */
 
-public class OrderFeedbackActivity extends BaseAppActivity<OrderController>
+public class OrderFeedbackActivity extends BaseActivity<OrderController>
         implements ChoiceSelectionFragment.ChoiceSelectionListener,
                    OrderFeedbackView,
                    TradesmanReviewFragment.TradesmanReviewListener,
@@ -35,10 +37,11 @@ public class OrderFeedbackActivity extends BaseAppActivity<OrderController>
 
     private String mOrderId;
     private int mFlowCode;
+    private int mNotificationRequestCode;
 
     @Override
     public OrderController createController() {
-        return new OrderController((BaseApplication) getApplication(), this);
+        return new OrderController((FixItApplication) getApplication(), this);
     }
 
     @Override
@@ -49,6 +52,12 @@ public class OrderFeedbackActivity extends BaseAppActivity<OrderController>
         Intent intent = getIntent();
         mOrderId = intent.getStringExtra(Constants.ARG_ORDER_ID);
         mFlowCode = intent.getIntExtra(Constants.ARG_FLOW_CODE, -1);
+        mNotificationRequestCode = intent.getIntExtra(Constants.ARG_NOTIFICATION_REQUEST_CODE, -1);
+
+        if(mNotificationRequestCode > -1) {
+            NotificationManager manager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
+            manager.cancel(mNotificationRequestCode);
+        }
 
         if(mFlowCode < 0) {
             abortFeedback("Cannot start flow without a flow code");
@@ -76,9 +85,8 @@ public class OrderFeedbackActivity extends BaseAppActivity<OrderController>
 
     private void abortFeedback(String reason) {
         FILog.e(Constants.LOG_TAG_FEEDBACK, "Aborting! " + reason, this);
-        boolean fromNotification = getIntent().getBooleanExtra(Constants.ARG_FROM_NOTIFICATION, false);
 
-        if(fromNotification) {
+        if(mNotificationRequestCode > -1) {
             startActivity(new Intent(this, SearchActivity.class));
         }
         finish();

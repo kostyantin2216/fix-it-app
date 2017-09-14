@@ -30,14 +30,21 @@ public class Constants {
     public final static String ARG_DEFAULT_ADDRESS = "default_address";
     public final static String ARG_ORDER_TO_RESTORE = "order_to_restore";
     public final static String ARG_DELEGATE = "delegate";
-    public static final String ARG_FROM_NOTIFICATION = "fromNotification";
+    public final static String ARG_NOTIFICATION_REQUEST_CODE = "notificationReqCode";
+    public final static String ARG_LOGIN_MESSAGE = "loginDescription";
+    public final static String ARG_PROMPT_ON_BACK_PRESS_MESSAGE = "promptOnBackPressMsg";
 
     public final static int HTTP_INTERNAL_SERVER_ERROR = 500;
 
     public final static String KEY_USER_AVATAR = "userAvatar";
     public final static String KEY_USER_NAME = "userName";
 
-    public final static String LOG_TAG_FEEDBACK = "feedback";
+    public final static String LOG_TAG_SEARCH = "Search";
+    public final static String LOG_TAG_ORDER_HISTORY = "OrderHistory";
+    public final static String LOG_TAG_FEEDBACK = "Feedback";
+    public final static String LOG_TAG_ORDER_FACTORY = "OrderFactory";
+    public final static String LOG_TAG_TRADESMAN_CACHE = "TradesmanCache";
+    public final static String LOG_TAG_SYNCHRONIZATION = "Synchronization";
 
     public final static String PROP_TRADESMAN_ID = "tradesmanId";
 

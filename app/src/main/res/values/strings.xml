@@ -77,7 +77,8 @@
     <string name="rating">Rating</string>
     <string name="register">Register</string>
 
-    <string name="login_text">We need your help!\nWithout your reviews and experiences with the tradesmen we won\'t be able to keep providing you with top quality tradesmen, so in order to help out  please create an account with us and leave a review of the tradesman you have ordered!</string>
+    <string name="login">Login</string>
+    <string name="login_for_order">We need your help!\nWithout your reviews and experiences with the tradesmen we won\'t be able to keep providing you with top quality tradesmen, so in order to help out  please create an account with us and leave a review of the tradesman you have ordered!</string>
     <string name="sign_in_with_google">Sign in with Google</string>
 
     <string name="contact_selected_tradesmen">Contact selected tradesmen</string>
@@ -165,6 +166,14 @@
     <string name="what_would_you_like_to_do_next">What would you like to do next?</string>
     <string name="why_not_answered_to_satisfaction">Could you tell us why the tradesmen didn\'t answer to your satisfaction?</string>
     <string name="loading_order_history">Loading Order History</string>
+    <string name="unavailable">Unavailable</string>
+    <string name="login_for_order_history">Please login to view your order history.</string>
+    <string name="comment">Comment</string>
 
+    <plurals name="job_reasons_picked">
+        <item quantity="zero">@string/pick_a_reason</item>
+        <item quantity="one">Picked 1 reason</item>
+        <item quantity="other">Picked %1$d reasons</item>
+    </plurals>
 
 </resources>

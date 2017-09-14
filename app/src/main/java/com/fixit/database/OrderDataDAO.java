@@ -58,7 +58,7 @@ public class OrderDataDAO extends BaseDAO<OrderData> {
     protected ContentValues extractContentValues(OrderData obj) {
         ContentValues cv = new ContentValues();
 
-        cv.put(KEY_ID, obj.getId());
+        cv.put(KEY_ID, obj.get_id());
         cv.put(KEY_PROFESSION_ID, obj.getProfessionId());
         cv.put(KEY_COMMENT, obj.getComment());
         cv.put(KEY_FEEDBACK_PROVIDED, obj.isFeedbackProvided() ? 1 : 0);

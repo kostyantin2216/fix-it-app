@@ -13,18 +13,18 @@ public class Review {
     private String title;
     private String content;
     private float rating;
-    private boolean onDisplay;
+    private boolean isOnDisplay;
     private Date createdAt;
 
     public Review() { }
 
-    public Review(String userId, String tradesmanId, String title, String content, float rating, boolean onDisplay, Date createdAt) {
+    public Review(String userId, String tradesmanId, String title, String content, float rating, boolean isOnDisplay, Date createdAt) {
         this.userId = userId;
         this.tradesmanId = tradesmanId;
         this.title = title;
         this.content = content;
         this.rating = rating;
-        this.onDisplay = onDisplay;
+        this.isOnDisplay = isOnDisplay;
         this.createdAt = createdAt;
     }
 
@@ -69,11 +69,11 @@ public class Review {
     }
 
     public boolean isOnDisplay() {
-        return onDisplay;
+        return isOnDisplay;
     }
 
     public void setOnDisplay(boolean onDisplay) {
-        this.onDisplay = onDisplay;
+        this.isOnDisplay = onDisplay;
     }
 
     public Date getCreatedAt() {
@@ -92,7 +92,7 @@ public class Review {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", rating=" + rating +
-                ", onDisplay=" + onDisplay +
+                ", isOnDisplay=" + isOnDisplay +
                 ", createdAt=" + createdAt +
                 '}';
     }

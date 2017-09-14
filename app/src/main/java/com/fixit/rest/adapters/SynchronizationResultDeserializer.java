@@ -1,9 +1,11 @@
 package com.fixit.rest.adapters;
 
 import com.fixit.data.DataModelObject;
+import com.fixit.data.JobReason;
 import com.fixit.data.Profession;
 import com.fixit.synchronization.SynchronizationAction;
 import com.fixit.synchronization.SynchronizationResult;
+import com.fixit.utils.Constants;
 import com.fixit.utils.FILog;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -25,8 +27,6 @@ import java.util.Set;
 
 public class SynchronizationResultDeserializer implements JsonDeserializer<SynchronizationResult> {
 
-    private final static String LOG_TAG = SynchronizationResultDeserializer.class.getSimpleName();
-
     @Override
     public SynchronizationResult deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
@@ -38,8 +38,10 @@ public class SynchronizationResultDeserializer implements JsonDeserializer<Synch
         if(resultsJson != null && resultsJson.size() > 0) {
             if (name.equalsIgnoreCase(Profession.class.getSimpleName())) {
                 return deserialize(name, resultsJson, Profession.class);
+            } else if(name.equalsIgnoreCase(JobReason.class.getSimpleName())) {
+                return deserialize(name, resultsJson, JobReason.class);
             } else {
-                FILog.w(LOG_TAG, name + " is unsupported");
+                FILog.w(Constants.LOG_TAG_SYNCHRONIZATION, name + " is unsupported");
             }
         }
 

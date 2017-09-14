@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.fixit.app.R;
-import com.fixit.BaseApplication;
+import com.fixit.FixItApplication;
 import com.fixit.controllers.OrderController;
 import com.fixit.controllers.SearchController;
 import com.fixit.data.JobLocation;
@@ -38,6 +38,7 @@ import com.fixit.ui.fragments.SearchFragment;
 import com.fixit.ui.fragments.TradesmanReviewFragment;
 import com.fixit.ui.helpers.OrderedTradesmanInteractionHandler;
 import com.fixit.ui.helpers.TradesmanActionHandler;
+import com.fixit.utils.GlobalPreferences;
 import com.fixit.validation.AddressValidator;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
@@ -48,49 +49,42 @@ import java.util.List;
  * Created by konstantin on 3/29/2017.
  */
 
-public class SearchActivity extends BaseAppActivity<SearchController>
+public class SearchActivity extends BaseActivity<SearchController>
         implements SearchFragment.SearchFragmentInteractionListener,
-                   SearchManager.SearchCallback,
+                   SearchController.SearchCallback,
                    ProfessionsListFragment.ProfessionSelectionListener,
                    GoogleClientManager.GoogleManagerCallback,
                    NavigationView.OnNavigationItemSelectedListener,
                    OrderedTradesmanInteractionHandler.OrderedTradesmanInteractionListener,
                    TradesmanReviewFragment.TradesmanReviewListener {
 
-    private static final String LOG_TAG = "#" + SearchActivity.class.getSimpleName();
     private static final String FRAG_TAG_SEARCH = "searchFrag";
     private static final String FRAG_TAG_PROFESSIONS = "professionsFrag";
 
     public static final int DELEGATE_ORDER_HISTORY = 0;
 
     private GoogleClientManager mGoogleClientManager;
-    private AddressValidator mAddressValidator;
-
-    private JobLocation mJobLocation;
-    private Profession mProfession;
 
     private boolean navInitialized = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(!checkActivityDelegate()) {
-            setContentView(R.layout.activity_drawer_layout);
+        setContentView(R.layout.activity_drawer_layout);
 
-            if (savedInstanceState == null) {
-                createSearchFragment();
-            }
-
-            mGoogleClientManager = new GoogleClientManager(new GoogleApiClient
-                    .Builder(this)
-                    .addApi(Places.GEO_DATA_API)
-                    .addApi(Places.PLACE_DETECTION_API),
-                    this,
-                    this
-            );
-
-            mAddressValidator = new AddressValidator();
+        if (savedInstanceState == null) {
+            createSearchFragment();
         }
+
+        mGoogleClientManager = new GoogleClientManager(new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API),
+                this,
+                this
+        );
+
+        checkActivityDelegate();
     }
 
     private boolean checkActivityDelegate() {
@@ -154,6 +148,11 @@ public class SearchActivity extends BaseAppActivity<SearchController>
     }
 
     private void invalidateNavigationHeader(NavigationView navigationView) {
+        if(!TextUtils.isEmpty(GlobalPreferences.getUserId(this))) {
+            MenuItem loginItem = navigationView.getMenu().findItem(R.id.login);
+            loginItem.setVisible(false);
+        }
+
         SearchController controller = getController();
         OrderData order = controller.getLatestOrder();
         View headerView = navigationView.getHeaderView(0);
@@ -161,7 +160,7 @@ public class SearchActivity extends BaseAppActivity<SearchController>
             final OngoingOrderView ongoingOrderView = (OngoingOrderView) headerView.findViewById(R.id.ongoing_order_view);
             String ongoingOrderId = ongoingOrderView.getOrderId();
 
-            if(!TextUtils.isEmpty(ongoingOrderId) && !ongoingOrderId.equals(order.getId())) {
+            if(TextUtils.isEmpty(ongoingOrderId) || !ongoingOrderId.equals(order.get_id())) {
                 controller.loadLatestOrder(new OrderController.SingleOrderCallback() {
                     @Override
                     public void onOrderLoaded(Order order) {
@@ -210,6 +209,8 @@ public class SearchActivity extends BaseAppActivity<SearchController>
 
         if(navInitialized) {
             invalidateNavigationHeader((NavigationView) findViewById(R.id.nav_view));
+        } else {
+            FILog.i(Constants.LOG_TAG_SEARCH, "nav not initialized", this);
         }
     }
 
@@ -240,7 +241,7 @@ public class SearchActivity extends BaseAppActivity<SearchController>
 
     @Override
     public SearchController createController() {
-        return new SearchController((BaseApplication) getApplication(), this);
+        return new SearchController((FixItApplication) getApplication(), this);
     }
 
     private SearchFragment getSearchFragment() {
@@ -275,38 +276,8 @@ public class SearchActivity extends BaseAppActivity<SearchController>
 
     @Override
     public void performSearch(String professionName, final String address) {
-        mProfession = getController().getProfession(professionName);
-        if(mProfession != null) {
-            showLoader(getString(R.string.validating_address));
-            mAddressValidator.validate(address, new AddressValidator.AddressValidationCallback() {
-                @Override
-                public void onAddressValidated(AddressValidator.AddressValidationResult result) {
-                    if(result.jobLocation != null) {
-                        showLoader(getString(R.string.starting_search));
-                        mJobLocation = result.jobLocation;
-                        double lat = mJobLocation.getLat();
-                        double lng = mJobLocation.getLng();
-                        getController().sendSearch(
-                                SearchActivity.this,
-                                mProfession,
-                                new MutableLatLng(lat, lng),
-                                SearchActivity.this
-                        );
-                        getAnalyticsManager().trackSearch(mProfession.getName(), address);
-                    } else {
-                        invalidAddress();
-                    }
-                }
-
-                @Override
-                public void onValidationError(String error, Throwable t) {
-                    FILog.e(LOG_TAG, "Address Geocode Validation error: " + error, t, getApplicationContext());
-                    invalidAddress();
-                }
-            });
-        } else {
-            notifyUser(getString(R.string.invalid_profession));
-        }
+        getController().performSearch(this, professionName, address, this);
+        showLoader(getString(R.string.validating_address));
     }
 
     @Override
@@ -315,12 +286,24 @@ public class SearchActivity extends BaseAppActivity<SearchController>
         hideLoader();
     }
 
+
     @Override
-    public void onSearchStarted(String searchId) {
+    public void invalidProfession() {
+        notifyUser(getString(R.string.invalid_profession));
+        hideLoader();
+    }
+
+    @Override
+    public void onAddressValidated() {
+        showLoader(getString(R.string.starting_search));
+    }
+
+    @Override
+    public void onSearchStarted(Profession profession, JobLocation location, String searchId) {
         Intent intent = new Intent(this, ResultsActivity.class);
         intent.putExtra(Constants.ARG_SEARCH_ID, searchId);
-        intent.putExtra(Constants.ARG_JOB_LOCATION, mJobLocation);
-        intent.putExtra(Constants.ARG_PROFESSION, mProfession);
+        intent.putExtra(Constants.ARG_JOB_LOCATION, location);
+        intent.putExtra(Constants.ARG_PROFESSION, profession);
         startActivity(intent);
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_out_left);
         hideLoader();
@@ -340,9 +323,12 @@ public class SearchActivity extends BaseAppActivity<SearchController>
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         closeNavigationDrawer();
         switch (item.getItemId()) {
+            case R.id.login:
+                startActivity(new Intent(this, LoginActivity.class));
+                return true;
             case R.id.order_history:
                 startActivity(new Intent(this, OrderHistoryActivity.class));
-                break;
+                return true;
             case R.id.about:
                 getSupportFragmentManager()
                         .beginTransaction()
@@ -350,9 +336,10 @@ public class SearchActivity extends BaseAppActivity<SearchController>
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left, R.anim.enter_from_left, R.anim.exit_out_right)
                         .add(R.id.fragment_holder, AboutFragment.newInstance())
                         .commit();
-                break;
+                return true;
+            default:
+                return false;
         }
-        return true;
     }
 
     @Override
