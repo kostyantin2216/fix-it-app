@@ -10,4 +10,7 @@
     <item android:id="@+id/send_order_notification"
         android:title="Send Order Notification"
         app:showAsAction="never" />
+    <item android:id="@+id/clear_user"
+        android:title="Clear User"
+        app:showAsAction="never" />
 </menu>

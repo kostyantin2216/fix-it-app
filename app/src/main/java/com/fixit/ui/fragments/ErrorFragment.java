@@ -16,9 +16,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.fixit.config.AppConfig;
 import com.fixit.controllers.ActivityController;
 import com.fixit.app.R;
+import com.fixit.exceptions.CrashlyticsException;
 import com.fixit.rest.APIError;
 import com.fixit.ui.activities.DeveloperSettingsActivity;
 import com.fixit.utils.Constants;
@@ -28,6 +30,8 @@ import com.fixit.utils.GlobalPreferences;
 
 import java.util.Iterator;
 import java.util.List;
+
+import io.fabric.sdk.android.services.common.Crash;
 
 /**
  * Created by konstantin on 4/3/2017.
@@ -60,6 +64,15 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
                     new ErrorUtils.MissingValuesArgument(getClass(), 1)
                         .add(Constants.ARG_ERROR_PARAMS, ErrorParams.class)
             );
+        } else {
+            CrashlyticsException ex;
+            if(mParams.cause != null) {
+                ex = new CrashlyticsException(mParams.logMsg, mParams.cause);
+            } else {
+                ex = new CrashlyticsException(mParams.logMsg);
+            }
+
+            Crashlytics.logException(ex);
         }
     }
 

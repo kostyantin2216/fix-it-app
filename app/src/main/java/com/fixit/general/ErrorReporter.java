@@ -41,7 +41,7 @@ public class ErrorReporter {
 
         GlobalPreferences.fillServerLog(context, log);
 
-        mServerApi.create(log).enqueue(new EmptyCallback<ServerLog>());
+        mServerApi.create(log).enqueue(new EmptyCallback<>());
     }
 
 }

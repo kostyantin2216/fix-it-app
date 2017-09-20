@@ -3,6 +3,7 @@
     <color name="colorPrimary">#10B3F0</color>
     <color name="colorPrimaryDark">#1779BE</color>
     <color name="colorAccent">#ffea00</color>
+    <color name="colorError">#FFDD2C00</color>
 
     <array name="loaderColors">
         <item>#F44336</item>
@@ -10,7 +11,6 @@
         <item>#4CAF50</item>
         <item>#FFC107</item>
     </array>
-
 
     <color name="colorButton">#10B3F0</color>
     <color name="colorDarkButton">#146ba7</color>

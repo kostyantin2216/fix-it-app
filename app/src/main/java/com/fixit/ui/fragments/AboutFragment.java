@@ -50,6 +50,9 @@ public class AboutFragment extends BaseFragment<ActivityController> implements V
         tvVersion.setText(versionInfo);
         tvVersion.setOnClickListener(this);
 
+        v.findViewById(R.id.tv_terms_conditions).setOnClickListener(this);
+        v.findViewById(R.id.tv_privacy_policy).setOnClickListener(this);
+
         return v;
     }
 
@@ -68,6 +71,18 @@ public class AboutFragment extends BaseFragment<ActivityController> implements V
             case R.id.tv_version:
                 String label = getString(R.string.fixxit_version);
                 copyToClipboard(label, versionInfo);
+                break;
+            case R.id.tv_terms_conditions:
+                showStaticWebPage(
+                        getString(R.string.terms_and_conditions),
+                        AppConfig.getString(getContext(), AppConfig.KEY_TERMS_AND_CONDITIONS_URL, "")
+                );
+                break;
+            case R.id.tv_privacy_policy:
+                showStaticWebPage(
+                        getString(R.string.privacy_policy),
+                        AppConfig.getString(getContext(), AppConfig.KEY_PRIVACY_POLICY_URL, "")
+                );
                 break;
             default:
                 throw new IllegalArgumentException("unsupported view click");

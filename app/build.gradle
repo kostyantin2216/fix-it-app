@@ -26,6 +26,12 @@ android {
             storeFile file('C:/FixIt/FixIt/prototypeKeyStore/prototypeKeyStore.jks')
             storePassword 'MakeMoney4Life!'
         }
+        release {
+            keyAlias 'fixxit!'
+            keyPassword '123easyabc'
+            storeFile file('C:/FixIt/keys/fixxit-release.jks')
+            storePassword '123easyabc'
+        }
     }
     compileSdkVersion 25
     buildToolsVersion '25.0.0'
@@ -33,7 +39,7 @@ android {
         applicationId "com.fixit.app"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 7
+        versionCode 8
         versionName "0.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

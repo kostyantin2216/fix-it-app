@@ -41,6 +41,10 @@
         <attr name="clearButtonMode" />
     </declare-styleable>
 
+    <declare-styleable name="ErrorCheckBox">
+        <attr name="errorMessage" format="string" />
+    </declare-styleable>
+
     <declare-styleable name="FloatingTextButton">
         <attr name="buttonIcon" format="reference" />
         <attr name="buttonText" format="string|reference" />

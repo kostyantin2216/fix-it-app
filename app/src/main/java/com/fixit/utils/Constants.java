@@ -33,6 +33,8 @@ public class Constants {
     public final static String ARG_NOTIFICATION_REQUEST_CODE = "notificationReqCode";
     public final static String ARG_LOGIN_MESSAGE = "loginDescription";
     public final static String ARG_PROMPT_ON_BACK_PRESS_MESSAGE = "promptOnBackPressMsg";
+    public final static String ARG_URL = "url";
+    public final static String ARG_INSTALLATION_ID = "installationId";
 
     public final static int HTTP_INTERNAL_SERVER_ERROR = 500;
 

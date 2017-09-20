@@ -1,10 +1,12 @@
 package com.fixit.ui.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
@@ -13,11 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fixit.app.R;
+import com.fixit.config.AppConfig;
 import com.fixit.controllers.RegistrationController;
 import com.fixit.ui.activities.BaseActivity;
 import com.fixit.utils.CommonUtils;
@@ -51,6 +55,9 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
         final EditText etTelephone;
         final TextInputLayout codeContainer;
         final EditText etCode;
+        final ViewGroup containerTermsConditions;
+        final CheckBox cbAgreed;
+        final TextView tvTermsConditions;
         final Button btnSubmit;
 
         ViewState currentState;
@@ -64,11 +71,15 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
             etTelephone = (EditText) v.findViewById(R.id.et_telephone);
             codeContainer = (TextInputLayout) v.findViewById(R.id.container_code);
             etCode = (EditText) v.findViewById(R.id.et_verification_code);
+            containerTermsConditions = (ViewGroup) v.findViewById(R.id.container_terms_conditions);
+            cbAgreed = (CheckBox) v.findViewById(R.id.cb_agree_to_terms);
+            tvTermsConditions = (TextView) v.findViewById(R.id.tv_agree_to_terms);
             btnSubmit = (Button) v.findViewById(R.id.btn_submit);
 
             etTelephone.setText(TELEPHONE_NUMBER_PREFIX);
             etTelephone.addTextChangedListener(this);
 
+            tvTermsConditions.setOnClickListener(onClickListener);
             btnSubmit.setOnClickListener(onClickListener);
         }
 
@@ -80,12 +91,14 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
                     tvHint.setText(R.string.number_verification_desc);
                     telephoneContainer.setVisibility(View.VISIBLE);
                     codeContainer.setVisibility(View.GONE);
+                    containerTermsConditions.setVisibility(View.GONE);
                     btnSubmit.setText(R.string.verify);
                     break;
                 case CODE_INPUT:
                     tvHint.setText(R.string.verification_code_desc);
                     telephoneContainer.setVisibility(View.GONE);
                     codeContainer.setVisibility(View.VISIBLE);
+                    containerTermsConditions.setVisibility(View.VISIBLE);
                     btnSubmit.setText(R.string.continue_);
                     break;
             }
@@ -117,14 +130,25 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
                     valid = false;
                 }
             } else {
-                String verificationCodeInput = etCode.getText().toString();
-                if(TextUtils.isEmpty(verificationCodeInput)) {
-                    etCode.setError(getString(R.string.error_empty_field));
-                    valid = false;
-                } else if(!verificationCodeInput.equals(String.valueOf(verificationCode))) {
-                    etCode.setError(getString(R.string.invalid_verification_code));
+                int textColor;
+                if(cbAgreed.isChecked()) {
+                    cbAgreed.setText(getString(R.string.agree_to));
+                    textColor = Color.WHITE;
+                    String verificationCodeInput = etCode.getText().toString();
+                    if (TextUtils.isEmpty(verificationCodeInput)) {
+                        etCode.setError(getString(R.string.error_empty_field));
+                        valid = false;
+                    } else if (!verificationCodeInput.equals(String.valueOf(verificationCode))) {
+                        etCode.setError(getString(R.string.invalid_verification_code));
+                        valid = false;
+                    }
+                } else {
+                    cbAgreed.setText(getString(R.string.must_agree_to));
+                    textColor = ContextCompat.getColor(cbAgreed.getContext(), R.color.colorError);
                     valid = false;
                 }
+                cbAgreed.setTextColor(textColor);
+                tvTermsConditions.setTextColor(textColor);
             }
             return valid;
         }
@@ -182,14 +206,22 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.btn_submit) {
-            if(mView.validate(mVerificationCode)) {
-                if (mView.currentState == ViewState.TELEPHONE_INPUT) {
-                    verifyPhoneNumber();
-                } else {
-                    completeVerification();
+        switch (v.getId()) {
+            case R.id.btn_submit:
+                if(mView.validate(mVerificationCode)) {
+                    if (mView.currentState == ViewState.TELEPHONE_INPUT) {
+                        verifyPhoneNumber();
+                    } else {
+                        completeVerification();
+                    }
                 }
-            }
+                break;
+            case R.id.tv_agree_to_terms:
+                showStaticWebPage(
+                        getString(R.string.terms_and_conditions),
+                        AppConfig.getString(getContext(), AppConfig.KEY_TERMS_AND_CONDITIONS_URL, "")
+                );
+                break;
         }
     }
 

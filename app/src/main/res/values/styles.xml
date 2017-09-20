@@ -20,6 +20,11 @@
         <item name="colorControlNormal">@color/grey_400</item>
     </style>
 
+    <style name="error_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorError</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="expandedAppBar" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">26sp
         </item>

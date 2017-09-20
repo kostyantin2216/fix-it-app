@@ -169,6 +169,11 @@
     <string name="unavailable">Unavailable</string>
     <string name="login_for_order_history">Please login to view your order history.</string>
     <string name="comment">Comment</string>
+    <string name="terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="loading_format">Loading %1$s</string>
+    <string name="agree_to">Agree to </string>
+    <string name="must_agree_to">Must agree to </string>
 
     <plurals name="job_reasons_picked">
         <item quantity="zero">@string/pick_a_reason</item>

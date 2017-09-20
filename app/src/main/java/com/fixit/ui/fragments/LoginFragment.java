@@ -221,10 +221,10 @@ public class LoginFragment extends BaseFragment<UserController>
         }
     }
 
-    private void loginError(String forClient) {
+    private void loginError(String forClient, Throwable t) {
         mView.hideLoader();
         String error = getString(R.string.login_failed_for, forClient);
-        showPrompt(error);
+        showPrompt(error, t);
     }
 
     // GOOGLE LOGIN CALLBACKS
@@ -249,7 +249,7 @@ public class LoginFragment extends BaseFragment<UserController>
             if (mCallbacks != null) {
                 mCallbacks.setGoogleLoginEnabled(false);
             }
-            loginError(getString(R.string.google));
+            loginError(getString(R.string.google), null);
         } else {
             notifyUser(getString(R.string.error_google_login));
         }
@@ -286,12 +286,16 @@ public class LoginFragment extends BaseFragment<UserController>
     }
 
     @Override
-    public void onLogInError() {
+    public void onLogInError(Throwable t) {
+        disableFacebookLogin();
+        loginError(getString(R.string.facebook), t);
+    }
+
+    void disableFacebookLogin() {
         mView.btnFacebookLogin.setEnabled(false);
         if(mCallbacks != null) {
             mCallbacks.setFacebookLoginEnabled(false);
         }
-        loginError(getString(R.string.facebook));
     }
 
     public interface LoginFragmentCallbacks {

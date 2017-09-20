@@ -252,6 +252,14 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         }
     }
 
+    @Override
+    public void showStaticWebPage(String title, String url) {
+        Intent intent = new Intent(this, WebActivity.class);
+        intent.putExtra(Constants.ARG_TITLE, title);
+        intent.putExtra(Constants.ARG_URL, url);
+        startActivity(intent);
+    }
+
     // USER MANAGEMENT
 
     public boolean isUserRegistered() {
@@ -333,6 +341,11 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         showError(ErrorFragment.ErrorType.PROMPT.createBuilder(message).build());
     }
 
+    @Override
+    public void showPrompt(String message, Throwable t) {
+        showError(ErrorFragment.ErrorType.PROMPT.createBuilder(message).cause(t).build());
+    }
+
     // LOADER
     // ==========================
 
@@ -345,6 +358,7 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         showLoader(message, false);
     }
 
+    @Override
     public void showLoader(String message, boolean cancelable) {
         if(mLoaderDialog == null) {
             mLoaderDialog = new MaterialDialog.Builder(this)
@@ -378,25 +392,10 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         new MaterialDialog.Builder(this)
                 .content(question)
                 .positiveText(yesText)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        result.onQuestionAnswered(true);
-                    }
-                })
+                .onPositive((dialog, which) -> result.onQuestionAnswered(true))
                 .negativeText(noText)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        result.onQuestionAnswered(false);
-                    }
-                })
-                .cancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        result.onQuestionCancelled();
-                    }
-                })
+                .onNegative((dialog, which) -> result.onQuestionAnswered(false))
+                .cancelListener(dialog -> result.onQuestionCancelled())
                 .show();
     }
 

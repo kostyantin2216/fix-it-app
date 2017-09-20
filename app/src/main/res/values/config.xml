@@ -5,6 +5,9 @@
     <string name="facebook_app_id">259875731141973</string>
     <string name="fb_login_protocol_scheme">fb259875731141973</string>
 
+    <string name="terms_and_conditions_url">http://fixxit.co.za/terms-and-conditions/</string>
+    <string name="privacy_policy_url">http://fixxit.co.za/privacy-policy/</string>
+
     <integer name="db_version">5</integer>
 
     <string name="api_key">TlKm7GFjtGVD2YoQruca9emGfSz9j323</string>

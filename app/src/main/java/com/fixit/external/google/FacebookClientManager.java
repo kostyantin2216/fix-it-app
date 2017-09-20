@@ -74,7 +74,7 @@ public class FacebookClientManager implements FacebookCallback<LoginResult> {
             @Override
             public void onCompleted(GraphResponse response) {
                 if (response.getError() != null) {
-                    mLoginCallback.onLogInError();
+                    mLoginCallback.onLogInError(null);
                 } else {
                     JSONObject me = response.getJSONObject();
                     String email = me.optString("email");
@@ -95,14 +95,14 @@ public class FacebookClientManager implements FacebookCallback<LoginResult> {
 
     @Override
     public void onError(FacebookException error) {
-        mLoginCallback.onLogInError();
+        mLoginCallback.onLogInError(error);
         mLoginCallback = null;
     }
 
     public interface FacebookLoginCallback {
         void onLogInSuccess(Profile profile, String email);
         void onLogInCanceled();
-        void onLogInError();
+        void onLogInError(Throwable t);
     }
 
 }

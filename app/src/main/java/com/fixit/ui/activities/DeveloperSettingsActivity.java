@@ -95,6 +95,10 @@ public class DeveloperSettingsActivity extends BaseDeveloperSettingsActivity {
                         .positiveText(R.string.done)
                         .show();
                 return true;
+            case R.id.clear_user:
+                GlobalPreferences.setUserId(this, "");
+                restartApp(true);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -131,9 +135,4 @@ public class DeveloperSettingsActivity extends BaseDeveloperSettingsActivity {
         }
     }
 
-    @Override
-    public void restartApp(boolean skipSplash) {
-        startActivity(new Intent(this, SplashActivity.class));
-        finishAffinity();
-    }
 }

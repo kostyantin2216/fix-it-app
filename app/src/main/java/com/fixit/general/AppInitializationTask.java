@@ -14,6 +14,7 @@ import com.fixit.rest.ServerCallback;
 import com.fixit.rest.apis.AppInstallationDataAPI;
 import com.fixit.rest.apis.SynchronizationServiceAPI;
 import com.fixit.synchronization.SynchronizationTask;
+import com.fixit.utils.Constants;
 import com.fixit.utils.FILog;
 import com.fixit.utils.GlobalPreferences;
 
@@ -85,8 +86,15 @@ public class AppInitializationTask extends Thread {
             DAOFactory daoFactory = mCallback.getDaoFactory();
 
             if(!mStopped) {
-                if (TextUtils.isEmpty(GlobalPreferences.getInstallationId(context))) {
-                    sendInstallation(context, serverAPIFactory.createAppInstallationApi());
+                String installationId = GlobalPreferences.getInstallationId(context);
+                if (TextUtils.isEmpty(installationId)) {
+                    installationId = sendInstallation(context, serverAPIFactory.createAppInstallationApi());
+                    if(installationId != null) {
+                        GlobalPreferences.setInstallationId(context, installationId);
+                    }
+                }
+                if(!TextUtils.isEmpty(installationId)) {
+                    Crashlytics.setString(Constants.ARG_INSTALLATION_ID, installationId);
                 }
 
                 if(!mStopped) {
@@ -103,7 +111,7 @@ public class AppInitializationTask extends Thread {
         }
     }
 
-    private void sendInstallation(Context context, AppInstallationDataAPI api) {
+    private String sendInstallation(Context context, AppInstallationDataAPI api) {
         AppInstallation appInstallation = new AppInstallation(
                 "", // TODO: get url from google play.
                 AppConfig.getDeviceInfo(context),
@@ -111,19 +119,23 @@ public class AppInitializationTask extends Thread {
                 new Date()
         );
 
+        String appInstallationId;
         try {
             Response<AppInstallation> response = api.create(appInstallation).execute();
             if(!mStopped && response != null) {
-                String appInstallationId = response.body().getId();
-                GlobalPreferences.setInstallationId(context, appInstallationId);
+                appInstallationId = response.body().getId();
                 if(!mStopped) {
                     mCallback.updateInstallationId(appInstallationId);
                 }
+            } else {
+                appInstallationId = null;
             }
         } catch (IOException e) {
+            appInstallationId = null;
             // Do nothing, try again next time app opens.
             FILog.e(LOG_TAG, "Couldn't send app installation to server.", e);
         }
+        return appInstallationId;
     }
 
     private void synchronizeDatabase(Context context, SynchronizationServiceAPI api, DAOFactory daoFactory) {

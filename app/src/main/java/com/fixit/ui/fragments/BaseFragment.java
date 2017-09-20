@@ -59,6 +59,12 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         }
     }
 
+    public void showLoader(String message, boolean cancelable) {
+        if(mListener != null) {
+            mListener.showLoader(message, cancelable);
+        }
+    }
+
     public void hideLoader() {
         if(mListener != null) {
             mListener.hideLoader();
@@ -118,6 +124,12 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         }
     }
 
+    public void showPrompt(String prompt, Throwable t) {
+        if(mListener != null) {
+            mListener.showPrompt(prompt, t);
+        }
+    }
+
     public void setToolbar(Toolbar toolbar) {
         setToolbar(toolbar, false);
     }
@@ -153,6 +165,12 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         return false;
     }
 
+    public void showStaticWebPage(String title, String url) {
+        if(mListener != null) {
+            mListener.showStaticWebPage(title, url);
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -176,7 +194,9 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         C getController();
         void showError(String displayMsg);
         void showPrompt(String displayMsg);
+        void showPrompt(String message, Throwable t);
         void showLoader(String message);
+        void showLoader(String message, boolean cancelable);
         void hideLoader();
         void setToolbar(Toolbar toolbar, boolean homeAsUpEnabled);
         void setToolbarTitle(String title);
@@ -189,6 +209,7 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         void restartApp(boolean skipSplash);
         boolean isUserRegistered();
         void requestLogin(@Nullable String message, @Nullable String promptOnBackPressMessage, @Nullable Bundle data, BaseActivity.LoginRequester requester);
+        void showStaticWebPage(String title, String url);
     }
 
 }
