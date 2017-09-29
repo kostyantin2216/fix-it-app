@@ -57,8 +57,8 @@ public class OrderController extends TradesmenController {
         );
     }
 
-    public void orderTradesmen(final Tradesman[] tradesmen, JobLocation location, JobReason[] jobReasons, String comment, final TradesmenOrderCallback callback) {
-        TradesmenOrderRequestData requestData = new TradesmenOrderRequestData(tradesmen, jobReasons, location, comment);
+    public void orderTradesmen(long professionId, final Tradesman[] tradesmen, JobLocation location, JobReason[] jobReasons, String comment, final TradesmenOrderCallback callback) {
+        TradesmenOrderRequestData requestData = new TradesmenOrderRequestData(professionId, tradesmen, jobReasons, location, comment);
         mOrderApi.orderTradesmen(requestData).enqueue(new ManagedServiceCallback<TradesmenOrderResponseData>(getApplicationContext(), callback, "Unexpected error while trying to order tradesmen") {
             @Override
             public void onResponse(TradesmenOrderResponseData responseData) {
@@ -71,7 +71,8 @@ public class OrderController extends TradesmenController {
     }
 
     public void findReasonsForProfession(final long professionId, final JobReasonsCallback callback) {
-        callback.onReceiveJobReasons(mJobReasonDao.findByProperty(JobReasonDAO.KEY_PROFESSION_ID, String.valueOf(professionId)));
+        JobReason[] reasons = mJobReasonDao.findByProperty(JobReasonDAO.KEY_PROFESSION_ID, String.valueOf(professionId));
+        callback.onReceiveJobReasons(reasons);
     }
 
     public void saveOrder(OrderData orderData) {

@@ -1,12 +1,16 @@
 package com.fixit.validation;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.os.AsyncTask;
 
+import com.fixit.config.AppConfig;
 import com.fixit.data.JobLocation;
 import com.fixit.data.MutableLatLng;
 import com.fixit.geodata.AddressComponent;
 import com.fixit.geodata.GeocodeResponse;
 import com.fixit.geodata.GeocodeResult;
+import com.fixit.utils.FILog;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -24,15 +28,21 @@ import okhttp3.Response;
 
 public class AddressValidator {
 
-    public void validate(String address, AddressValidationCallback callback) {
-        new ValidationTask(callback).execute(address);
+    private final static Gson gson = new Gson();
+
+    public void validate(Context context, String address, AddressValidationCallback callback) {
+        int maxRequestRetries = AppConfig.getInteger(context, AppConfig.KEY_MAX_ADDRESS_VALIDATION_REQUEST_RETRIES, 3);
+        new ValidationTask(maxRequestRetries, callback).execute(address);
     }
 
     private static class ValidationTask extends AsyncTask<String, Void, AddressValidationResult> {
 
         private final AddressValidationCallback mCallback;
 
-        private ValidationTask(AddressValidationCallback callback) {
+        private final int maxRequestRetries;
+
+        private ValidationTask(int maxRequestRetries, AddressValidationCallback callback) {
+            this.maxRequestRetries = maxRequestRetries;
             this.mCallback = callback;
         }
 
@@ -51,9 +61,7 @@ public class AddressValidator {
                         .get()
                         .build();
 
-                Response response = httpClient.newCall(request).execute();
-
-                GeocodeResponse geocodeResponse = new Gson().fromJson(response.body().charStream(), GeocodeResponse.class);
+                GeocodeResponse geocodeResponse = parseAddress(httpClient, request, address, 0);
 
                 if(geocodeResponse.getStatus().equals("OK")) {
                     for(GeocodeResult result : geocodeResponse.getResults()) {
@@ -62,11 +70,29 @@ public class AddressValidator {
                         }
                     }
                 }
+
             } catch (IOException e) {
                 mCallback.onValidationError("Could not execute request to google apis geocoder.", e);
             }
 
             return new AddressValidationResult(null, null);
+        }
+
+        private GeocodeResponse parseAddress(OkHttpClient httpClient, Request request, String address, int retries) throws IOException {
+            Response response = httpClient.newCall(request).execute();
+
+            GeocodeResponse geocodeResponse = gson.fromJson(response.body().charStream(), GeocodeResponse.class);
+
+            if(geocodeResponse.getStatus().equals("OVER_QUERY_LIMIT") && retries < maxRequestRetries) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                geocodeResponse = parseAddress(httpClient, request, address, ++retries);
+            }
+
+            return geocodeResponse;
         }
 
         @Override
@@ -129,6 +155,7 @@ public class AddressValidator {
                     jobLocation = null;
                 }
             } else {
+                FILog.i("couldn't create job location");
                 this.jobLocation = null;
             }
         }

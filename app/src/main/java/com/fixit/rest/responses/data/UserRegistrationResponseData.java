@@ -11,6 +11,7 @@ import java.util.Arrays;
 public class UserRegistrationResponseData {
 
     private boolean existingEmail;
+    private boolean newUser;
     private String userId;
     private OrderData[] orderHistory;
 
@@ -20,6 +21,14 @@ public class UserRegistrationResponseData {
 
     public void setExistingEmail(boolean existingEmail) {
         this.existingEmail = existingEmail;
+    }
+
+    public boolean isNewUser() {
+        return newUser;
+    }
+
+    public void setNewUser(boolean newUser) {
+        this.newUser = newUser;
     }
 
     public String getUserId() {
@@ -42,6 +51,7 @@ public class UserRegistrationResponseData {
     public String toString() {
         return "UserRegistrationResponseData{" +
                 "existingEmail=" + existingEmail +
+                ", newUser=" + newUser +
                 ", userId='" + userId + '\'' +
                 ", orderHistory=" + Arrays.toString(orderHistory) +
                 '}';

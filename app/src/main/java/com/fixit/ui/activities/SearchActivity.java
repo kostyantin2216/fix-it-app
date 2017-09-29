@@ -295,6 +295,12 @@ public class SearchActivity extends BaseActivity<SearchController>
         hideLoader();
     }
 
+    @Override
+    public void unsupportedAddress() {
+        notifyUser(getString(R.string.unsupported_address));
+        hideLoader();
+    }
+
 
     @Override
     public void invalidProfession() {

@@ -40,6 +40,7 @@ public class OrderActivity extends BaseActivity<OrderController>
     private Profession mProfession;
     private Tradesman[] mTradesmen;
     private JobReason[] mJobReasons = new JobReason[0];
+    private String comment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,9 +98,10 @@ public class OrderActivity extends BaseActivity<OrderController>
                     .addToBackStack(null)
                     .commit();
 
-            getController().orderTradesmen(mTradesmen, mJobLocation, mJobReasons, comment, this);
+            this.comment = comment;
+            getController().orderTradesmen(mProfession.getId(), mTradesmen, mJobLocation, mJobReasons, comment, this);
+            getAnalyticsManager().trackTradesmanOrder(mProfession.getName(), mTradesmen.length);
             setToolbarTitle(getString(R.string.order_complete));
-            getAnalyticsManager().trackJobReasonsSelected(!TextUtils.isEmpty(comment), mJobReasons.length);
         } else{
             requestLogin(getString(R.string.login_for_order), getString(R.string.question_exit_without_login), null, this);
         }
@@ -111,8 +113,22 @@ public class OrderActivity extends BaseActivity<OrderController>
         if(fragment != null) {
             fragment.onOrderComplete();
         }
-        Order order = getController().orderCompleted(orderData.get_id(), mJobLocation, mProfession, mTradesmen, mJobReasons, orderData.getComment(), orderData.getCreatedAt());
+        Order order = getController().orderCompleted(
+                orderData.get_id(),
+                mJobLocation,
+                mProfession,
+                mTradesmen,
+                mJobReasons,
+                orderData.getComment(),
+                orderData.getCreatedAt()
+        );
         OrderNotificationManager.initiateOrderFeedback(this, order.getId());
+        getAnalyticsManager().trackOrderConfirmed(
+                mProfession.getName(),
+                mTradesmen.length,
+                mJobReasons.length,
+                !TextUtils.isEmpty(comment)
+        );
     }
 
     @Override

@@ -35,6 +35,7 @@ public class OrderHistoryActivity extends BaseActivity<OrderController>
         setToolbar((Toolbar) findViewById(R.id.toolbar), true);
         setToolbarTitle(getString(R.string.order_history));
 
+        getAnalyticsManager().trackHistoryShown();
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left, R.anim.enter_from_left, R.anim.exit_out_right)

@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.fixit.app.R;
 import com.fixit.data.Tradesman;
+import com.fixit.general.AnalyticsManager;
 
 /**
  * Created by konstantin on 8/8/2017.
@@ -73,6 +74,7 @@ public class OrderedTradesmanInteractionHandler {
 
     private void callTradesman(Tradesman tradesman) {
         mListener.onOrderViewInteraction();
+        mListener.getAnalyticsManager().trackTradesmanCallAction(tradesman.getTelephone(), tradesman.getCompanyName());
 
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", tradesman.getTelephone(), null));
         mListener.startActivity(intent);
@@ -80,12 +82,14 @@ public class OrderedTradesmanInteractionHandler {
 
     private void messageTradesman(Tradesman tradesman) {
         mListener.onOrderViewInteraction();
+        mListener.getAnalyticsManager().trackMessageTradesmanAction(tradesman.getTelephone(), tradesman.getCompanyName());
 
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", tradesman.getTelephone(), null));
         mListener.startActivity(intent);
     }
 
     public interface OrderedTradesmanInteractionListener {
+        AnalyticsManager getAnalyticsManager();
         void onOrderViewInteraction();
         void showTradesman(Tradesman tradesman);
         void reviewTradesman(Tradesman tradesman);

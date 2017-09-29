@@ -17,8 +17,10 @@ import com.fixit.rest.responses.data.TradesmanReviewResponseData;
 import com.fixit.utils.Constants;
 import com.fixit.utils.GlobalPreferences;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -68,7 +70,8 @@ public class ReviewController extends BaseController {
         });
     }
 
-    public void saveReview(Review review) {
+    public void saveReview(Tradesman tradesman, Review review) {
+        getAnalyticsManager().trackTradesmanReview(review.getRating(), review.getTradesmanId(), tradesman.getCompanyName());
         mReviewDataApi.create(review).enqueue(new EmptyCallback<>());
     }
 
@@ -81,19 +84,21 @@ public class ReviewController extends BaseController {
 
         int reviewCount = reviews.size();
         if(reviewCount > 0) {
-            ReviewData[] data = new ReviewData[reviews.size()];
+            Set<ReviewData> reviewData = new HashSet<>();
             Map<String, Map<String, String>> reviewerDataMapping = responseData.getReviewerDataMappings();
 
             for (int i = 0; i < reviewCount; i++) {
                 Review review = reviews.get(i);
                 Map<String, String> reviewerData = reviewerDataMapping.get(review.getUserId());
 
-                String userAvatar = reviewerData.get(Constants.KEY_USER_AVATAR);
-                String userName = reviewerData.get(Constants.KEY_USER_NAME);
-                data[i] = new ReviewData(review, userName, userAvatar);
+                if(reviewerData !=  null) {
+                    String userAvatar = reviewerData.get(Constants.KEY_USER_AVATAR);
+                    String userName = reviewerData.get(Constants.KEY_USER_NAME);
+                    reviewData.add(new ReviewData(review, userName, userAvatar));
+                }
             }
 
-            return data;
+            return reviewData.toArray(new ReviewData[reviewData.size()]);
         }
 
         return new ReviewData[0];

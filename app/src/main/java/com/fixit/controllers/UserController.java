@@ -49,7 +49,7 @@ public class UserController extends OrderController {
                 } else {
                     String userId = responseData.getUserId();
                     Crashlytics.setUserIdentifier(userId);
-                    callback.onRegistrationSuccess(userId);
+                    callback.onRegistrationSuccess(responseData.isNewUser(), userId);
                     getServerApiFactory().updateUserId(userId);
 
                     OrderData[] orderData = responseData.getOrderHistory();
@@ -62,7 +62,7 @@ public class UserController extends OrderController {
     }
 
     public interface UserRegistrationCallback extends GeneralServiceErrorCallback {
-        void onRegistrationSuccess(String userId);
+        void onRegistrationSuccess(boolean newUser, String userId);
         void emailAlreadyExists();
     }
 

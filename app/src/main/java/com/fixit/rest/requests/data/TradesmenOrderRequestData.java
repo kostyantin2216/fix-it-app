@@ -12,12 +12,14 @@ import java.util.Arrays;
 public class TradesmenOrderRequestData {
 
     private JobLocation jobLocation;
+    private long professionId;
     private Tradesman[] tradesmen;
     private JobReason[] jobReasons;
     private String comment;
 
-    public TradesmenOrderRequestData(Tradesman[] tradesmen, JobReason[] jobReasons, JobLocation jobLocation, String comment) {
+    public TradesmenOrderRequestData(long professionId, Tradesman[] tradesmen, JobReason[] jobReasons, JobLocation jobLocation, String comment) {
         this.jobLocation = jobLocation;
+        this.professionId = professionId;
         this.tradesmen = tradesmen;
         this.jobReasons = jobReasons;
         this.comment = comment;

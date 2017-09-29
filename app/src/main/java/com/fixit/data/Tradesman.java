@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class Tradesman implements Parcelable {
 
     private String _id;
-    private long professionId;
+    private long[] professions;
     private String contactName;
     private String companyName;
     private String telephone;
@@ -31,12 +31,12 @@ public class Tradesman implements Parcelable {
         this._id = _id;
     }
 
-    public long getProfessionId() {
-        return professionId;
+    public long[] getProfessions() {
+        return professions;
     }
 
-    public void setProfessionId(long professionId) {
-        this.professionId = professionId;
+    public void setProfession(long[] professions) {
+        this.professions = professions;
     }
 
     public String getContactName() {
@@ -107,7 +107,7 @@ public class Tradesman implements Parcelable {
     public String toString() {
         return "Tradesman{" +
                 "_id='" + _id + '\'' +
-                ", professionId=" + professionId +
+                ", professions=" + professions +
                 ", contactName='" + contactName + '\'' +
                 ", companyName='" + companyName + '\'' +
                 ", telephone='" + telephone + '\'' +
@@ -127,7 +127,7 @@ public class Tradesman implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this._id);
-        dest.writeLong(this.professionId);
+        dest.writeLongArray(this.professions);
         dest.writeString(this.contactName);
         dest.writeString(this.companyName);
         dest.writeString(this.logoUrl);
@@ -138,7 +138,7 @@ public class Tradesman implements Parcelable {
 
     protected Tradesman(Parcel in) {
         this._id = in.readString();
-        this.professionId = in.readLong();
+        this.professions = in.createLongArray();
         this.contactName = in.readString();
         this.companyName = in.readString();
         this.logoUrl = in.readString();

@@ -32,7 +32,7 @@ public class SearchController extends OrderController {
     }
 
     public Profession[] getProfessions() {
-        return mProfessionDao.findAll();
+        return mProfessionDao.findByProperty(ProfessionDAO.KEY_IS_ACTIVE, "1");
     }
 
     public Profession getProfession(String name) {
@@ -46,7 +46,7 @@ public class SearchController extends OrderController {
     public void performSearch(final Context context, String professionName, String address, final SearchCallback callback) {
         final Profession profession = getProfession(professionName);
         if(profession != null) {
-            mAddressValidator.validate(address, new AddressValidator.AddressValidationCallback() {
+            mAddressValidator.validate(context, address, new AddressValidator.AddressValidationCallback() {
                 @Override
                 public void onAddressValidated(AddressValidator.AddressValidationResult result) {
                     if(result.jobLocation != null) {

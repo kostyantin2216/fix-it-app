@@ -98,7 +98,7 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
             review.setCreatedAt(new Date());
 
             if(newReview) {
-                getController().saveReview(review);
+                getController().saveReview(tradesman, review);
             } else {
                 getController().updateReview(review);
             }

@@ -2,6 +2,7 @@ package com.fixit.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 /**
  * Created by konstantin on 5/15/2017.
@@ -9,6 +10,13 @@ import android.os.Parcelable;
 
 public class UserAccountDetails implements Parcelable {
 
+    public enum SignUpMethod {
+        GOOGLE,
+        FACEBOOK,
+        MANUAL
+    }
+
+    private SignUpMethod signUpMethod;
     private String firstName;
     private String lastName;
     private String email;
@@ -18,6 +26,14 @@ public class UserAccountDetails implements Parcelable {
     private String facebookId;
 
     public UserAccountDetails() { }
+
+    public SignUpMethod getSignUpMethod() {
+        return signUpMethod;
+    }
+
+    public void setSignUpMethod(SignUpMethod signUpMethod) {
+        this.signUpMethod = signUpMethod;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -78,7 +94,8 @@ public class UserAccountDetails implements Parcelable {
     @Override
     public String toString() {
         return "UserAccountDetails{" +
-                "firstName='" + firstName + '\'' +
+                "signUpMethod=" + signUpMethod +
+                ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", telephone='" + telephone + '\'' +
@@ -95,6 +112,7 @@ public class UserAccountDetails implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.signUpMethod == null ? "" : this.signUpMethod.name());
         dest.writeString(this.firstName);
         dest.writeString(this.lastName);
         dest.writeString(this.email);
@@ -105,6 +123,10 @@ public class UserAccountDetails implements Parcelable {
     }
 
     protected UserAccountDetails(Parcel in) {
+        String signUpMethodName = in.readString();
+        if(!TextUtils.isEmpty(signUpMethodName)) {
+            this.signUpMethod = SignUpMethod.valueOf(signUpMethodName);
+        }
         this.firstName = in.readString();
         this.lastName = in.readString();
         this.email = in.readString();

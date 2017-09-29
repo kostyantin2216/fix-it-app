@@ -45,13 +45,12 @@
 
     <string name="copied_format">Copied %1$s</string>
 
-
     <string name="verify">Verify</string>
-    
+
     <string name="i_need_a">I need a…</string>
     <string name="search_professions">Search Professions</string>
     <string name="show_all_professions">Show All Professions</string>
-    <string name="at_location">At location…</string>
+    <string name="at_location">Location…</string>
     <string name="search_addresses">Search Addresses</string>
     <string name="show_map">Show Map</string>
 
@@ -69,7 +68,7 @@
     <string name="format_review_count">%1$d Reviews</string>
     <string name="tradesman_selection_limit_passed">Cannot select more then %1$d tradesmen</string>
     <string name="select_tradesman">Select Tradesman</string>
-    
+
     <string name="validating_address">Validating address…</string>
     <string name="starting_search">Starting search…</string>
     <string name="waiting_for_results">Waiting for search results…</string>
@@ -102,15 +101,17 @@
     <string name="cannot_continue_without_login">Cannot continue without signing up.</string>
 
     <string name="reason">Reason</string>
-    <string name="pick_a_reason">Pick a reason</string>
+    <string name="pick_a_reason">Pick a problem</string>
     <string name="cant_select_gt_x_reasons">Can\'t select more then %1$d reasons.</string>
     <string name="chosen_x_tradesmen">You have chosen %1$d tradesmen</string>
     <string name="error_google_login">Could\'nt login with google.</string>
 
     <string name="order_complete">Order Complete!</string>
     <string name="order_completed_text">
-        Thank you for choosing us, let us know if you don\'t get contacted within the next half hour.\n\n
-        Please leave a review after any good or bad interactions you have with any of the tradesmen you have ordered so we can help you and the community find good quality tradesmen.
+        Thank you for using Fixxit.\n
+        One of your chosen professionals will contact you shortly.\n
+        You can also call them from the menu located on the top left corner of our home page.\n
+        Please remember to leave a review. It helps the community find quality tradesmen.
     </string>
     <string name="view_ordered_tradesmen">View Ordered Tradesmen</string>
     <string name="new_search">New Search</string>
@@ -168,17 +169,18 @@
     <string name="loading_order_history">Loading Order History</string>
     <string name="unavailable">Unavailable</string>
     <string name="login_for_order_history">Please login to view your order history.</string>
-    <string name="comment">Comment</string>
+    <string name="comment">Send a comment in your order.</string>
     <string name="terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="loading_format">Loading %1$s</string>
     <string name="agree_to">Agree to </string>
     <string name="must_agree_to">Must agree to </string>
+    <string name="unsupported_address">Unsupported address</string>
 
     <plurals name="job_reasons_picked">
         <item quantity="zero">@string/pick_a_reason</item>
-        <item quantity="one">Picked 1 reason</item>
-        <item quantity="other">Picked %1$d reasons</item>
+        <item quantity="one">Picked 1 problem</item>
+        <item quantity="other">Picked %1$d problems</item>
     </plurals>
 
 </resources>

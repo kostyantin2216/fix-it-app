@@ -53,6 +53,8 @@ public class AppConfig {
     public final static String KEY_ORDER_FEEDBACK_NOTIFICATION_DELAY = "order_feedback_notification_delay_min";
     public final static String KEY_TERMS_AND_CONDITIONS_URL = "terms_and_conditions_url";
     public final static String KEY_PRIVACY_POLICY_URL = "privacy_policy_url";
+    public static final String KEY_TELE_VERIFICATION_COUNTRY_PREFIX = "tele_verification_country_prefix";
+    public static final String KEY_MAX_ADDRESS_VALIDATION_REQUEST_RETRIES = "max_address_validation_request_retries";
 
     private final static String KEY_IS_PRODUCTION = "is_production";
     private final static String KEY_DEVICE_INFO = "device_info";

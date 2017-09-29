@@ -26,7 +26,9 @@ import com.fixit.utils.GlobalPreferences;
 public class DeveloperSettingsActivity extends BaseDeveloperSettingsActivity {
 
     private final static EditableConfiguration[] EDITABLE_CONFIGURATIONS = {
-            new EditableConfiguration(AppConfig.KEY_SERVER_API_BASE_URL, ConfigurationType.STRING)
+            new EditableConfiguration(AppConfig.KEY_SERVER_API_BASE_URL, ConfigurationType.STRING),
+            new EditableConfiguration(AppConfig.KEY_TELE_VERIFICATION_COUNTRY_PREFIX, ConfigurationType.STRING),
+            new EditableConfiguration(AppConfig.KEY_SYNCHRONIZATION_MIN_INTERVAL_MS, ConfigurationType.INT)
     };
 
     @Override

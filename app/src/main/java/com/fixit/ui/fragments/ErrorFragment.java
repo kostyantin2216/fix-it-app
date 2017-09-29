@@ -195,6 +195,7 @@ public class ErrorFragment extends BaseFragment<ActivityController> implements V
             btnClose.setOnClickListener(onClickListener);
             btnContinue.setOnClickListener(onClickListener);
             btnExitApp.setOnClickListener(onClickListener);
+            btnDeveloperSettings.setOnClickListener(onClickListener);
         }
 
         void setState(ErrorType errorType) {

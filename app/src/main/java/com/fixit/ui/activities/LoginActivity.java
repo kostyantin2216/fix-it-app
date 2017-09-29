@@ -91,11 +91,13 @@ public class LoginActivity extends BaseActivity<RegistrationController>
 
     @Override
     public void onLoggedIn(String firstName, String lastName, String email, String avatarUrl) {
-        onLoggedIn(firstName, lastName, email, avatarUrl, null, null);
+        onLoggedIn(UserAccountDetails.SignUpMethod.MANUAL, firstName, lastName, email, avatarUrl, null, null);
     }
 
     @Override
-    public void onLoggedIn(String firstName, String lastName, String email, String avatarUrl, String googleId, String facebookId) {
+    public void onLoggedIn(UserAccountDetails.SignUpMethod method, String firstName, String lastName, String email,
+                           String avatarUrl, String googleId, String facebookId) {
+        mUserAccountDetails.setSignUpMethod(method);
         mUserAccountDetails.setFirstName(firstName);
         mUserAccountDetails.setLastName(lastName);
         mUserAccountDetails.setEmail(email);
@@ -144,8 +146,9 @@ public class LoginActivity extends BaseActivity<RegistrationController>
     }
 
     @Override
-    public void onRegistrationSuccess(String userId) {
+    public void onRegistrationSuccess(boolean newUser, String userId) {
         GlobalPreferences.setUserId(this, userId);
+        getAnalyticsManager().login(newUser, mUserAccountDetails.getSignUpMethod().name());
         setResult(RESULT_OK, getIntent());
         finish();
     }

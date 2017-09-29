@@ -51,7 +51,7 @@ public class SearchManager {
             @Override
             public void onAppServiceError(List<APIError> errors) {
                 if (APIError.contains(APIError.Error.UNSUPPORTED, errors)){
-                    searchCallback.invalidAddress();
+                    searchCallback.unsupportedAddress();
                 } else {
                     super.onAppServiceError(errors);
                 }
@@ -67,6 +67,7 @@ public class SearchManager {
 
     public interface SearchCallback extends GeneralServiceErrorCallback {
         void invalidAddress();
+        void unsupportedAddress();
         void onSearchStarted(Profession profession, JobLocation location, String searchId);
     }
 

@@ -35,8 +35,6 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
                    RegistrationController.TelephoneVerificationCallback,
                    BaseActivity.OnBackPressListener {
 
-    private final static String TELEPHONE_NUMBER_PREFIX = "+972 ";
-
     private TelephoneVerificationListener mListener;
 
     private ViewHolder mView;
@@ -60,9 +58,12 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
         final TextView tvTermsConditions;
         final Button btnSubmit;
 
+        final String countryPrefix;
+
         ViewState currentState;
 
-        ViewHolder(View v, View.OnClickListener onClickListener) {
+        ViewHolder(View v, String countryPrefix, View.OnClickListener onClickListener) {
+            this.countryPrefix = countryPrefix;
             currentState = ViewState.TELEPHONE_INPUT;
 
             tvHint = (TextView) v.findViewById(R.id.tv_hint);
@@ -76,7 +77,7 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
             tvTermsConditions = (TextView) v.findViewById(R.id.tv_agree_to_terms);
             btnSubmit = (Button) v.findViewById(R.id.btn_submit);
 
-            etTelephone.setText(TELEPHONE_NUMBER_PREFIX);
+            etTelephone.setText(countryPrefix);
             etTelephone.addTextChangedListener(this);
 
             tvTermsConditions.setOnClickListener(onClickListener);
@@ -165,9 +166,9 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
 
         @Override
         public void afterTextChanged(Editable s) {
-            if(!s.toString().startsWith(TELEPHONE_NUMBER_PREFIX)) {
-                etTelephone.setText(TELEPHONE_NUMBER_PREFIX);
-                Selection.setSelection(etTelephone.getText(), TELEPHONE_NUMBER_PREFIX.length());
+            if(!s.toString().startsWith(countryPrefix)) {
+                etTelephone.setText(countryPrefix);
+                Selection.setSelection(etTelephone.getText(), countryPrefix.length());
             }
         }
     }
@@ -181,7 +182,13 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_telephone_verification, container, false);
 
-        mView = new ViewHolder(v, this);
+        String countryPrefix = AppConfig.getString(getContext(), AppConfig.KEY_TELE_VERIFICATION_COUNTRY_PREFIX, null);
+
+        if(!TextUtils.isEmpty(countryPrefix)) {
+            countryPrefix += " ";
+        }
+
+        mView = new ViewHolder(v, countryPrefix, this);
 
         return v;
     }

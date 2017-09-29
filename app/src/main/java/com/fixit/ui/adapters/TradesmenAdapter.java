@@ -185,5 +185,4 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
         }
     }
 
-
 }

@@ -21,6 +21,7 @@ import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.fixit.app.R;
 import com.fixit.controllers.UserController;
+import com.fixit.data.UserAccountDetails;
 import com.fixit.external.google.FacebookClientManager;
 import com.fixit.external.google.GoogleClientManager;
 import com.fixit.utils.Constants;
@@ -207,10 +208,12 @@ public class LoginFragment extends BaseFragment<UserController>
         }
     }
 
-    private void completeLogin(String firstName, String lastName, String email, Uri avatarUrl, String googleId, String facebookId) {
+    private void completeLogin(UserAccountDetails.SignUpMethod signUpMethod, String firstName, String lastName,
+                               String email, Uri avatarUrl, String googleId, String facebookId) {
         mView.hideLoader();
         if(mCallbacks != null) {
             mCallbacks.onLoggedIn(
+                    signUpMethod,
                     firstName,
                     lastName,
                     email,
@@ -232,6 +235,7 @@ public class LoginFragment extends BaseFragment<UserController>
     @Override
     public void onSignInSuccess(GoogleSignInAccount account) {
         completeLogin(
+                UserAccountDetails.SignUpMethod.GOOGLE,
                 account.getGivenName(),
                 account.getFamilyName(),
                 account.getEmail(),
@@ -270,6 +274,7 @@ public class LoginFragment extends BaseFragment<UserController>
     @Override
     public void onLogInSuccess(Profile profile, String email) {
         completeLogin(
+                UserAccountDetails.SignUpMethod.FACEBOOK,
                 profile.getFirstName(),
                 profile.getLastName(),
                 email,
@@ -299,7 +304,7 @@ public class LoginFragment extends BaseFragment<UserController>
     }
 
     public interface LoginFragmentCallbacks {
-        void onLoggedIn(String firstName, String lastName, String email, String avatarUrl, String googleId, String facebookId);
+        void onLoggedIn(UserAccountDetails.SignUpMethod signUpMethod, String firstName, String lastName, String email, String avatarUrl, String googleId, String facebookId);
         void beginRegistration();
         void setGoogleLoginEnabled(boolean enabled);
         void setFacebookLoginEnabled(boolean enabled);
