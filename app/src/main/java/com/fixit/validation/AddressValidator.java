@@ -53,11 +53,13 @@ public class AddressValidator {
             OkHttpClient httpClient = new OkHttpClient.Builder().build();
 
             try {
+                String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?address=%s",
+                        URLEncoder.encode(address, "utf-8"));
+
+                FILog.i("Fetching geo data from " + url);
+
                 Request request = new Request.Builder()
-                        .url(String.format(
-                                "https://maps.googleapis.com/maps/api/geocode/json?address=%s",
-                                URLEncoder.encode(address, "utf-8")
-                        ))
+                        .url(url)
                         .get()
                         .build();
 
@@ -65,7 +67,8 @@ public class AddressValidator {
 
                 if(geocodeResponse.getStatus().equals("OK")) {
                     for(GeocodeResult result : geocodeResponse.getResults()) {
-                        if(result.getTypes().contains("street_address")) {
+                        List<String> types = result.getTypes();
+                        if(types.contains("street_address") || types.contains("route")) {
                             return new AddressValidationResult(address, geocodeResponse);
                         }
                     }
@@ -109,9 +112,12 @@ public class AddressValidator {
                 List<GeocodeResult> results = geocodeResponse.getResults();
                 GeocodeResult result = null;
                 for(GeocodeResult tempResult : results) {
-                    if(tempResult.getTypes().contains("street_address")) {
+                    List<String> types = tempResult.getTypes();
+                    if(types.contains("street_address")) {
                         result = tempResult;
                         break;
+                    } else if(types.contains("route")) {
+                        result = tempResult;
                     }
                 }
 

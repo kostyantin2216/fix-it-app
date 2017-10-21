@@ -56,6 +56,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_tradesman_logo"
+        tools:layout_editor_absoluteX="0dp"
         tools:text="Rate Bobs plumbing" />
 
     <RatingBar
@@ -65,54 +66,45 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_label_rating"
-        tools:layout_editor_absoluteX="72dp" />
+        tools:layout_editor_absoluteX="48dp" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/review_title_container"
-        android:layout_width="0dp"
+
+    <com.fixit.ui.components.CancelableEditText
+        android:id="@+id/et_review_title"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:hint="@string/review_title_hint"
+        android:imeOptions="actionNext"
+        android:inputType="text"
+        android:nextFocusDown="@+id/et_review_content"
+        android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
+        app:cancelDrawable="@drawable/ic_close_light"
+        app:clearButtonMode="always"
+        app:layout_constraintBottom_toTopOf="@+id/et_review_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rb_rating">
+        app:layout_constraintTop_toBottomOf="@+id/rb_rating"
+        tools:layout_editor_absoluteX="8dp" />
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/et_review_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/review_title"
-            android:imeOptions="actionNext"
-            android:inputType="text"
-            android:nextFocusDown="@+id/et_review_content"
-            android:textColor="@android:color/white" />
 
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/review_content_container"
-        android:layout_width="0dp"
+    <com.fixit.ui.components.CancelableEditText
+        android:id="@+id/et_review_content"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:hint="@string/review_content_hint"
+        android:imeOptions="actionDone"
+        android:inputType="textMultiLine"
+        android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
+        app:cancelDrawable="@drawable/ic_close_light"
+        app:clearButtonMode="always"
         app:layout_constraintBottom_toTopOf="@+id/btn_submit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/review_title_container">
+        app:layout_constraintTop_toBottomOf="@+id/et_review_title"
+        tools:layout_editor_absoluteX="8dp" />
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/et_review_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/review_description"
-            android:imeOptions="actionDone"
-            android:inputType="textMultiLine"
-            android:maxLines="8"
-            android:textColor="@android:color/white" />
-
-    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/btn_submit"
@@ -123,6 +115,7 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteX="124dp" />
 
 </android.support.constraint.ConstraintLayout>

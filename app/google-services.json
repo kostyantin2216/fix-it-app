@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "255078666095-29mrc4kgqnd94q95slfbfg981c9f5ldo.apps.googleusercontent.com",
+          "client_id": "255078666095-cae9hvi70vh5u6u97e3f36eof3qo7j13.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.fixit.app",
-            "certificate_hash": "ef40768ebcb8f57b5c1567a480e343a365d4837f"
+            "certificate_hash": "03ec1e832f8a32bac833977fc0bd181cf9a3c6f5"
           }
         },
         {
@@ -29,14 +29,6 @@
         {
           "client_id": "255078666095-b39rcbn3uiqtiganmk8haae2sdktedi3.apps.googleusercontent.com",
           "client_type": 3
-        },
-        {
-          "client_id": "255078666095-3m206dl14ikld82pr4arhfu66suii04u.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.fixit.app",
-            "certificate_hash": "1103e5d8f277533573cf344cc90fa9557497f679"
-          }
         }
       ],
       "api_key": [

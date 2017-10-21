@@ -33,28 +33,39 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
     private final int mMaxTradesmenSelection;
     private final float mRatingBarScale;
 
+    private final boolean mNarrow;
+
     public TradesmenAdapter(@Nullable TradesmenAdapterCallback callback) {
-        this(0, callback, -1);
+        this(0, callback, -1, false);
     }
 
     public TradesmenAdapter(@Nullable TradesmenAdapterCallback callback, float ratingBarScale) {
-        this(0, callback, ratingBarScale);
+        this(0, callback, ratingBarScale, false);
+    }
+
+    public TradesmenAdapter(@Nullable TradesmenAdapterCallback callback, float ratingBarScale, boolean narrow) {
+        this(0, callback, ratingBarScale, narrow);
     }
 
     public TradesmenAdapter(int maxTradesmenSelection, @Nullable TradesmenAdapterCallback callback) {
-        this(maxTradesmenSelection, callback, -1);
+        this(maxTradesmenSelection, callback, -1, false);
     }
 
     public TradesmenAdapter(int maxTradesmenSelection, @Nullable TradesmenAdapterCallback callback, float ratingBarScale) {
+        this(maxTradesmenSelection, callback, ratingBarScale, false);
+    }
+
+    public TradesmenAdapter(int maxTradesmenSelection, @Nullable TradesmenAdapterCallback callback, float ratingBarScale, boolean narrow) {
         mCallback = callback;
         mMaxTradesmenSelection = maxTradesmenSelection;
         mSelectedTradesmenPositions = new HashSet<>(maxTradesmenSelection);
         mRatingBarScale = ratingBarScale;
+        mNarrow = narrow;
     }
 
     @Override
     public TradesmanViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_tradesman, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(mNarrow ? R.layout.list_item_narrow_tradesman : R.layout.list_item_tradesman, parent, false);
         TradesmanViewHolder vh = new TradesmanViewHolder(v, mRatingBarScale);
 
         if(mCallback != null) {

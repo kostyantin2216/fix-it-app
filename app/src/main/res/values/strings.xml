@@ -50,9 +50,13 @@
     <string name="i_need_a">I need a…</string>
     <string name="search_professions">Search Professions</string>
     <string name="show_all_professions">Show All Professions</string>
-    <string name="at_location">Location…</string>
+    <string name="location">Location…</string>
+    <string name="at_location">At Location</string>
     <string name="search_addresses">Search Addresses</string>
     <string name="show_map">Show Map</string>
+
+    <string name="review_title_hint">Summary in a few words.</string>
+    <string name="review_content_hint">How was your experience with the tradesman?</string>
 
     <string name="empty_profession">Please pick a profession</string>
     <string name="empty_address">Please pick an address</string>

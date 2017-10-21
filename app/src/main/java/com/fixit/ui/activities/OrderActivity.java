@@ -57,7 +57,7 @@ public class OrderActivity extends BaseActivity<OrderController>
             getSupportFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left)
-                    .add(com.fixit.app.R.id.fragment_holder, OrderDetailsFragment.newInstance(tradesmen), FRAG_TAG_ORDER_DETAILS)
+                    .add(com.fixit.app.R.id.fragment_holder, OrderDetailsFragment.newInstance(mProfession, mJobLocation.getGoogleAddress(), tradesmen), FRAG_TAG_ORDER_DETAILS)
                     .commit();
         }
     }

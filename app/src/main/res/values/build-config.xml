@@ -3,12 +3,14 @@
 
     <bool name="is_production">false</bool>
 
-<!--
+
     <string name="server_api_base_url">http://www.fixxit-web.co.za/rest/</string>
--->
+
+<!--
 
     <string name="server_api_base_url">http://10.0.0.1/rest/</string>
 
+-->
 
     <integer name="retrofit_connect_timeout_seconds">90</integer>
     <integer name="retrofit_read_timeout_seconds">90</integer>

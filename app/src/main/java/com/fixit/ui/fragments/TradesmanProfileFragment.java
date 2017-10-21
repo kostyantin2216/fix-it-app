@@ -9,9 +9,11 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -23,6 +25,8 @@ import com.fixit.ui.components.SimpleRatingView;
 import com.fixit.ui.components.WorkingDaysView;
 import com.fixit.utils.Constants;
 import com.fixit.ui.adapters.ReviewRecyclerAdapter;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 /**
  * Created by konstantin on 4/26/2017.
@@ -62,8 +66,16 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
             rvReviews.setNestedScrollingEnabled(false);
             rvReviews.setLayoutManager(new LinearLayoutManager(context));
 
-            CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
+            final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
             collapsingToolbarLayout.setTitle(tradesman.getCompanyName());
+
+            ImageView ivFeatureImage = (ImageView) v.findViewById(R.id.iv_tradesman_feature);
+            String featureImageUrl = tradesman.getFeatureImageUrl();
+            Picasso.with(context)
+                    .load(featureImageUrl)
+                    .placeholder(R.drawable.feature_image)
+                    .error(R.drawable.feature_image)
+                    .into(ivFeatureImage);
 
             WorkingDaysView workingDaysView = (WorkingDaysView) v.findViewById(R.id.working_days);
             workingDaysView.setWorkingDays(tradesman.getWorkingDays());

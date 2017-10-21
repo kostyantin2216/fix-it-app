@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/search_activity_item_spacing"
-            android:text="@string/at_location"
+            android:text="@string/location"
             android:textSize="@dimen/large_text_size" />
 
         <com.fixit.ui.components.CancelableAutoCompleteTextView
@@ -62,7 +62,7 @@
             android:layout_marginBottom="@dimen/search_activity_item_spacing"
             android:hint="@string/search_addresses"
             android:imeOptions="actionDone"
-            android:inputType="text"
+            android:inputType="textMultiLine"
             android:lines="2"
             android:minLines="2"
             android:theme="@style/EditTextTheme"

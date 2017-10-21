@@ -78,10 +78,12 @@ public class WorkingDayView extends LinearLayout {
     }
 
     private void setHours(TextView tv, WorkingHours workingHours) {
-        String open = CommonUtils.hundredthsToTimeDisplay(workingHours.getOpen());
-        String close = CommonUtils.hundredthsToTimeDisplay(workingHours.getClose());
-        String display = open + " - " + close;
-        tv.setText(display);
+        if(workingHours != null) {
+            String open = CommonUtils.hundredthsToTimeDisplay(workingHours.getOpen());
+            String close = CommonUtils.hundredthsToTimeDisplay(workingHours.getClose());
+            String display = open + " - " + close;
+            tv.setText(display);
+        }
     }
 
     public WorkingDay getWorkingDay() {

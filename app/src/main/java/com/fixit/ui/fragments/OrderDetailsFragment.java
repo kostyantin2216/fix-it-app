@@ -15,11 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.fixit.app.R;
 import com.fixit.controllers.OrderController;
+import com.fixit.data.Profession;
 import com.fixit.data.TradesmanWrapper;
 import com.fixit.ui.components.ExpandablePanel;
+import com.fixit.ui.helpers.TradesmanActionHandler;
 import com.fixit.utils.Constants;
 import com.fixit.ui.adapters.TradesmenAdapter;
 
@@ -32,17 +35,20 @@ import java.util.List;
 
 public class OrderDetailsFragment extends BaseFragment<OrderController>
         implements View.OnClickListener,
-                   ExpandablePanel.ExpandablePanelListener {
+                   ExpandablePanel.ExpandablePanelListener,
+                   TradesmenAdapter.TradesmenAdapterCallback {
 
     private OrderDetailsInteractionListener mListener;
     private TradesmenAdapter mAdapter;
 
     private ViewHolder mView;
 
-    public static OrderDetailsFragment newInstance(ArrayList<TradesmanWrapper> selectedTradesmen) {
+    public static OrderDetailsFragment newInstance(Profession profession, String address, ArrayList<TradesmanWrapper> selectedTradesmen) {
         OrderDetailsFragment fragment = new OrderDetailsFragment();
 
         Bundle args = new Bundle();
+        args.putParcelable(Constants.ARG_PROFESSION, profession);
+        args.putString(Constants.ARG_ADDRESS, address);
         args.putParcelableArrayList(Constants.ARG_TRADESMEN, selectedTradesmen);
         args.putInt(Constants.ARG_TRADESMEN_COUNT, selectedTradesmen.size());
         fragment.setArguments(args);
@@ -57,6 +63,8 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
 
     static class ViewHolder implements View.OnFocusChangeListener {
 
+        final TextView tvProfession;
+        final TextView tvLocation;
         final ExpandablePanel tradesmenPanel;
         final EditText etComment;
         final Button btnPickReason;
@@ -64,7 +72,13 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
 
         private ViewState mState = ViewState.BEFORE_ORDER;
 
-        ViewHolder(View v, TradesmenAdapter recyclerAdapter, int tradesmenCount, ExpandablePanel.ExpandablePanelListener panelListener, View.OnClickListener onClickListener) {
+        ViewHolder(View v, Profession profession, String address, TradesmenAdapter recyclerAdapter, int tradesmenCount, ExpandablePanel.ExpandablePanelListener panelListener, View.OnClickListener onClickListener) {
+            tvProfession = (TextView) v.findViewById(R.id.tv_profession);
+            tvProfession.setText(profession.getName());
+
+            tvLocation = (TextView) v.findViewById(R.id.tv_location);
+            tvLocation.setText(address);
+
             tradesmenPanel = (ExpandablePanel) v.findViewById(R.id.panel_tradesmen);
             tradesmenPanel.setTitle(v.getResources().getString(R.string.chosen_x_tradesmen, tradesmenCount));
             tradesmenPanel.setListener(panelListener);
@@ -148,11 +162,14 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
 
         setToolbar((Toolbar) v.findViewById(R.id.toolbar), true);
 
-        int tradesmenCount = getArguments().getInt(Constants.ARG_TRADESMEN_COUNT);
+        Bundle args = getArguments();
+        Profession profession = args.getParcelable(Constants.ARG_PROFESSION);
+        String address = args.getString(Constants.ARG_ADDRESS);
+        int tradesmenCount = args.getInt(Constants.ARG_TRADESMEN_COUNT);
 
-        mAdapter = new TradesmenAdapter(null, 0.5f);
+        mAdapter = new TradesmenAdapter(this, 0.5f, true);
 
-        mView = new ViewHolder(v, mAdapter, tradesmenCount, this, this);
+        mView = new ViewHolder(v, profession, address, mAdapter, tradesmenCount, this, this);
 
         return v;
     }
@@ -208,6 +225,16 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
             }
             mView.clearFocus();
         }
+    }
+
+    @Override
+    public void onTradesmanClick(int adapterPosition, TradesmanWrapper tradesman) {
+        TradesmanActionHandler.showTradesman(getFragmentManager(), tradesman.tradesman);
+    }
+
+    @Override
+    public void onTradesmanUnselected(boolean hasMoreSelections) {
+
     }
 
     @Override

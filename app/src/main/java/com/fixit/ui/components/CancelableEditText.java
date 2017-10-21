@@ -31,6 +31,8 @@ public class CancelableEditText extends AppCompatEditText  {
     private int mInitPaddingRight;
     private int mButtonPadding = dp2px(3);
 
+    private OnCancelTextListener onCancelTextListener;
+
     public enum ClearButtonMode {
         NEVER, ALWAYS, WHILEEDITING, UNLESSEDITING
     }
@@ -48,6 +50,10 @@ public class CancelableEditText extends AppCompatEditText  {
     public CancelableEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
+    }
+
+    public void setOnCancelTextListener(OnCancelTextListener listener) {
+        this.onCancelTextListener = listener;
     }
 
     private void init(Context context, AttributeSet attributeSet) {
@@ -139,6 +145,9 @@ public class CancelableEditText extends AppCompatEditText  {
                 if (event.getX() - (getMeasuredWidth() - getPaddingRight()) >= 0) {
                     setError(null);
                     this.setText("");
+                    if(onCancelTextListener != null) {
+                        onCancelTextListener.onTextCancelled(this);
+                    }
                 }
                 break;
         }
@@ -169,5 +178,9 @@ public class CancelableEditText extends AppCompatEditText  {
     public int dp2px(float dipValue) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);
+    }
+
+    public interface OnCancelTextListener {
+        void onTextCancelled(CancelableEditText cancelableEditText);
     }
 }

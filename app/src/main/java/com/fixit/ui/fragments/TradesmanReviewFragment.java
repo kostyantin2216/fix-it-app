@@ -2,23 +2,33 @@ package com.fixit.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.fixit.app.R;
 import com.fixit.controllers.ReviewController;
 import com.fixit.data.Review;
 import com.fixit.data.Tradesman;
+import com.fixit.ui.components.CancelableEditText;
 import com.fixit.utils.Constants;
+import com.fixit.utils.FILog;
 import com.fixit.utils.GlobalPreferences;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.Date;
 import java.util.List;
@@ -27,7 +37,10 @@ import java.util.List;
  * Created by konstantin on 7/23/2017.
  */
 
-public class TradesmanReviewFragment extends BaseFragment<ReviewController> implements View.OnClickListener, ReviewController.LoadReviewsCallback {
+public class TradesmanReviewFragment extends BaseFragment<ReviewController>
+        implements View.OnClickListener,
+                   View.OnFocusChangeListener,
+                   ReviewController.LoadReviewsCallback {
 
     private Tradesman tradesman;
     private ViewHolder mView;
@@ -65,7 +78,7 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
             backgroundColor = args.getInt(Constants.ARG_BACKGROUND_COLOR);
         }
 
-        mView = new ViewHolder(v, this, backgroundColor);
+        mView = new ViewHolder(v, this, this, backgroundColor);
         mView.populate(tradesman);
 
         return v;
@@ -90,23 +103,76 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.btn_submit) {
-            Review review = mView.fieldsToReview();
-            review.setTradesmanId(tradesman.get_id());
-            review.setUserId(GlobalPreferences.getUserId(getContext()));
-            review.setOnDisplay(true);
-            review.setCreatedAt(new Date());
+        int viewId = v.getId();
+        switch (viewId) {
+            case R.id.btn_submit:
+                Review review = mView.fieldsToReview();
+                review.setTradesmanId(tradesman.get_id());
+                review.setUserId(GlobalPreferences.getUserId(getContext()));
+                review.setOnDisplay(true);
+                review.setCreatedAt(new Date());
 
-            if(newReview) {
-                getController().saveReview(tradesman, review);
-            } else {
-                getController().updateReview(review);
-            }
+                ReviewController controller = getController();
+                if(controller != null) {
+                    if (newReview) {
+                        controller.saveReview(tradesman, review);
+                    } else {
+                        controller.updateReview(review);
+                    }
+                } else {
+                    FILog.w("Unable to obtain Review Controller in TradesmanReviewFragment", getContext());
+                }
 
-            if(mListener != null) {
-                mListener.onTradesmanReviewed(newReview, review);
-            }
+                if(mListener != null) {
+                    mListener.onTradesmanReviewed(newReview, review);
+                }
+                break;
+            default:
+                handleReviewInput(viewId);
         }
+
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if(hasFocus) {
+            handleReviewInput(v.getId());
+        }
+    }
+
+    private void handleReviewInput(int viewId) {
+        switch (viewId) {
+            case R.id.et_review_title:
+                promptInput(viewId, R.string.review_title, R.string.review_title_hint, mView.etReviewTitle, true);
+                break;
+            case R.id.et_review_content:
+                promptInput(viewId, R.string.review_content, R.string.review_content_hint, mView.etReview, false);
+                break;
+        }
+    }
+
+    public void promptInput(final int fromViewId, @StringRes int titleResId, @StringRes int hintResId, final EditText etInput, boolean limitInput) {
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getContext())
+                .title(titleResId)
+                .content(getString(hintResId))
+                .inputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+
+        if(limitInput) {
+            builder.inputRangeRes(2, 40, R.color.colorError);
+        }
+        MaterialDialog materialDialog = builder.input("", etInput.getText(), (dialog, input) -> {
+                    etInput.setText(input);
+                    mView.onTextInput(fromViewId);
+                }).build();
+
+        if(!limitInput) {
+            EditText editText = materialDialog.getInputEditText();
+            editText.setSingleLine(false);
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            editText.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+        }
+
+        materialDialog.show();
     }
 
     @Override
@@ -132,25 +198,31 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
         void onTradesmanReviewed(boolean isNewReview, Review review);
     }
 
-    public static class ViewHolder implements RatingBar.OnRatingBarChangeListener {
+    public static class ViewHolder implements RatingBar.OnRatingBarChangeListener, CancelableEditText.OnCancelTextListener {
         final TextView tvStatus;
         final ImageView ivTradesmanLogo;
         final TextView tvCompanyName;
         final RatingBar rbRating;
-        final EditText etReviewTitle;
-        final EditText etReview;
+        final CancelableEditText etReviewTitle;
+        final CancelableEditText etReview;
         final Button btnSubmit;
 
-        ViewHolder(View v, View.OnClickListener submitClickListener, Integer backgroundColor) {
+        ViewHolder(View v, View.OnFocusChangeListener focusChangeListener, View.OnClickListener clickListener, Integer backgroundColor) {
             tvStatus = (TextView) v.findViewById(R.id.tv_review_status);
             ivTradesmanLogo = (ImageView) v.findViewById(R.id.iv_tradesman_logo);
             tvCompanyName = (TextView) v.findViewById(R.id.tv_company_name);
             rbRating = (RatingBar) v.findViewById(R.id.rb_rating);
-            etReviewTitle = (EditText) v.findViewById(R.id.et_review_title);
-            etReview = (EditText) v.findViewById(R.id.et_review_content);
+            etReviewTitle = (CancelableEditText) v.findViewById(R.id.et_review_title);
+            etReview = (CancelableEditText) v.findViewById(R.id.et_review_content);
             btnSubmit = (Button) v.findViewById(R.id.btn_submit);
 
-            btnSubmit.setOnClickListener(submitClickListener);
+            etReviewTitle.setOnCancelTextListener(this);
+            etReview.setOnCancelTextListener(this);
+            etReviewTitle.setOnFocusChangeListener(focusChangeListener);
+            etReview.setOnFocusChangeListener(focusChangeListener);
+            etReviewTitle.setOnClickListener(clickListener);
+            etReview.setOnClickListener(clickListener);
+            btnSubmit.setOnClickListener(clickListener);
             rbRating.setOnRatingBarChangeListener(this);
 
             if(backgroundColor != null) {
@@ -168,11 +240,7 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
             rbRating.setRating(review.getRating());
             etReviewTitle.setText(review.getTitle());
             etReview.setText(review.getContent());
-        }
-
-        @Override
-        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-            btnSubmit.setVisibility(rating > 0.0f ? View.VISIBLE : View.INVISIBLE);
+            validateSubmitButton();
         }
 
         Review fieldsToReview() {
@@ -181,6 +249,30 @@ public class TradesmanReviewFragment extends BaseFragment<ReviewController> impl
             review.setTitle(etReviewTitle.getText().toString());
             review.setContent(etReview.getText().toString());
             return review;
+        }
+
+        @Override
+        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+            validateSubmitButton();
+        }
+
+        @Override
+        public void onTextCancelled(CancelableEditText cancelableEditText) {
+            validateSubmitButton();
+        }
+
+        void onTextInput(int viewId) {
+            validateSubmitButton();
+        }
+
+        void validateSubmitButton() {
+            if(rbRating.getRating() > 0
+                    && etReviewTitle.getText().toString().trim().length() > 0
+                    && etReview.getText().toString().trim().length() > 0) {
+                btnSubmit.setVisibility(View.VISIBLE);
+            } else {
+                btnSubmit.setVisibility(View.INVISIBLE);
+            }
         }
     }
 

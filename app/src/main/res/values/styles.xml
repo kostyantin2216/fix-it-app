@@ -16,6 +16,9 @@
         <item name="colorControlActivated">@color/gold</item>
     </style>
 
+    <style name="RatingBarSmall" parent="android:style/Widget.Material.RatingBar">
+    </style>
+
     <style name="EditTextTheme">
         <item name="colorControlNormal">@color/grey_400</item>
     </style>

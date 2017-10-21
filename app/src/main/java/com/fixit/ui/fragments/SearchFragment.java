@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
@@ -61,6 +62,13 @@ public class SearchFragment extends BaseFragment<SearchController>
         actvProfessions = (AutoCompleteTextView) v.findViewById(R.id.actv_professions);
         actvAddress = (AutoCompleteTextView) v.findViewById(R.id.actv_address);
 
+        actvAddress.setOnItemClickListener((parent, view, position, id) -> hideKeyboard(root));
+        actvProfessions.setOnItemClickListener((parent, view, position, id) -> {
+            if(!actvAddress.getText().toString().trim().isEmpty()) {
+                hideKeyboard(root);
+            }
+        });
+
         v.findViewById(R.id.btn_show_professions).setOnClickListener(this);
         v.findViewById(R.id.btn_show_map).setOnClickListener(this);
         v.findViewById(R.id.fab_search).setOnClickListener(this);
@@ -100,6 +108,7 @@ public class SearchFragment extends BaseFragment<SearchController>
     }
 
     public void setGoogleApiClient(GoogleApiClient googleApiClient) {
+
         actvAddress.setAdapter(new PlaceAutocompleteAdapter(getContext(), googleApiClient, null,
                 new AutocompleteFilter
                         .Builder()
