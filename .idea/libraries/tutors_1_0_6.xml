@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="tutors-1.0.6">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.android/build-cache/dee000069e79d35f139883e5e459bc00960c3b0e/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/dee000069e79d35f139883e5e459bc00960c3b0e/output/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.popalay/tutors/1.0.6/c4918e34c0d7dfa13768bb881b4b1c3333a0c9b2/tutors-1.0.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

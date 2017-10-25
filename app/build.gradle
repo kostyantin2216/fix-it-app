@@ -39,33 +39,36 @@ android {
         applicationId "com.fixit.app"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 17
-        versionName "0.0.4"
+        versionCode 25
+        versionName "0.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
             applicationIdSuffix '.dev'
             debuggable true
-            manifestPlaceholders = [applicationLabel: "Fix It Development"]
+            manifestPlaceholders = [applicationLabel: "Fixxit Development"]
             versionNameSuffix '-d'
         }
         prototype {
             signingConfig signingConfigs.prototype
             applicationIdSuffix '.proto'
             debuggable true
-            manifestPlaceholders = [applicationLabel: "Fix It Prototype"]
+            manifestPlaceholders = [applicationLabel: "Fixxit Prototype"]
             versionNameSuffix '-p'
         }
         release {
             signingConfig signingConfigs.release
-            manifestPlaceholders = [applicationLabel: "Fix It"]
+            manifestPlaceholders = [applicationLabel: "Fixxit"]
             versionNameSuffix '-r'
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dexOptions {
+        jumboMode true
     }
 }
 
@@ -95,6 +98,7 @@ dependencies {
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
 
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.github.popalay:tutors:1.0.6'
 
     compile 'com.facebook.android:facebook-android-sdk:4.26.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
@@ -102,6 +106,12 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.xwray:groupie:2.0.0-alpha2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
+    compile('com.appsee:appsee-android:2.3.4@aar') {
+        transitive = true;
+    }
+    compile('io.fabric.sdk.android:fabric:1.3.10@aar') {
         transitive = true;
     }
 }

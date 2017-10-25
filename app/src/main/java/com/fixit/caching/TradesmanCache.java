@@ -10,8 +10,14 @@ import com.fixit.rest.responses.data.TradesmenResponseData;
 import com.fixit.utils.Constants;
 import com.fixit.utils.FILog;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Kostyantin on 8/26/2017.
@@ -51,7 +57,7 @@ public class TradesmanCache {
         if(missingTradesmenCount == 0) {
             FILog.i(Constants.LOG_TAG_TRADESMAN_CACHE, "perfect cache hit!");
 
-            cacheCallback.onResult(results);
+            complete(results, cacheCallback);
         } else {
             FILog.i(Constants.LOG_TAG_TRADESMAN_CACHE, "fetching " + missingTradesmenCount + " missing tradesmen");
 
@@ -65,13 +71,26 @@ public class TradesmanCache {
                 @Override
                 public void onResponse(TradesmenResponseData responseData) {
                     for(Tradesman tradesman : responseData.getTradesmen()) {
-                        Integer resultIndex = missingTradesmen.get(tradesman.get_id());
-                        results[resultIndex] = tradesman;
+                        if(tradesman != null) {
+                            Integer resultIndex = missingTradesmen.get(tradesman.get_id());
+                            results[resultIndex] = tradesman;
+                        }
                     }
-                    cacheCallback.onResult(results);
+
+                    complete(results, cacheCallback);
                 }
             });
         }
+    }
+
+    private void complete(final Tradesman[] results, final CacheCallback<Tradesman> callback) {
+        Set<Tradesman> tradesmen = new HashSet<>();
+        for(Tradesman tradesman : results) {
+            if(tradesman != null) {
+                tradesmen.add(tradesman);
+            }
+        }
+        callback.onResult(tradesmen.toArray(new Tradesman[tradesmen.size()]));
     }
 
 }

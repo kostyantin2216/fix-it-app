@@ -17,6 +17,7 @@ import com.fixit.data.Tradesman;
 import com.fixit.data.TradesmanWrapper;
 import com.fixit.general.SearchManager;
 import com.fixit.ui.fragments.ErrorFragment;
+import com.fixit.ui.helpers.UITutorials;
 import com.fixit.utils.Constants;
 import com.fixit.ui.fragments.TradesmanProfileFragment;
 import com.fixit.ui.fragments.TradesmenResultsFragment;
@@ -124,6 +125,8 @@ public class ResultsActivity extends BaseActivity<ResultsController>
     @Override
     public void showDoneBtn() {
         fabDone.setVisibility(View.VISIBLE);
+        UITutorials.create(UITutorials.TUTORIAL_ORDER_SELECTED_TRADESMEN, fabDone, getString(R.string.tutorial_order_selected_tradesmen))
+            .show(getSupportFragmentManager());
     }
 
     @Override

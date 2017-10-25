@@ -4,6 +4,7 @@
     <bool name="is_production">true</bool>
 
     <string name="server_api_base_url">http://fixxit-web.co.za/rest/</string>
+    <string name="appsee_api_key">cfda1183ca304a47b0a812efd73dd418</string>
 
     <integer name="retrofit_connect_timeout_seconds">20</integer>
     <integer name="retrofit_read_timeout_seconds">30</integer>

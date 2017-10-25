@@ -100,7 +100,7 @@ public class OrderItem extends Item<OrderItem.OrderViewHolder> implements Expand
 
             tvProfessionLine.setText(order.getProfession().getName());
             tvTradesmenLine.setText(res.getString(R.string.format_ordered_x_tradesmen, order.getTradesmen().length));
-            tvLocationLine.setText(res.getString(R.string.format_at_x, order.getJobLocation().toShortAddress()));
+            tvLocationLine.setText(res.getString(R.string.format_at_x, order.getJobLocation().getGoogleAddress()));
             tvDateLine.setText(DateUtils.dateToString(DateUtils.FORMAT_DMY_AT_HM, order.getCreatedAt()));
         }
 

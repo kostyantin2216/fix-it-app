@@ -23,6 +23,7 @@ import com.fixit.data.Profession;
 import com.fixit.data.TradesmanWrapper;
 import com.fixit.ui.components.ExpandablePanel;
 import com.fixit.ui.helpers.TradesmanActionHandler;
+import com.fixit.ui.helpers.UITutorials;
 import com.fixit.utils.Constants;
 import com.fixit.ui.adapters.TradesmenAdapter;
 
@@ -66,6 +67,7 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
         final TextView tvProfession;
         final TextView tvLocation;
         final ExpandablePanel tradesmenPanel;
+        final RecyclerView rvTradesmen;
         final EditText etComment;
         final Button btnPickReason;
         final FloatingActionButton fabDone;
@@ -83,7 +85,7 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
             tradesmenPanel.setTitle(v.getResources().getString(R.string.chosen_x_tradesmen, tradesmenCount));
             tradesmenPanel.setListener(panelListener);
 
-            RecyclerView rvTradesmen = (RecyclerView) v.findViewById(R.id.rv_tradesmen);
+            rvTradesmen = (RecyclerView) v.findViewById(R.id.rv_tradesmen);
             rvTradesmen.setAdapter(recyclerAdapter);
             SnapHelper helper = new LinearSnapHelper();
             helper.attachToRecyclerView(rvTradesmen);
@@ -183,6 +185,15 @@ public class OrderDetailsFragment extends BaseFragment<OrderController>
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         List<TradesmanWrapper> tradesmen = getArguments().getParcelableArrayList(Constants.ARG_TRADESMEN);
         mAdapter.setTradesmen(tradesmen);
+
+        mView.rvTradesmen.post(() -> {
+            UITutorials.create(UITutorials.TUTORIAL_ORDER_DETAILS_SCREEN, mView.tradesmenPanel, getString(R.string.tutorial_slide_for_tradesmen))
+                    .and(mView.rvTradesmen.findViewHolderForLayoutPosition(0).itemView, getString(R.string.tutorial_view_profile))
+                    .and(mView.etComment, getString(R.string.tutorial_order_comment))
+                    .and(mView.btnPickReason, getString(R.string.tutorial_select_reasons))
+                    .and(mView.fabDone, getString(R.string.tutorial_complete_order))
+                    .show(getFragmentManager());
+        });
     }
 
     @Override

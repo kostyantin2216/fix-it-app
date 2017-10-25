@@ -1,6 +1,7 @@
 package com.fixit.ui.fragments;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -12,10 +13,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 
+import com.appsee.Appsee;
 import com.fixit.app.R;
 import com.fixit.controllers.SearchController;
 import com.fixit.data.Profession;
+import com.fixit.ui.helpers.UITutorials;
 import com.fixit.utils.Constants;
 import com.fixit.utils.DataUtils;
 import com.fixit.external.google.GoogleClientManager;
@@ -34,11 +38,77 @@ public class SearchFragment extends BaseFragment<SearchController>
 
     private SearchFragmentInteractionListener mListener;
 
-    private CoordinatorLayout root;
-    private AutoCompleteTextView actvProfessions;
-    private AutoCompleteTextView actvAddress;
+    private ViewHolder mView;
 
+    private static class ViewHolder {
 
+        private final CoordinatorLayout root;
+        private final AutoCompleteTextView actvProfessions;
+        private final AutoCompleteTextView actvAddress;
+
+        private final Button btnProfessions;
+        private final Button btnMap;
+        private final Button btnSearch;
+
+        private final AnimationDrawable animGradient;
+
+        ViewHolder(View v, View.OnClickListener clickListener, AdapterView.OnItemClickListener addressItemClickListener, AdapterView.OnItemClickListener professionItemClickListener) {
+            root = (CoordinatorLayout) v.findViewById(R.id.root);
+            actvProfessions = (AutoCompleteTextView) v.findViewById(R.id.actv_professions);
+            actvAddress = (AutoCompleteTextView) v.findViewById(R.id.actv_address);
+
+            actvAddress.setOnItemClickListener(addressItemClickListener);
+            actvProfessions.setOnItemClickListener(professionItemClickListener);
+
+            Appsee.unmarkViewAsSensitive(actvAddress);
+            Appsee.unmarkViewAsSensitive(actvProfessions);
+
+            btnProfessions = (Button) v.findViewById(R.id.btn_show_professions);
+            btnMap = (Button) v.findViewById(R.id.btn_show_map);
+            btnSearch = (Button) v.findViewById(R.id.fab_search);
+
+            btnSearch.setBackgroundResource(R.drawable.rounded_gradient_animation_list);
+            animGradient = (AnimationDrawable) btnSearch.getBackground();
+            animGradient.start();
+            animGradient.setEnterFadeDuration(2000);
+            animGradient.setExitFadeDuration(2000);
+
+            btnProfessions.setOnClickListener(clickListener);
+            btnMap.setOnClickListener(clickListener);
+            btnSearch.setOnClickListener(clickListener);
+        }
+
+        String getAddress() {
+            return actvAddress.getText().toString();
+        }
+
+        void setAddress(Place place) {
+            actvAddress.setText(place.getAddress());
+        }
+
+        String getProfession() {
+            return actvProfessions.getText().toString();
+        }
+
+        void setProfession(Profession profession) {
+            actvProfessions.setText(profession.getName());
+            actvProfessions.dismissDropDown();
+        }
+
+        void update(Bundle args) {
+            if (args.containsKey(Constants.ARG_DEFAULT_PROFESSION)) {
+                actvProfessions.setText(args.getString(Constants.ARG_DEFAULT_PROFESSION));
+            }
+            if (args.containsKey(Constants.ARG_DEFAULT_ADDRESS)) {
+                actvAddress.setText(args.getString(Constants.ARG_DEFAULT_ADDRESS));
+            }
+        }
+
+        void clearFocus() {
+            actvProfessions.clearFocus();
+            actvAddress.clearFocus();
+        }
+    }
 
     public static SearchFragment newInstance(@Nullable String defaultProfession, @Nullable String defaultAddress) {
         SearchFragment frag = new SearchFragment();
@@ -58,20 +128,13 @@ public class SearchFragment extends BaseFragment<SearchController>
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_search, container, false);
 
-        root = (CoordinatorLayout) v.findViewById(R.id.root);
-        actvProfessions = (AutoCompleteTextView) v.findViewById(R.id.actv_professions);
-        actvAddress = (AutoCompleteTextView) v.findViewById(R.id.actv_address);
-
-        actvAddress.setOnItemClickListener((parent, view, position, id) -> hideKeyboard(root));
-        actvProfessions.setOnItemClickListener((parent, view, position, id) -> {
-            if(!actvAddress.getText().toString().trim().isEmpty()) {
-                hideKeyboard(root);
+        mView = new ViewHolder(v, this,
+                (parent, view, position, id) -> hideKeyboard(mView.root),
+                (parent, view, position, id) -> {
+            if(!mView.actvAddress.getText().toString().trim().isEmpty()) {
+                hideKeyboard(mView.root);
             }
         });
-
-        v.findViewById(R.id.btn_show_professions).setOnClickListener(this);
-        v.findViewById(R.id.btn_show_map).setOnClickListener(this);
-        v.findViewById(R.id.fab_search).setOnClickListener(this);
 
         setToolbar((Toolbar) v.findViewById(R.id.toolbar));
 
@@ -85,7 +148,7 @@ public class SearchFragment extends BaseFragment<SearchController>
         super.onViewCreated(view, savedInstanceState);
 
         Profession[] professions = getController().getProfessions();
-        actvProfessions.setAdapter(new ArrayAdapter<>(
+        mView.actvProfessions.setAdapter(new ArrayAdapter<>(
                 getContext(),
                 android.R.layout.simple_dropdown_item_1line,
                 android.R.id.text1,
@@ -93,23 +156,38 @@ public class SearchFragment extends BaseFragment<SearchController>
         ));
 
         checkDefaults();
+
+        UITutorials.create(UITutorials.TUTORIAL_SEARCH_SCREEN, mView.btnProfessions, getString(R.string.tutorial_show_professions))
+                .and(mView.btnMap, getString(R.string.tutorial_show_map))
+                .and(mView.btnSearch, getString(R.string.tutorial_search))
+                .show(getFragmentManager());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(mView != null && mView.animGradient != null) {
+            mView.animGradient.start();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mView.animGradient.stop();
     }
 
     private void checkDefaults() {
         Bundle args = getArguments();
         if(args != null) {
-            if (args.containsKey(Constants.ARG_DEFAULT_PROFESSION)) {
-                actvProfessions.setText(args.getString(Constants.ARG_DEFAULT_PROFESSION));
-            }
-            if (args.containsKey(Constants.ARG_DEFAULT_ADDRESS)) {
-                actvAddress.setText(args.getString(Constants.ARG_DEFAULT_ADDRESS));
-            }
+            mView.update(args);
         }
     }
 
     public void setGoogleApiClient(GoogleApiClient googleApiClient) {
-
-        actvAddress.setAdapter(new PlaceAutocompleteAdapter(getContext(), googleApiClient, null,
+        mView.actvAddress.setAdapter(new PlaceAutocompleteAdapter(getContext(), googleApiClient, null,
                 new AutocompleteFilter
                         .Builder()
                         .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
@@ -120,12 +198,11 @@ public class SearchFragment extends BaseFragment<SearchController>
 
     @Override
     public void onPlaceChosen(Place place) {
-        actvAddress.setText(place.getAddress());
+        mView.setAddress(place);
     }
 
     public void onProfessionChosen(Profession profession) {
-        actvProfessions.setText(profession.getName());
-        actvProfessions.dismissDropDown();
+        mView.setProfession(profession);
     }
 
     @Override
@@ -150,7 +227,7 @@ public class SearchFragment extends BaseFragment<SearchController>
     @Override
     public void onClick(View v) {
         if(mListener != null) {
-            clearFocus();
+            mView.clearFocus();
             switch (v.getId()) {
                 case R.id.btn_show_professions:
                     mListener.showProfessionsList();
@@ -159,13 +236,13 @@ public class SearchFragment extends BaseFragment<SearchController>
                     mListener.showMap();
                     break;
                 case R.id.fab_search:
-                    String profession = actvProfessions.getText().toString();
+                    String profession = mView.getProfession();
                     if(TextUtils.isEmpty(profession)) {
-                        notifyUser(getString(R.string.empty_profession), root);
+                        notifyUser(getString(R.string.empty_profession), mView.root);
                     } else {
-                        String address = actvAddress.getText().toString();
+                        String address = mView.getAddress();
                         if(TextUtils.isEmpty(address)) {
-                            notifyUser(getString(R.string.empty_address), root);
+                            notifyUser(getString(R.string.empty_address), mView.root);
                         } else {
                             mListener.performSearch(profession, address);
                         }
@@ -173,11 +250,6 @@ public class SearchFragment extends BaseFragment<SearchController>
                     break;
             }
         }
-    }
-
-    private void clearFocus() {
-        actvProfessions.clearFocus();
-        actvAddress.clearFocus();
     }
 
     public interface SearchFragmentInteractionListener {

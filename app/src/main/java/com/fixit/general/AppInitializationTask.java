@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Process;
 import android.text.TextUtils;
 
+import com.appsee.Appsee;
 import com.crashlytics.android.Crashlytics;
 import com.fixit.config.AppConfig;
 import com.fixit.data.AppInstallation;
@@ -80,6 +81,7 @@ public class AppInitializationTask extends Thread {
             String userId = GlobalPreferences.getUserId(context);
             if(!TextUtils.isEmpty(userId)) {
                 Crashlytics.setUserIdentifier(userId);
+                Appsee.setUserId(userId);
             }
 
             APIFactory serverAPIFactory = mCallback.getServerApiFactory();

@@ -20,6 +20,7 @@ public class Tradesman implements Parcelable {
     private float rating;
     private MutableLatLng lastKnownLocation;
     private WorkingDay[] workingDays;
+    private int priority;
 
     public Tradesman() { }
 
@@ -35,7 +36,7 @@ public class Tradesman implements Parcelable {
         return professions;
     }
 
-    public void setProfession(long[] professions) {
+    public void setProfessions(long[] professions) {
         this.professions = professions;
     }
 
@@ -103,6 +104,14 @@ public class Tradesman implements Parcelable {
         this.workingDays = workingDays;
     }
 
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
     @Override
     public String toString() {
         return "Tradesman{" +
@@ -134,6 +143,7 @@ public class Tradesman implements Parcelable {
         dest.writeFloat(this.rating);
         dest.writeParcelable(this.lastKnownLocation, flags);
         dest.writeTypedArray(this.workingDays, flags);
+        dest.writeInt(this.priority);
     }
 
     protected Tradesman(Parcel in) {
@@ -145,6 +155,7 @@ public class Tradesman implements Parcelable {
         this.rating = in.readFloat();
         this.lastKnownLocation = in.readParcelable(MutableLatLng.class.getClassLoader());
         this.workingDays = in.createTypedArray(WorkingDay.CREATOR);
+        this.priority = in.readInt();
     }
 
     public static final Creator<Tradesman> CREATOR = new Creator<Tradesman>() {

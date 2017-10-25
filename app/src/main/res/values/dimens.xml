@@ -21,6 +21,7 @@
 
     <dimen name="order_completion_spacing">8dp</dimen>
 
+    <dimen name="rounded_gradient_radius">100dp</dimen>
 
     <!-- Text sizes -->
     <dimen name="extra_large_text_size">28sp</dimen>

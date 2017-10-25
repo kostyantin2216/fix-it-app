@@ -3,6 +3,7 @@ package com.fixit.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.fixit.app.R;
@@ -11,6 +12,7 @@ import com.fixit.controllers.ResultsController;
 import com.fixit.data.Tradesman;
 import com.fixit.data.TradesmanWrapper;
 import com.fixit.ui.adapters.TradesmenAdapter;
+import com.fixit.ui.helpers.UITutorials;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +99,11 @@ public class TradesmenResultsFragment extends StaticRecyclerListFragment<Results
                 adapterData.add(new TradesmanWrapper(tradesman, reviewCountForTradesmen.get(tradesman.get_id())));
             }
             mAdapter.setTradesmen(adapterData);
+
+            getRecyclerView().post(() -> {
+                UITutorials.create(UITutorials.TUTORIAL_SEARCH_RESULTS, getRecyclerView().findViewHolderForLayoutPosition(0).itemView, getString(R.string.tutorial_search_results))
+                        .show(getFragmentManager());
+            });
         }
     }
 

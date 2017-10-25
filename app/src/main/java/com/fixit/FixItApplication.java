@@ -29,9 +29,6 @@ public class FixItApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics(), new Answers());
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
 
         FILog.i("running version: " + AppConfig.getVersionInfo(this).getName());
     }

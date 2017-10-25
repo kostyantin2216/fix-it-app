@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Fix It</string>
+    <string name="app_name">Fixxit</string>
 
     <string name="data_access_activity_name">Fix It Data</string>
 
@@ -186,5 +186,17 @@
         <item quantity="one">Picked 1 problem</item>
         <item quantity="other">Picked %1$d problems</item>
     </plurals>
+
+    <string name="tutorial_show_professions">Click here to pick a profession from a list.</string>
+    <string name="tutorial_show_map">Click here to select your location on a map.</string>
+    <string name="tutorial_search">Click here to search for tradesmen.</string>
+    <string name="tutorial_search_results">Click a tradesman to view his profile and add him to your order.</string>
+    <string name="tutorial_order_selected_tradesmen">Click here to order selected tradesmen.</string>
+    <string name="tutorial_select_tradesman">Click here to select this tradesman.</string>
+    <string name="tutorial_view_profile">Click a tradesman to view his profile.</string>
+    <string name="tutorial_slide_for_tradesmen">If you ordered more then one tradesman then you can slide to the right to see them.</string>
+    <string name="tutorial_order_comment">Attach a comment to your order.</string>
+    <string name="tutorial_select_reasons">Help the tradesmen by letting him know whats wrong from a list of common problems.</string>
+    <string name="tutorial_complete_order">Click here to complete your order!</string>
 
 </resources>

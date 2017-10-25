@@ -12,7 +12,7 @@ import android.view.animation.Interpolator;
 
 import com.fixit.ui.components.FloatingTextButton;
 
-public class SnackbarBehavior extends CoordinatorLayout.Behavior<FloatingTextButton> {
+public class SnackbarBehavior extends CoordinatorLayout.Behavior<View> {
 
     private static final Interpolator HIDE_INTERPOLATOR = new FastOutSlowInInterpolator();
     private static final Long HIDE_DURATION = 250L;
@@ -26,7 +26,7 @@ public class SnackbarBehavior extends CoordinatorLayout.Behavior<FloatingTextBut
     @Override
     public boolean layoutDependsOn(
             CoordinatorLayout parent,
-            FloatingTextButton child,
+            View child,
             View dependency
     ) {
         return dependency instanceof Snackbar.SnackbarLayout;
@@ -35,7 +35,7 @@ public class SnackbarBehavior extends CoordinatorLayout.Behavior<FloatingTextBut
     @Override
     public boolean onDependentViewChanged(
             CoordinatorLayout parent,
-            FloatingTextButton child,
+            View child,
             View dependency
     ) {
         if (child.getTranslationY() > 0) {
@@ -55,7 +55,7 @@ public class SnackbarBehavior extends CoordinatorLayout.Behavior<FloatingTextBut
     @Override
     public void onDependentViewRemoved(
             CoordinatorLayout parent,
-            FloatingTextButton child,
+            View child,
             View dependency
     ) {
         if (dependency instanceof Snackbar.SnackbarLayout) {

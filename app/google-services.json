@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "255078666095-rjajd8tc2ej14vbfnl52hjs1rog6kumb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fixit.app",
+            "certificate_hash": "e9b76e7dbc547aa59e6ab7552d2f505b4b683fb6"
+          }
+        },
+        {
           "client_id": "255078666095-cae9hvi70vh5u6u97e3f36eof3qo7j13.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

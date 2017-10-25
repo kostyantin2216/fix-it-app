@@ -3,6 +3,7 @@ package com.fixit.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -10,6 +11,8 @@ import java.util.List;
  */
 
 public class TradesmanWrapper implements Parcelable {
+
+    public static Comparator<TradesmanWrapper> PRIORITY_COMPARATOR = (e1, e2) -> e2.tradesman.getPriority() - e1.tradesman.getPriority();
 
     public static Tradesman[] unwrap(List<TradesmanWrapper> tradesmanWrapperList) {
         Tradesman[] tradesmen = new Tradesman[tradesmanWrapperList.size()];
@@ -63,4 +66,5 @@ public class TradesmanWrapper implements Parcelable {
             return new TradesmanWrapper[size];
         }
     };
+
 }

@@ -15,6 +15,7 @@ import com.fixit.data.TradesmanWrapper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -115,6 +116,7 @@ public class TradesmenAdapter extends RecyclerView.Adapter<TradesmenAdapter.Trad
         mTradesmen.clear();
         mSelectedTradesmenPositions.clear();
         notifyItemRangeRemoved(0, oldCount);
+        Collections.sort(tradesmen, TradesmanWrapper.PRIORITY_COMPARATOR);
         for (int i = 0, count = tradesmen.size(); i < count; i++) {
             TradesmanWrapper tradesman = tradesmen.get(i);
             if(tradesman.isSelected()) {

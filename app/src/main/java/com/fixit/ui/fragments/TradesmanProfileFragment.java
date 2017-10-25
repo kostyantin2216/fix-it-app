@@ -9,10 +9,10 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,10 +23,10 @@ import com.fixit.data.ReviewData;
 import com.fixit.data.Tradesman;
 import com.fixit.ui.components.SimpleRatingView;
 import com.fixit.ui.components.WorkingDaysView;
+import com.fixit.ui.helpers.UITutorials;
 import com.fixit.utils.Constants;
 import com.fixit.ui.adapters.ReviewRecyclerAdapter;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 
 /**
  * Created by konstantin on 4/26/2017.
@@ -44,6 +44,8 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
     private ReviewRecyclerAdapter mAdapter;
     private ViewHolder mView;
 
+    private boolean mTradesmanSelectable;
+
     private static class ViewHolder {
 
         private enum ListState {
@@ -56,6 +58,7 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
         final RecyclerView rvReviews;
         final TextView tvNoReviews;
         final ProgressBar pbLoader;
+        final Button btnSelect;
 
         ViewHolder(Context context, View v, Tradesman tradesman, boolean selectable, View.OnClickListener clickListener) {
             svProfileScroller = (NestedScrollView) v.findViewById(R.id.sv_profile_scroller);
@@ -85,11 +88,12 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
 
             changeListState(ListState.LOADING);
 
+            btnSelect = (Button) v.findViewById(R.id.btn_select_tradesman);
             if(!selectable) {
-                v.findViewById(R.id.btn_select_tradesman).setVisibility(View.GONE);
+                btnSelect.setVisibility(View.GONE);
                 ((CoordinatorLayout.LayoutParams) svProfileScroller.getLayoutParams()).bottomMargin = 0;
             } else {
-                v.findViewById(R.id.btn_select_tradesman).setOnClickListener(clickListener);
+                btnSelect.setOnClickListener(clickListener);
             }
         }
 
@@ -136,6 +140,7 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
         super.onCreate(savedInstanceState);
 
         mTradesman = getArguments().getParcelable(Constants.ARG_TRADESMAN);
+        mTradesmanSelectable = getArguments().getBoolean(Constants.ARG_SELECTABLE);
     }
 
     @Nullable
@@ -145,8 +150,7 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
 
         setToolbar((Toolbar) v.findViewById(R.id.toolbar), true);
 
-        boolean selectable = getArguments().getBoolean(Constants.ARG_SELECTABLE);
-        mView = new ViewHolder(getContext(), v, mTradesman, selectable, this);
+        mView = new ViewHolder(getContext(), v, mTradesman, mTradesmanSelectable, this);
 
         return v;
     }
@@ -156,6 +160,11 @@ public class TradesmanProfileFragment extends BaseFragment<TradesmenController>
         super.onViewCreated(view, savedInstanceState);
 
         getController().loadReviews(mTradesman.get_id(), this);
+
+        if(mTradesmanSelectable) {
+            UITutorials.create(UITutorials.TUTORIAL_SELECT_TRADESMAN, mView.btnSelect, getString(R.string.tutorial_select_tradesman))
+                .show(getFragmentManager());
+        }
     }
 
     @Override
