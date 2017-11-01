@@ -1,4 +1,4 @@
-package com.fixit.external.google;
+package com.fixit.external;
 
 import android.content.Intent;
 import android.os.Bundle;

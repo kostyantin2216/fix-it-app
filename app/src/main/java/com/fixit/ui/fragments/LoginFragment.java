@@ -22,7 +22,7 @@ import com.facebook.login.LoginManager;
 import com.fixit.app.R;
 import com.fixit.controllers.UserController;
 import com.fixit.data.UserAccountDetails;
-import com.fixit.external.google.FacebookClientManager;
+import com.fixit.external.FacebookClientManager;
 import com.fixit.external.google.GoogleClientManager;
 import com.fixit.utils.Constants;
 import com.google.android.gms.auth.api.Auth;

@@ -1,15 +1,14 @@
-package com.fixit.validation;
+package com.fixit.geo;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 
 import com.fixit.config.AppConfig;
 import com.fixit.data.JobLocation;
 import com.fixit.data.MutableLatLng;
-import com.fixit.geodata.AddressComponent;
-import com.fixit.geodata.GeocodeResponse;
-import com.fixit.geodata.GeocodeResult;
+import com.fixit.geo.data.AddressComponent;
+import com.fixit.geo.data.GeocodeResponse;
+import com.fixit.geo.data.GeocodeResult;
 import com.fixit.utils.FILog;
 import com.google.gson.Gson;
 

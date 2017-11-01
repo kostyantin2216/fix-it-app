@@ -1,4 +1,4 @@
-package com.fixit.geodata;
+package com.fixit.geo.data;
 
 import java.util.List;
 

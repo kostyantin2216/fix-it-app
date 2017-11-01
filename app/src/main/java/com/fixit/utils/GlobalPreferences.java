@@ -25,6 +25,7 @@ public class GlobalPreferences {
     private final static String PREF_INSTALLATION_ID = "pref_installation_id";
     private final static String PREF_DEVICE_ID = "pref_device_id";
     private final static String PREF_LAST_ORDER_ID = "pref_last_order_id";
+    private final static String PREF_LOCATION_PERMISSION_EXPLAINED = "pref_location_permission_explained";
 
     // GETTERS
 
@@ -55,6 +56,11 @@ public class GlobalPreferences {
         return deviceId;
     }
 
+    public static boolean isLocationPermissionExplained(Context context) {
+        return context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
+                .getBoolean(PREF_LOCATION_PERMISSION_EXPLAINED, false);
+    }
+
     // SETTERS
 
     public static void setLastOrderId(Context context, String orderId) {
@@ -72,6 +78,12 @@ public class GlobalPreferences {
     public static void setInstallationId(Context context, String installationId) {
         SharedPreferences.Editor editor = context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
                 .edit().putString(PREF_INSTALLATION_ID, installationId);
+        editor.apply();
+    }
+
+    public static void setLocationPermissionExplained(Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
+                .edit().putBoolean(PREF_LOCATION_PERMISSION_EXPLAINED, true);
         editor.apply();
     }
 

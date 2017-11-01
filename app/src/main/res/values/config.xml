@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="google_geo_api_key">AIzaSyBqA5tZjB_QeP7ONTgDQURWcafuavNVzNE</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
+        AIzaSyBqA5tZjB_QeP7ONTgDQURWcafuavNVzNE
+    </string>
     <string name="facebook_app_id">259875731141973</string>
     <string name="fb_login_protocol_scheme">fb259875731141973</string>
 
@@ -12,6 +14,10 @@
 
     <string name="api_key">TlKm7GFjtGVD2YoQruca9emGfSz9j323</string>
     <string name="user_agent">Fix-It-Android</string>
+
+    <string name="default_location_address">Johannesburg</string>
+    <string name="default_location_latitude">-26.195246</string>
+    <string name="default_location_longitude">28.034088</string>
 
     <string name="twilio_base_url">https://api.twilio.com/2010-04-01/</string>
     <!-- TESTING

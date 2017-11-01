@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:padding="8dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tv_profession_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/i_need_profession_at"/>
+
+    <TextView
+        android:id="@+id/tv_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="12 fox street, johannesburg, south africa"/>
+
+</LinearLayout>

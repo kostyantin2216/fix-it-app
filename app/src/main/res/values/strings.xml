@@ -198,5 +198,20 @@
     <string name="tutorial_order_comment">Attach a comment to your order.</string>
     <string name="tutorial_select_reasons">Help the tradesmen by letting him know whats wrong from a list of common problems.</string>
     <string name="tutorial_complete_order">Click here to complete your order!</string>
+    <string name="title_activity_location">Map</string>
+    <string name="search_location">Search For Your Location</string>
+    <string name="permission_request">Permission Request</string>
+    <string name="location_permission_explanation">We need your permission to access your location so we can use it as the job location for your convience.</string>
+    <string name="agree">Agree</string>
+    <string name="grant">Grant</string>
+    <string name="deny">Deny</string>
+
+    <string name="title_activity_maps">Map</string>
+    <string name="no_location_data_provided">No location data provided</string>
+    <string name="service_not_available">Address fetching service is unavailable</string>
+    <string name="invalid_lat_long_used">Invalid location selected</string>
+    <string name="no_address_found">No address found for location</string>
+    <string name="address_found">Address Found</string>
+    <string name="i_need_profession_at">I need a %1$s at</string>
 
 </resources>

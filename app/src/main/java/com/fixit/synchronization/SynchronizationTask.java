@@ -96,7 +96,7 @@ public class SynchronizationTask extends Thread {
 
                         synchronize(responseData);
 
-                        // update synchronization history for future synchronizations.
+                        // updateDefaults synchronization history for future synchronizations.
                         mHistory.update(responseData.getSynchronizationResults());
 
                         if (!mStopped) {

@@ -15,7 +15,7 @@ public class SplashActivity extends LauncherActivity {
 
     @Override
     public void onAppReady() {
-        startActivity(new Intent(this, SearchActivity.class));
+        startActivity(new Intent(this, SplitSearchActivity.class));
         finish();
     }
 

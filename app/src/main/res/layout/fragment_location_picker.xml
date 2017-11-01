@@ -1,0 +1,47 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true">
+
+    <include
+        android:id="@+id/included_toolbar"
+        layout="@layout/layout_appbar_toolbar" />
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.fixit.ui.fragments.BindingMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/included_toolbar" />
+
+    <com.fixit.ui.components.CancelableAutoCompleteTextView
+        android:id="@+id/actv_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="14dp"
+        android:background="@drawable/list_item_bg_transparent_white"
+        android:drawablePadding="8dp"
+        android:drawableStart="@drawable/ic_search_grey_24dp"
+        android:hint="@string/search_location"
+        android:textColorHint="@color/grey_600"
+        android:textSize="15sp"
+        android:imeOptions="actionDone"
+        android:inputType="textMultiLine"
+        android:lines="2"
+        android:minLines="2"
+        android:padding="8dp"
+        android:theme="@style/EditTextTheme"
+        app:cancelDrawable="@drawable/ic_close_dark"
+        app:clearButtonMode="whileEditing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/included_toolbar" />
+
+</android.support.constraint.ConstraintLayout>

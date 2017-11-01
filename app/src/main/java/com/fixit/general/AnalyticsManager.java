@@ -5,12 +5,12 @@ import android.text.TextUtils;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.fixit.data.OrderData;
 import com.fixit.data.Tradesman;
 import com.fixit.utils.CommonUtils;
 import com.fixit.utils.GlobalPreferences;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +37,9 @@ public class AnalyticsManager {
     private final static String EVENT_TRADESMAN_REVIEWED = "tradesman_reviewed";
     private final static String EVENT_TRADESMAN_CALLED = "call_tradesman";
     private final static String EVENT_TRADESMAN_MESSAGED = "msg_tradesman";
+    private final static String EVENT_PERMISSION_REQUEST = "permission_request";
+    private final static String EVENT_PERMISSION_DENIED = "permission_denied";
+    private final static String EVENT_PERMISSION_GRANTED = "permission_granted";
 
     private final static String PARAM_PROFESSION = "profession";
     private final static String PARAM_LOCATION = "location";
@@ -47,6 +50,7 @@ public class AnalyticsManager {
     private final static String PARAM_JOB_REASON_COUNT = "job_reason_count";
     private final static String PARAM_PROVIDED_COMMENT = "provided_comment";
     private static final String PARAM_RATING = "rating";
+    private final static String PARAM_PERMISSIONS = "permission";
 
     private final static String LEAD_VALUE = "50.00";
     private final static String LEAD_VALUE_CURRENCY = "ZAR";
@@ -245,9 +249,41 @@ public class AnalyticsManager {
     }
 
     private void trackViewItemList(String category) {
-        QuickEvent event = new QuickEvent(FirebaseAnalytics.Event.VIEW_ITEM_LIST)
-                .forFirebase()
-                .addParam(FirebaseAnalytics.Param.ITEM_CATEGORY, category);
+        
+    }
+
+    public void trackPermissionRequest(String[] permissions) {
+        QuickEvent event = new QuickEvent(EVENT_PERMISSION_REQUEST)
+                .forAnswers();
+        trackPermissions(event, permissions);
+    }
+
+    public void trackPermissionGranted(String[] permissions) {
+        QuickEvent event = new QuickEvent(EVENT_PERMISSION_GRANTED)
+                .forAnswers();
+        trackPermissions(event, permissions);
+    }
+
+    public void trackPermissionDenied(String[] permissions) {
+        QuickEvent event = new QuickEvent(EVENT_PERMISSION_DENIED)
+                .forAnswers();
+        trackPermissions(event, permissions);
+    }
+
+    private void trackPermissions(QuickEvent event, String[] permissions) {
+        String permissionsStr;
+        switch (permissions.length) {
+            case 0:
+                permissionsStr = "NA";
+                break;
+            case 1:
+                permissionsStr = permissions[0];
+                break;
+            default:
+                Arrays.sort(permissions);
+                permissionsStr = Arrays.toString(permissions);
+        }
+        event.addParam(PARAM_PERMISSIONS, permissionsStr);
         sendEvent(event);
     }
 

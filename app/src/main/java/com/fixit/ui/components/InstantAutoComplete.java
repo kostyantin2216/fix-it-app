@@ -36,8 +36,8 @@ public class InstantAutoComplete extends CancelableAutoCompleteTextView implemen
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
         if (previouslyFocusedRect != null && focused && getFilter() != null) {
             performFiltering(getText(), 0);
-            showDropDown();
         }
+        showDropDown();
     }
 
     @Override

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_corner_nuts"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/included_toolbar"
+        layout="@layout/layout_appbar_toolbar" />
+
+    <com.fixit.ui.components.InstantAutoComplete
+        android:id="@+id/actv_professions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/search_activity_item_spacing"
+        android:layout_marginEnd="@dimen/search_activity_item_spacing"
+        android:layout_marginStart="@dimen/search_activity_item_spacing"
+        android:layout_marginTop="@dimen/search_activity_item_spacing"
+        android:hint="@string/search_professions"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:theme="@style/EditTextTheme"
+        android:drawableStart="@drawable/ic_search_grey_24dp"
+        android:drawablePadding="8dp"
+        app:cancelDrawable="@drawable/ic_close_dark"
+        app:clearButtonMode="whileEditing"
+        app:layout_constraintBottom_toTopOf="@+id/rv_professions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/included_toolbar"
+        tools:layout_editor_absoluteX="8dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_professions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/search_activity_item_spacing"
+        android:layout_marginStart="@dimen/search_activity_item_spacing"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/actv_professions"
+        tools:layout_editor_absoluteX="8dp" />
+
+</android.support.constraint.ConstraintLayout>

@@ -87,7 +87,7 @@ public class OrderFeedbackActivity extends BaseActivity<OrderController>
         FILog.e(Constants.LOG_TAG_FEEDBACK, "Aborting! " + reason, this);
 
         if(mNotificationRequestCode > -1) {
-            startActivity(new Intent(this, SearchActivity.class));
+            startActivity(new Intent(this, CombinedSearchActivity.class));
         }
         finish();
     }

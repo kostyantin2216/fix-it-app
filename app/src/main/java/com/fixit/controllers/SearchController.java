@@ -3,16 +3,13 @@ package com.fixit.controllers;
 import android.content.Context;
 
 import com.fixit.FixItApplication;
-import com.fixit.app.R;
 import com.fixit.data.JobLocation;
-import com.fixit.data.MutableLatLng;
 import com.fixit.data.Profession;
 import com.fixit.database.ProfessionDAO;
 import com.fixit.general.SearchManager;
-import com.fixit.ui.activities.SearchActivity;
 import com.fixit.utils.Constants;
 import com.fixit.utils.FILog;
-import com.fixit.validation.AddressValidator;
+import com.fixit.geo.AddressValidator;
 
 /**
  * Created by konstantin on 3/29/2017.

@@ -36,6 +36,13 @@ public class Constants {
     public final static String ARG_URL = "url";
     public final static String ARG_INSTALLATION_ID = "installationId";
     public static final String ARG_ADDRESS = "adrress";
+    public static final String ARG_DEFAULT_LOCATION_LATITUDE = "default_location_latitude";
+    public static final String ARG_DEFAULT_LOCATION_LONGITUDE = "default_location_longitude";
+    public static final String ARG_DEFAULT_LOCATION_ADDRESS = "default_location_address";
+    public static final String ARG_RESULT_DATA = "result_data";
+    public static final String ARG_RESULT_RECEIVER = "result_receiver";
+    public static final String ARG_LOCATION = "location";
+    public static final String ARG_LAT_LNG = "lat_lng";
 
     public final static int HTTP_INTERNAL_SERVER_ERROR = 500;
 
@@ -49,8 +56,8 @@ public class Constants {
     public final static String LOG_TAG_TRADESMAN_CACHE = "TradesmanCache";
     public final static String LOG_TAG_SYNCHRONIZATION = "Synchronization";
 
-    public final static String PROP_TRADESMAN_ID = "tradesmanId";
-
     public final static int RC_LOGIN = 1100;
 
+    public static final int RESULT_FAILURE = 0;
+    public static final int RESULT_SUCCESS = 1;
 }

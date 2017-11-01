@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -17,7 +16,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,12 +26,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fixit.config.AppConfig;
 import com.fixit.controllers.ActivityController;
@@ -224,7 +219,7 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
     public void restartApp(boolean skipSplash) {
         Intent intent;
         if(skipSplash) {
-            intent = new Intent(this, SearchActivity.class);
+            intent = new Intent(this, CombinedSearchActivity.class);
         } else {
             intent = new Intent(this, SplashActivity.class);
         }

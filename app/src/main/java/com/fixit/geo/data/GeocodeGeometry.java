@@ -1,4 +1,4 @@
-package com.fixit.geodata;
+package com.fixit.geo.data;
 
 import com.fixit.data.MutableLatLng;
 import com.fixit.data.MutableLatLngBounds;
