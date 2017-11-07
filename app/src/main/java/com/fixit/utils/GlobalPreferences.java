@@ -25,7 +25,8 @@ public class GlobalPreferences {
     private final static String PREF_INSTALLATION_ID = "pref_installation_id";
     private final static String PREF_DEVICE_ID = "pref_device_id";
     private final static String PREF_LAST_ORDER_ID = "pref_last_order_id";
-    private final static String PREF_LOCATION_PERMISSION_EXPLAINED = "pref_location_permission_explained";
+    private final static String PREF_LOCATION_PERMISSION_EXPLAINED = "pref_is_location_permission_explained";
+    private final static String PREF_LAST_SYNCHRONIZED_DB_VERSION = "pref_last_synced_db_version";
 
     // GETTERS
 
@@ -61,6 +62,11 @@ public class GlobalPreferences {
                 .getBoolean(PREF_LOCATION_PERMISSION_EXPLAINED, false);
     }
 
+    public static int getLastSynchronizedDbVersion(Context context) {
+        return context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
+                .getInt(PREF_LAST_SYNCHRONIZED_DB_VERSION, 0);
+    }
+
     // SETTERS
 
     public static void setLastOrderId(Context context, String orderId) {
@@ -85,6 +91,11 @@ public class GlobalPreferences {
         SharedPreferences.Editor editor = context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
                 .edit().putBoolean(PREF_LOCATION_PERMISSION_EXPLAINED, true);
         editor.apply();
+    }
+
+    public static void setLastSynchronizedDbVersion(Context context, int dbVersion) {
+        context.getSharedPreferences(PREF_GROUP_GLOBAL, Context.MODE_PRIVATE)
+                .edit().putInt(PREF_LAST_SYNCHRONIZED_DB_VERSION, dbVersion).apply();
     }
 
     // PRIVATE UTILITIES

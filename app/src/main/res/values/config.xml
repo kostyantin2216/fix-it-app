@@ -10,7 +10,7 @@
     <string name="terms_and_conditions_url">http://fixxit.co.za/terms-and-conditions/</string>
     <string name="privacy_policy_url">http://fixxit.co.za/privacy-policy/</string>
 
-    <integer name="db_version">5</integer>
+    <integer name="db_version">6</integer>
 
     <string name="api_key">TlKm7GFjtGVD2YoQruca9emGfSz9j323</string>
     <string name="user_agent">Fix-It-Android</string>
@@ -46,6 +46,7 @@
     <integer name="synchronization_min_interval_ms">3600000</integer> <!--3600000 1 hour -->
 
     <integer name="default_recycler_item_animation_time_millis">700</integer>
+    <integer name="map_loader_delay_millis">700</integer>
 
     <integer name="max_tradesmen_selection">3</integer>
     <integer name="max_job_reason_selection">6</integer>

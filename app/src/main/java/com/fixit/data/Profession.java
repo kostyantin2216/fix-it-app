@@ -12,15 +12,11 @@ import java.util.Date;
 
 public class Profession implements DataModelObject, Parcelable {
 
-    public final static Comparator<Profession> NAME_COMPARATOR = new Comparator<Profession>() {
-        @Override
-        public int compare(Profession o1, Profession o2) {
-            return o1.getName().compareTo(o2.getName());
-        }
-    };
+    public final static Comparator<Profession> NAME_COMPARATOR = (o1, o2) -> o1.getName().compareTo(o2.getName());
 
     private long id;
     private String name;
+    private String namePlural;
     private String description;
     private String imageUrl;
     private Boolean isActive;
@@ -28,9 +24,10 @@ public class Profession implements DataModelObject, Parcelable {
 
     public Profession() { }
 
-    public Profession(long id, String name, String description, String imageUrl, Boolean isActive, Date updatedAt) {
+    public Profession(long id, String name, String namePlural, String description, String imageUrl, Boolean isActive, Date updatedAt) {
         this.id = id;
         this.name = name;
+        this.namePlural = namePlural;
         this.description = description;
         this.imageUrl = imageUrl;
         this.isActive = isActive;
@@ -51,6 +48,14 @@ public class Profession implements DataModelObject, Parcelable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNamePlural() {
+        return namePlural;
+    }
+
+    public void setNamePlural(String namePlural) {
+        this.namePlural = namePlural;
     }
 
     public String getDescription() {
@@ -90,6 +95,7 @@ public class Profession implements DataModelObject, Parcelable {
         return "Profession{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", namePlural='" + namePlural + '\'' +
                 ", description='" + description + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", isActive=" + isActive +
@@ -106,6 +112,7 @@ public class Profession implements DataModelObject, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this.id);
         dest.writeString(this.name);
+        dest.writeString(this.namePlural);
         dest.writeString(this.description);
         dest.writeString(this.imageUrl);
         dest.writeValue(this.isActive);
@@ -115,6 +122,7 @@ public class Profession implements DataModelObject, Parcelable {
     protected Profession(Parcel in) {
         this.id = (Long) in.readValue(Long.class.getClassLoader());
         this.name = in.readString();
+        this.namePlural = in.readString();
         this.description = in.readString();
         this.imageUrl = in.readString();
         this.isActive = (Boolean) in.readValue(Boolean.class.getClassLoader());

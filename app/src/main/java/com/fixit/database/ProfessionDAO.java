@@ -17,6 +17,7 @@ public class ProfessionDAO extends BaseDAO<Profession> {
 
     public final static String KEY_ID = "id";
     public final static String KEY_NAME = "name";
+    public final static String KEY_NAME_PLURAL = "namePlural";
     public final static String KEY_DESCRIPTION = "description";
     public final static String KEY_IMAGE_URL = "imageUrl";
     public final static String KEY_IS_ACTIVE = "isActive";
@@ -25,6 +26,7 @@ public class ProfessionDAO extends BaseDAO<Profession> {
     public final static String CMD_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
             + KEY_ID + " INTEGER PRIMARY KEY, "
             + KEY_NAME + " TEXT, "
+            + KEY_NAME_PLURAL + " TEXT, "
             + KEY_DESCRIPTION + " TEXT, "
             + KEY_IMAGE_URL + " TEXT, "
             + KEY_IS_ACTIVE + " INTEGER, "
@@ -39,6 +41,7 @@ public class ProfessionDAO extends BaseDAO<Profession> {
         ContentValues cv = new ContentValues();
         cv.put(KEY_ID, obj.getId());
         cv.put(KEY_NAME, obj.getName());
+        cv.put(KEY_NAME_PLURAL, obj.getNamePlural());
         cv.put(KEY_DESCRIPTION, obj.getDescription());
         cv.put(KEY_IMAGE_URL, obj.getImageUrl());
         cv.put(KEY_IS_ACTIVE, obj.getActive() ? 1 : 0);
@@ -51,6 +54,7 @@ public class ProfessionDAO extends BaseDAO<Profession> {
         return new Profession(
                 c.getInt(c.getColumnIndex(KEY_ID)),
                 c.getString(c.getColumnIndex(KEY_NAME)),
+                c.getString(c.getColumnIndex(KEY_NAME_PLURAL)),
                 c.getString(c.getColumnIndex(KEY_DESCRIPTION)),
                 c.getString(c.getColumnIndex(KEY_IMAGE_URL)),
                 c.getInt(c.getColumnIndex(KEY_IS_ACTIVE)) == 1,

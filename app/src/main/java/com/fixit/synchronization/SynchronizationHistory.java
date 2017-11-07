@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.fixit.config.AppConfig;
+import com.fixit.utils.Constants;
+import com.fixit.utils.FILog;
 
 import java.util.Collections;
 import java.util.Date;
@@ -44,7 +46,10 @@ public class SynchronizationHistory {
         isReadyForSync = System.currentTimeMillis() > syncAfter;
 
         if(isReadyForSync) {
+            FILog.i(Constants.LOG_TAG_SYNCHRONIZATION, "Ready for synchronization");
             load();
+        } else {
+            FILog.i(Constants.LOG_TAG_SYNCHRONIZATION, "Not ready for synchronization");
         }
     }
 
@@ -105,4 +110,12 @@ public class SynchronizationHistory {
         return lastSyncDate;
     }
 
+    public static void clear(Context context, boolean apply) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREF_GROUP_SYNC_HISTORY, Context.MODE_PRIVATE).edit().clear();
+        if(apply) {
+            editor.apply();
+        } else {
+            editor.commit();
+        }
+    }
 }

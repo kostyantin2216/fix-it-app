@@ -206,12 +206,23 @@
     <string name="grant">Grant</string>
     <string name="deny">Deny</string>
 
+    <string name="search_predefined_professions">Search predefined professions</string>
     <string name="title_activity_maps">Map</string>
     <string name="no_location_data_provided">No location data provided</string>
     <string name="service_not_available">Address fetching service is unavailable</string>
     <string name="invalid_lat_long_used">Invalid location selected</string>
+    <string name="geocoder_unavailable">Geocoder unavailable</string>
     <string name="no_address_found">No address found for location</string>
     <string name="address_found">Address Found</string>
-    <string name="i_need_profession_at">I need a %1$s at</string>
+    <string name="i_need_profession_at">Find %1$s at</string>
+    <string name="i_need_profession_at_location">Find %1$s at %2$s</string>
+    <string name="loading_location">Loading location…</string>
+    <string name="invalid_location">Invalid location</string>
+    <string name="could_not_find_location">Could not find location</string>
+    <string name="find_profession_format">Find %1$s</string>
+    <string name="cant_search_with_address">Cannot start a search with current address</string>
+    <string name="tutorial_search_location">Search for the location that the tradesman is needed in.</string>
+    <string name="click_to_choose_profession">Click to choose profession</string>
+    <string name="click_to_search">Click here to begin your search for a qualified tradesman!</string>
 
 </resources>

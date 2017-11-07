@@ -114,7 +114,7 @@ public class SearchActivity extends BaseActivity<SearchController>
         }
     }
 
-    private void initNavigationDrawer(Toolbar toolbar) {
+    protected void initNavigationDrawer(Toolbar toolbar) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.open, R.string.close) {
@@ -220,12 +220,6 @@ public class SearchActivity extends BaseActivity<SearchController>
     @Override
     public SearchController createController() {
         return new SearchController((FixItApplication) getApplication(), this);
-    }
-
-
-    public void performSearch(String professionName, final String address) {
-        getController().performSearch(this, professionName, address, this);
-        showLoader(getString(R.string.validating_address));
     }
 
     @Override

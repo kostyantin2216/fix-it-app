@@ -35,11 +35,14 @@ public class UITutorials {
             .cancelable(false)
             .build();
 
+    public final static String TUTORIAL_SEARCH_PROFESSION = "tutorial_search_profession";
+    public final static String TUTORIAL_SEARCH_LOCATION = "tutorial_search_location";
     public final static String TUTORIAL_SEARCH_SCREEN = "tutorial_search_screen";
     public final static String TUTORIAL_SEARCH_RESULTS = "tutorial_search_results";
     public final static String TUTORIAL_SELECT_TRADESMAN = "tutorial_select_tradesman";
     public final static String TUTORIAL_ORDER_SELECTED_TRADESMEN = "tutorial_order_selected_tradesmen";
     public final static String TUTORIAL_ORDER_DETAILS_SCREEN = "tutorial_order_confirmation_screen";
+    public static final String TUTORIAL_BEGIN_SEARCH = "tutorial_begin_search";
 
     public static Tutorial create(String name, View forView, String withDescription) {
         FILog.i(LOG_TAG, "creating " + name);
@@ -86,7 +89,7 @@ public class UITutorials {
         TUTORS.close();
     }
 
-    private static boolean isTutorialComplete(String name, Context context) {
+    public static boolean isTutorialComplete(String name, Context context) {
         boolean isComplete = context.getSharedPreferences(PREF_GROUP_TUTORIALS, Context.MODE_PRIVATE)
                 .getBoolean(name, false);
         FILog.i(LOG_TAG, name + " complete " + isComplete);

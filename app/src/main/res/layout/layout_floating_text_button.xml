@@ -7,6 +7,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             tools:ignore="UseCompoundDrawables">
 
@@ -20,11 +21,10 @@
             <TextView
                 android:id="@+id/layout_button_text"
                 android:layout_width="wrap_content"
-                android:layout_height="24dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
                 android:gravity="center"
-                android:maxLines="1"
                 android:textAllCaps="true"
                 android:textSize="12sp"
                 android:textStyle="bold"

@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
+    android:background="@drawable/list_item_bg_white_primary_color_border"
     android:padding="8dp"
     android:gravity="center">
 

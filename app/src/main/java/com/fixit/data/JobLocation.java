@@ -1,13 +1,40 @@
 package com.fixit.data;
 
+import android.location.Address;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
+
+import com.fixit.utils.CommonUtils;
+import com.fixit.utils.DataUtils;
+
+import java.util.ArrayList;
 
 /**
  * Created by Kostyantin on 4/12/2017.
  */
 
 public class JobLocation implements Parcelable {
+
+    public static JobLocation create(Address address) {
+        JobLocation jobLocation = new JobLocation();
+        jobLocation.setStreet(address.getThoroughfare());
+        String streetNum = address.getSubThoroughfare();
+        if(!CommonUtils.isNumber(streetNum)) {
+            streetNum = address.getFeatureName();
+        }
+        if(CommonUtils.isNumber(streetNum)) {
+            jobLocation.setStreetNum(Integer.parseInt(streetNum));
+        }
+        jobLocation.setCity(address.getLocality());
+        jobLocation.setNeighborhood(address.getSubLocality());
+        jobLocation.setProvince(address.getAdminArea());
+        jobLocation.setZipCode(address.getPostalCode());
+        jobLocation.setLat(address.getLatitude());
+        jobLocation.setLng(address.getLongitude());
+        jobLocation.setGoogleAddress(DataUtils.combineAddressLines(address));
+        return jobLocation;
+    }
 
     private String province;
     private String city;

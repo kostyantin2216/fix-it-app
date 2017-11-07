@@ -17,7 +17,8 @@ public class FILog {
         INFO,
         WARN,
         ERROR,
-        DEBUG
+        DEBUG,
+        WHAT_A_TERRIBLE_FAILURE
     }
 
 
@@ -73,6 +74,13 @@ public class FILog {
         log(Level.ERROR, tag, message, cause, context);
     }
 
+    public static void wtf(String tag, String message, Throwable cause) {
+        log(Level.WHAT_A_TERRIBLE_FAILURE, tag, message, cause, null);
+    }
+
+    public static void wtf(String tag, String message) {
+        log(Level.WHAT_A_TERRIBLE_FAILURE, tag, message, null, null);
+    }
 
     public static void d(String tag, String message) {
         log(Level.DEBUG, tag, message, null, null);
@@ -84,15 +92,18 @@ public class FILog {
         }
         tag = LOG_PREFIX + tag;
 
-
         switch (level) {
             case INFO:
                 Log.i(tag, message, cause);
                 break;
             case WARN:
                 Log.w(tag, message, cause);
+                break;
             case ERROR:
                 Log.e(tag, message, cause);
+                break;
+            case WHAT_A_TERRIBLE_FAILURE:
+                Log.wtf(tag, message);
                 break;
         }
 

@@ -55,6 +55,7 @@ public class AppConfig {
     public final static String KEY_PRIVACY_POLICY_URL = "privacy_policy_url";
     public static final String KEY_TELE_VERIFICATION_COUNTRY_PREFIX = "tele_verification_country_prefix";
     public static final String KEY_MAX_ADDRESS_VALIDATION_REQUEST_RETRIES = "max_address_validation_request_retries";
+    public static final String KEY_MAP_LOADER_DELAY_MILLIS = "map_loader_delay_millis";
 
     private final static String KEY_IS_PRODUCTION = "is_production";
     private final static String KEY_DEVICE_INFO = "device_info";

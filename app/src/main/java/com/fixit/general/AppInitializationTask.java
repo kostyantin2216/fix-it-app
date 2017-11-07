@@ -14,6 +14,7 @@ import com.fixit.factories.DAOFactory;
 import com.fixit.rest.ServerCallback;
 import com.fixit.rest.apis.AppInstallationDataAPI;
 import com.fixit.rest.apis.SynchronizationServiceAPI;
+import com.fixit.synchronization.SynchronizationHistory;
 import com.fixit.synchronization.SynchronizationTask;
 import com.fixit.utils.Constants;
 import com.fixit.utils.FILog;
@@ -125,9 +126,15 @@ public class AppInitializationTask extends Thread {
         try {
             Response<AppInstallation> response = api.create(appInstallation).execute();
             if(!mStopped && response != null) {
-                appInstallationId = response.body().getId();
-                if(!mStopped) {
-                    mCallback.updateInstallationId(appInstallationId);
+                AppInstallation installation = response.body();
+                if(installation != null) {
+                    appInstallationId = installation.getId();
+                    if (!mStopped) {
+                        mCallback.updateInstallationId(appInstallationId);
+                    }
+                } else {
+                    Crashlytics.log(appInstallation.toString());
+                    throw new IllegalArgumentException("AppInstallation could not be created, ");
                 }
             } else {
                 appInstallationId = null;
@@ -141,6 +148,13 @@ public class AppInitializationTask extends Thread {
     }
 
     private void synchronizeDatabase(Context context, SynchronizationServiceAPI api, DAOFactory daoFactory) {
+        Integer dbVersion = AppConfig.getInteger(context, AppConfig.KEY_DB_VERSION, 0);
+        int lastSynchronizedDbVersion = GlobalPreferences.getLastSynchronizedDbVersion(context);
+        if(dbVersion > lastSynchronizedDbVersion) {
+            SynchronizationHistory.clear(context, false);
+            GlobalPreferences.setLastSynchronizedDbVersion(context, dbVersion);
+        }
+
         mSynchronizationTask = new SynchronizationTask(context, api, daoFactory, new SynchronizationTask.SynchronizationCallback() {
             @Override
             public void serverUnavailable() {

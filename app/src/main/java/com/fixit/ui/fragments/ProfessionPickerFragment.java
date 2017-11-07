@@ -19,6 +19,7 @@ import com.fixit.controllers.SearchController;
 import com.fixit.data.Profession;
 import com.fixit.ui.adapters.CommonRecyclerAdapter;
 import com.fixit.ui.adapters.ProfessionRecyclerAdapter;
+import com.fixit.ui.helpers.UITutorials;
 import com.fixit.utils.Constants;
 import com.fixit.utils.DataUtils;
 
@@ -94,6 +95,14 @@ public class ProfessionPickerFragment extends BaseFragment<SearchController> imp
         ));
 
         mView.updateDefaults(getArguments());
+
+        if(professions.length > 0 && !UITutorials.isTutorialComplete(UITutorials.TUTORIAL_SEARCH_PROFESSION, getContext())) {
+            mView.actvProfessions.post(() -> {
+                    UITutorials.create(UITutorials.TUTORIAL_SEARCH_PROFESSION, mView.actvProfessions, getString(R.string.search_predefined_professions))
+                            .and(mView.rvProfessions.findViewHolderForLayoutPosition(0).itemView, getString(R.string.click_to_choose_profession))
+                            .show(getFragmentManager());
+            });
+        }
     }
 
     @Override

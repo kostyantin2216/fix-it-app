@@ -43,6 +43,8 @@ public class Constants {
     public static final String ARG_RESULT_RECEIVER = "result_receiver";
     public static final String ARG_LOCATION = "location";
     public static final String ARG_LAT_LNG = "lat_lng";
+    public static final String ARG_PARAMS = "params";
+    public static final String ARG_MARK_LOCATION = "mark_location";
 
     public final static int HTTP_INTERNAL_SERVER_ERROR = 500;
 
@@ -55,6 +57,8 @@ public class Constants {
     public final static String LOG_TAG_ORDER_FACTORY = "OrderFactory";
     public final static String LOG_TAG_TRADESMAN_CACHE = "TradesmanCache";
     public final static String LOG_TAG_SYNCHRONIZATION = "Synchronization";
+    public static final String LOG_TAG_FETCH_ADDRESS = "FetchAddress";
+
 
     public final static int RC_LOGIN = 1100;
 

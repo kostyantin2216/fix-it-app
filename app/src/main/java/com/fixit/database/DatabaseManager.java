@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.fixit.config.AppConfig;
+import com.fixit.synchronization.SynchronizationHistory;
 
 /**
  * Created by Kostyantin on 7/29/2016.

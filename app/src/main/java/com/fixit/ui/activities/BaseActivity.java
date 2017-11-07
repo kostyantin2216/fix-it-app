@@ -332,11 +332,13 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
     }
 
     public void showError(ErrorFragment.ErrorParams params) {
-        hideLoader();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(android.R.id.content, ErrorFragment.newInstance(params))
-                .commitAllowingStateLoss();
+        if(!isDestroyed()) {
+            hideLoader();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(android.R.id.content, ErrorFragment.newInstance(params))
+                    .commitAllowingStateLoss();
+        }
     }
 
     @Override

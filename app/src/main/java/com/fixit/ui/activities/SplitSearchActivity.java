@@ -1,14 +1,19 @@
 package com.fixit.ui.activities;
 
+import android.location.Address;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 
 import com.fixit.app.R;
+import com.fixit.data.JobLocation;
 import com.fixit.data.Profession;
 import com.fixit.ui.fragments.LocationPickerFragment;
 import com.fixit.ui.fragments.ProfessionPickerFragment;
 
-public class SplitSearchActivity extends SearchActivity implements ProfessionPickerFragment.ProfessionSelectionListener {
+public class SplitSearchActivity extends SearchActivity
+        implements ProfessionPickerFragment.ProfessionSelectionListener,
+                   LocationPickerFragment.LocationPickerFragmentInteractionListener {
 
     private final static String FRAG_TAG_PROFESSION_PICKER = "profession_picker";
     private final static String FRAG_TAG_LOCATION_PICKER = "location_picker";
@@ -48,6 +53,7 @@ public class SplitSearchActivity extends SearchActivity implements ProfessionPic
                     .replace(R.id.fragment_holder, ProfessionPickerFragment.newInstance(defaultProfession), FRAG_TAG_PROFESSION_PICKER)
                     .commit();
 
+            getRootView().post(() -> initNavigationDrawer((Toolbar) findViewById(R.id.toolbar)));
         } else {
             super.onBackPressed();
         }
@@ -79,8 +85,9 @@ public class SplitSearchActivity extends SearchActivity implements ProfessionPic
         return (LocationPickerFragment) getSupportFragmentManager().findFragmentByTag(FRAG_TAG_LOCATION_PICKER);
     }
 
-    @Nullable
-    private ProfessionPickerFragment getProfessionPickerFragment() {
-        return (ProfessionPickerFragment) getSupportFragmentManager().findFragmentByTag(FRAG_TAG_PROFESSION_PICKER);
+    @Override
+    public void performSearch(String profession, Address address) {
+        getController().sendSearch(this, mProfession, JobLocation.create(address), this);
+        showLoader(getString(R.string.starting_search));
     }
 }

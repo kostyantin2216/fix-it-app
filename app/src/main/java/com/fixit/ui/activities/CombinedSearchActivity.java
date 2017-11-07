@@ -101,7 +101,8 @@ public class CombinedSearchActivity extends SearchActivity
 
     @Override
     public void performSearch(String profession, String address) {
-        super.performSearch(profession, address);
+        getController().performSearch(this, profession, address, this);
+        showLoader(getString(R.string.validating_address));
     }
 
 }

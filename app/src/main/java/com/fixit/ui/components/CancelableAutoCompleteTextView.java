@@ -31,6 +31,8 @@ public class CancelableAutoCompleteTextView extends AppCompatAutoCompleteTextVie
     private int mInitPaddingRight;
     private int mButtonPadding = dp2px(3);
 
+    private OnClearListener mOnClearListener;
+
     public enum ClearButtonMode {
         NEVER, ALWAYS, WHILEEDITING, UNLESSEDITING
     }
@@ -48,6 +50,10 @@ public class CancelableAutoCompleteTextView extends AppCompatAutoCompleteTextVie
     public CancelableAutoCompleteTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
+    }
+
+    public void setOnClearListener(OnClearListener listener) {
+        mOnClearListener = listener;
     }
 
     private void init(Context context, AttributeSet attributeSet) {
@@ -139,6 +145,9 @@ public class CancelableAutoCompleteTextView extends AppCompatAutoCompleteTextVie
                 if (event.getX() - (getMeasuredWidth() - getPaddingRight()) >= 0) {
                     setError(null);
                     this.setText("");
+                    if(mOnClearListener != null) {
+                        mOnClearListener.onAutoCompleteCleared();
+                    }
                 }
                 break;
         }
@@ -169,5 +178,9 @@ public class CancelableAutoCompleteTextView extends AppCompatAutoCompleteTextVie
     public int dp2px(float dipValue) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);
+    }
+
+    public interface OnClearListener {
+        void onAutoCompleteCleared();
     }
 }
