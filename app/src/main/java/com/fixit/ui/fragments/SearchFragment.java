@@ -15,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
-import com.appsee.Appsee;
 import com.fixit.app.R;
 import com.fixit.controllers.SearchController;
 import com.fixit.data.Profession;
@@ -59,9 +58,6 @@ public class SearchFragment extends BaseFragment<SearchController>
 
             actvAddress.setOnItemClickListener(addressItemClickListener);
             actvProfessions.setOnItemClickListener(professionItemClickListener);
-
-            Appsee.unmarkViewAsSensitive(actvAddress);
-            Appsee.unmarkViewAsSensitive(actvProfessions);
 
             btnProfessions = (Button) v.findViewById(R.id.btn_show_professions);
             btnMap = (Button) v.findViewById(R.id.btn_show_map);

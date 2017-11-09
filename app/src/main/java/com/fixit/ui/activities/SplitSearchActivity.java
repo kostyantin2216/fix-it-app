@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import com.fixit.app.R;
 import com.fixit.data.JobLocation;
 import com.fixit.data.Profession;
+import com.fixit.general.IntentHandler;
 import com.fixit.ui.fragments.LocationPickerFragment;
 import com.fixit.ui.fragments.ProfessionPickerFragment;
 
@@ -25,11 +26,13 @@ public class SplitSearchActivity extends SearchActivity
         super.onCreate(savedInstanceState);
 
         if(savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left, R.anim.exit_out_right, R.anim.enter_from_left)
-                    .add(R.id.fragment_holder, ProfessionPickerFragment.newInstance(null), FRAG_TAG_PROFESSION_PICKER)
-                    .commit();
+            if(!IntentHandler.handle(this)) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_out_left, R.anim.exit_out_right, R.anim.enter_from_left)
+                        .add(R.id.fragment_holder, ProfessionPickerFragment.newInstance(null), FRAG_TAG_PROFESSION_PICKER)
+                        .commit();
+            }
         }
     }
 

@@ -206,6 +206,7 @@ public class LocationPickerFragment extends BaseFragment<SearchController>
                 .commit();
 
         mapFragment.getMapAsync(this);
+        showLoader(getString(R.string.loading_map), true);
 
         /*UITutorials.create(UITutorials.TUTORIAL_SEARCH_LOCATION, mView.actvAddress, getString(R.string.tutorial_search_location))
                 .show(getFragmentManager());*/
@@ -232,6 +233,7 @@ public class LocationPickerFragment extends BaseFragment<SearchController>
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        hideLoader();
         mMap = new GoogleMapWrapper(googleMap);
 
         mMap.setTopPadding(mView.actvAddress.getHeight() + 15);
@@ -299,6 +301,8 @@ public class LocationPickerFragment extends BaseFragment<SearchController>
                     }
                 }, Manifest.permission.ACCESS_FINE_LOCATION);
             }
+        } else if(mMap != null) {
+            showDefaultLocation();
         }
     }
 

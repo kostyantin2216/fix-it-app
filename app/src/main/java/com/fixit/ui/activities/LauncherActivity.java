@@ -3,13 +3,9 @@ package com.fixit.ui.activities;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.appsee.Appsee;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.fixit.FixItApplication;
-import com.fixit.app.R;
 import com.fixit.controllers.LauncherController;
 import com.fixit.general.AppInitializationTask;
 import com.fixit.utils.FILog;
@@ -32,7 +28,6 @@ public abstract class LauncherActivity extends BaseActivity<LauncherController> 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics(), new Answers());
-        Appsee.start(getString(R.string.appsee_api_key));
     }
 
     @Override

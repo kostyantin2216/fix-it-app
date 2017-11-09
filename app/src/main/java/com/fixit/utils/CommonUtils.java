@@ -150,4 +150,17 @@ public class CommonUtils {
         return bundle;
     }
 
+    public static String toString(Iterable<?> list) {
+        StringBuilder sb = new StringBuilder();
+
+        Iterator<?> itr = list.iterator();
+        while(itr.hasNext()) {
+            sb.append(itr.next().toString());
+            if(itr.hasNext()) {
+                sb.append(",");
+            }
+        }
+
+        return sb.toString();
+    }
 }

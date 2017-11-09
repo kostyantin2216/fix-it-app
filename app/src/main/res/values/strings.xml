@@ -224,5 +224,6 @@
     <string name="tutorial_search_location">Search for the location that the tradesman is needed in.</string>
     <string name="click_to_choose_profession">Click to choose profession</string>
     <string name="click_to_search">Click here to begin your search for a qualified tradesman!</string>
+    <string name="loading_map">Loading map...</string>
 
 </resources>

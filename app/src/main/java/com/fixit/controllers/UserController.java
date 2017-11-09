@@ -2,7 +2,6 @@ package com.fixit.controllers;
 
 import android.text.TextUtils;
 
-import com.appsee.Appsee;
 import com.crashlytics.android.Crashlytics;
 import com.fixit.FixItApplication;
 import com.fixit.data.OrderData;
@@ -50,7 +49,6 @@ public class UserController extends OrderController {
                 } else {
                     String userId = responseData.getUserId();
                     Crashlytics.setUserIdentifier(userId);
-                    Appsee.setUserId(userId);
                     callback.onRegistrationSuccess(responseData.isNewUser(), userId);
                     getServerApiFactory().updateUserId(userId);
 
