@@ -12,6 +12,8 @@ import com.fixit.ui.activities.SplashActivity;
 import com.fixit.ui.activities.SplitSearchActivity;
 import com.fixit.utils.CommonUtils;
 
+import java.util.List;
+
 /**
  * Created by Kostyantin on 11/7/2017.
  */
@@ -19,8 +21,6 @@ import com.fixit.utils.CommonUtils;
 public class IntentHandler {
 
     private final static String HOST_SEARCH = "search";
-
-    private final static String PATH_SEARCH = "/search";
 
     private final static String PARAM_PROFESSION = "profession";
 
@@ -51,9 +51,16 @@ public class IntentHandler {
             if (isSearchIntent(data)) {
 
                 String professionParam = data.getQueryParameter(PARAM_PROFESSION);
-                professionParam = Uri.decode(professionParam);
-                if(!TextUtils.isEmpty(professionParam)) {
+                if(TextUtils.isEmpty(professionParam)) {
+                    List<String> pathSegments = data.getPathSegments();
+                    if(!pathSegments.isEmpty()) {
+                        professionParam = pathSegments.get(pathSegments.size() - 1);
+                    }
+                }
 
+                professionParam = professionParam.replace("_", " ");
+
+                if(!TextUtils.isEmpty(professionParam)) {
                     SearchController searchController = activity.getController();
                     if (searchController != null) {
                         Profession profession = searchController.getProfession(professionParam);
@@ -69,7 +76,12 @@ public class IntentHandler {
     }
 
     private static boolean isSearchIntent(Uri data) {
-        return data.getHost().equals(HOST_SEARCH)|| data.getPath().equals(PATH_SEARCH);
+        if(data.getHost().equals(HOST_SEARCH)) {
+            return true;
+        }
+
+        List<String> pathSegments = data.getPathSegments();
+        return pathSegments.contains(HOST_SEARCH);
     }
 
     private static boolean isValid(String action, Uri data) {
