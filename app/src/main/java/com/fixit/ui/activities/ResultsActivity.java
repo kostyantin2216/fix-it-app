@@ -9,7 +9,7 @@ import android.util.SparseArray;
 import android.view.View;
 
 import com.fixit.app.R;
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.controllers.ResultsController;
 import com.fixit.data.JobLocation;
 import com.fixit.data.Profession;
@@ -74,7 +74,7 @@ public class ResultsActivity extends BaseActivity<ResultsController>
 
     @Override
     public ResultsController createController() {
-        return new ResultsController((FixItApplication) getApplication(), this);
+        return new ResultsController((FixxitApplication) getApplication(), this);
     }
 
     @Override
@@ -106,12 +106,12 @@ public class ResultsActivity extends BaseActivity<ResultsController>
         getSupportFragmentManager().popBackStack();
         int index = mTradesmenIdsForPositions.indexOfValue(tradesman.get_id());
         getTradesmenResultsFragment().selectTradesman(mTradesmenIdsForPositions.keyAt(index));
-        getAnalyticsManager().trackTradesmanSelected(tradesman, mProfession.getName());
+        getAnalyticsManager().trackTradesmanSelected(this, tradesman, mProfession.getName());
     }
 
     @Override
     public void orderTradesmen(List<TradesmanWrapper> selectedTradesmen) {
-        getAnalyticsManager().trackResultsSelected(mProfession.getName(), selectedTradesmen.size());
+        getAnalyticsManager().trackResultsSelected(this, mProfession.getName(), selectedTradesmen.size());
         Intent intent = new Intent(this, OrderActivity.class);
         Bundle extras = new Bundle();
         extras.putParcelableArrayList(Constants.ARG_TRADESMEN, (ArrayList<TradesmanWrapper>) selectedTradesmen);

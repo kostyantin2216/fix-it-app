@@ -1,22 +1,16 @@
 package com.fixit.ui.activities;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.app.R;
 import com.fixit.controllers.SearchController;
 import com.fixit.data.OrderData;
 import com.fixit.data.Profession;
-import com.fixit.external.google.GoogleClientManager;
 import com.fixit.ui.fragments.ProfessionsListFragment;
 import com.fixit.ui.fragments.SearchFragment;
 import com.fixit.utils.Constants;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
 
 /**
  * Created by konstantin on 3/29/2017.
@@ -66,7 +60,7 @@ public class CombinedSearchActivity extends SearchActivity
 
     @Override
     public SearchController createController() {
-        return new SearchController((FixItApplication) getApplication(), this);
+        return new SearchController((FixxitApplication) getApplication(), this);
     }
 
     private SearchFragment getSearchFragment() {

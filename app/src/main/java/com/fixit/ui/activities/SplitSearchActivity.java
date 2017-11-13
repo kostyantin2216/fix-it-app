@@ -2,6 +2,7 @@ package com.fixit.ui.activities;
 
 import android.location.Address;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 
@@ -11,6 +12,7 @@ import com.fixit.data.Profession;
 import com.fixit.general.IntentHandler;
 import com.fixit.ui.fragments.LocationPickerFragment;
 import com.fixit.ui.fragments.ProfessionPickerFragment;
+import com.fixit.utils.Constants;
 
 public class SplitSearchActivity extends SearchActivity
         implements ProfessionPickerFragment.ProfessionSelectionListener,
@@ -34,6 +36,20 @@ public class SplitSearchActivity extends SearchActivity
                         .commit();
             }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(Constants.ARG_PROFESSION, mProfession);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mProfession = savedInstanceState.getParcelable(Constants.ARG_PROFESSION);
     }
 
     @Override

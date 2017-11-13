@@ -4,11 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.test.suitebuilder.TestMethod;
 import android.text.TextUtils;
 
 import com.fixit.app.R;
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.controllers.RegistrationController;
 import com.fixit.controllers.UserController;
 import com.fixit.data.UserAccountDetails;
@@ -86,7 +85,7 @@ public class LoginActivity extends BaseActivity<RegistrationController>
 
     @Override
     public RegistrationController createController() {
-        return new RegistrationController((FixItApplication) getApplication(), this);
+        return new RegistrationController((FixxitApplication) getApplication(), this);
     }
 
     @Override
@@ -148,7 +147,7 @@ public class LoginActivity extends BaseActivity<RegistrationController>
     @Override
     public void onRegistrationSuccess(boolean newUser, String userId) {
         GlobalPreferences.setUserId(this, userId);
-        getAnalyticsManager().login(newUser, mUserAccountDetails.getSignUpMethod().name());
+        getAnalyticsManager().login(this, newUser, mUserAccountDetails.getSignUpMethod().name());
         setResult(RESULT_OK, getIntent());
         finish();
     }

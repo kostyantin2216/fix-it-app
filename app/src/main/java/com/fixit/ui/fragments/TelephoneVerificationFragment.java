@@ -41,6 +41,8 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
 
     private int mVerificationCode = -1;
 
+    private long verificationBeginMillis;
+
     private enum ViewState {
         TELEPHONE_INPUT,
         CODE_INPUT
@@ -248,6 +250,8 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
 
     private void completeVerification() {
         if(mListener != null) {
+            long verificationDuration = System.currentTimeMillis() - verificationBeginMillis;
+            getController().getAnalyticsManager().trackSmsVerificationComplete(mView.getTelephone(), verificationDuration);
             mView.showLoader();
             mListener.onTelephoneNumberVerified(mView.getTelephone());
         }
@@ -255,6 +259,8 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
 
     @Override
     public void onVerificationCodeSent(int verificationCode) {
+        verificationBeginMillis = System.currentTimeMillis();
+        getController().getAnalyticsManager().trackSmsVerificationRequest(mView.getTelephone());
         mView.hideLoader();
         mVerificationCode = verificationCode;
         mView.setState(ViewState.CODE_INPUT);
@@ -262,6 +268,7 @@ public class TelephoneVerificationFragment extends BaseFragment<RegistrationCont
 
     @Override
     public void onVerificationError(int code, String error) {
+        getController().getAnalyticsManager().trackSmsVerificationError(mView.getTelephone(), code, error);
         mView.hideLoader();
         mView.etTelephone.setError(error);
     }

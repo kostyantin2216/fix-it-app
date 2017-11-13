@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.appsflyer.AppsFlyerLib;
 import com.fixit.controllers.SearchController;
 import com.fixit.data.Profession;
 import com.fixit.ui.activities.SplashActivity;
@@ -26,6 +27,7 @@ public class IntentHandler {
 
     // General handler.
     public static boolean handle(SplashActivity activity) {
+        AppsFlyerLib.getInstance().sendDeepLinkData(activity);
         Intent intent = activity.getIntent();
         String action = intent.getAction();
         Uri data = intent.getData();

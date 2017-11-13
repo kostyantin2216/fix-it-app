@@ -1,6 +1,6 @@
 package com.fixit.controllers;
 
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.data.Review;
 import com.fixit.data.ReviewData;
 import com.fixit.data.Tradesman;
@@ -34,7 +34,7 @@ public class ReviewController extends BaseController {
     private final DataServiceAPI mDataApi;
     private final ReviewDataAPI mReviewDataApi;
 
-    public ReviewController(FixItApplication baseApplication, UiCallback uiCallback) {
+    public ReviewController(FixxitApplication baseApplication, UiCallback uiCallback) {
         super(baseApplication, uiCallback);
 
         mDataApi = baseApplication.getServerApiFactory().createDataServiceApi();

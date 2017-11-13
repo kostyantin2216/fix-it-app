@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="apps_flyer_key">bya7UEe8NAdbtSW9NU7EsF</string>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
         AIzaSyBqA5tZjB_QeP7ONTgDQURWcafuavNVzNE
     </string>

@@ -49,7 +49,7 @@
         android:layout_margin="14dp"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:backgroundTint="@color/colorButton"
+        app:buttonColor="@color/colorButton"
         app:buttonIcon="@drawable/ic_check_white_24dp"
         app:buttonText="@string/find_profession_format"
         app:buttonTextColor="@android:color/white"

@@ -219,7 +219,7 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
     public void restartApp(boolean skipSplash) {
         Intent intent;
         if(skipSplash) {
-            intent = new Intent(this, CombinedSearchActivity.class);
+            intent = new Intent(this, SplitSearchActivity.class);
         } else {
             intent = new Intent(this, SplashActivity.class);
         }

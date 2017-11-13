@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.view.WindowManager;
 
 import com.fixit.app.R;
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.controllers.OrderController;
 import com.fixit.data.JobLocation;
 import com.fixit.data.JobReason;
@@ -64,7 +64,7 @@ public class OrderActivity extends BaseActivity<OrderController>
 
     @Override
     public OrderController createController() {
-        return new OrderController((FixItApplication) getApplication(), this);
+        return new OrderController((FixxitApplication) getApplication(), this);
     }
 
     @Override
@@ -100,7 +100,6 @@ public class OrderActivity extends BaseActivity<OrderController>
 
             this.comment = comment;
             getController().orderTradesmen(mProfession.getId(), mTradesmen, mJobLocation, mJobReasons, comment, this);
-            getAnalyticsManager().trackTradesmanOrder(mProfession.getName(), mTradesmen.length);
             setToolbarTitle(getString(R.string.order_complete));
         } else{
             requestLogin(getString(R.string.login_for_order), getString(R.string.question_exit_without_login), null, this);
@@ -109,6 +108,8 @@ public class OrderActivity extends BaseActivity<OrderController>
 
     @Override
     public void onOrderComplete(OrderData orderData) {
+        getAnalyticsManager().trackTradesmanOrdered(this, mProfession, orderData);
+
         OrderCompletionFragment fragment = (OrderCompletionFragment) getSupportFragmentManager().findFragmentByTag(FRAG_TAG_ORDER_COMPLETE);
         if(fragment != null) {
             fragment.onOrderComplete();

@@ -2,7 +2,7 @@ package com.fixit.controllers;
 
 import android.content.Context;
 
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.caching.ApplicationCache;
 import com.fixit.factories.APIFactory;
 import com.fixit.factories.DAOFactory;
@@ -16,16 +16,16 @@ import com.fixit.ui.fragments.ErrorFragment;
 
 abstract class BaseController implements ActivityController, ServerCallback {
 
-    private final FixItApplication mFixItApplication;
+    private final FixxitApplication mFixxitApplication;
     private final UiCallback mUiCallback;
 
-    public BaseController(FixItApplication baseApplication, UiCallback uiCallback) {
-        mFixItApplication = baseApplication;
+    public BaseController(FixxitApplication baseApplication, UiCallback uiCallback) {
+        mFixxitApplication = baseApplication;
         mUiCallback = uiCallback;
     }
 
     public Context getApplicationContext() {
-        return mFixItApplication;
+        return mFixxitApplication;
     }
 
     public UiCallback getUiCallback(){
@@ -34,22 +34,22 @@ abstract class BaseController implements ActivityController, ServerCallback {
 
     @Override
     public DAOFactory getDaoFactory() {
-        return mFixItApplication.getDaoFactory();
+        return mFixxitApplication.getDaoFactory();
     }
 
     @Override
     public APIFactory getServerApiFactory() {
-        return mFixItApplication.getServerApiFactory();
+        return mFixxitApplication.getServerApiFactory();
     }
 
     @Override
     public AnalyticsManager getAnalyticsManager() {
-        return mFixItApplication.getAnalyticsManager();
+        return mFixxitApplication.getAnalyticsManager();
     }
 
     @Override
     public ApplicationCache getAppCache() {
-        return mFixItApplication.getAppCache();
+        return mFixxitApplication.getAppCache();
     }
 
     @Override

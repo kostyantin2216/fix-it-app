@@ -9,7 +9,7 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import com.fixit.app.R;
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.controllers.OrderController;
 import com.fixit.data.Order;
 import com.fixit.data.Review;
@@ -41,7 +41,7 @@ public class OrderFeedbackActivity extends BaseActivity<OrderController>
 
     @Override
     public OrderController createController() {
-        return new OrderController((FixItApplication) getApplication(), this);
+        return new OrderController((FixxitApplication) getApplication(), this);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class OrderFeedbackActivity extends BaseActivity<OrderController>
         FILog.e(Constants.LOG_TAG_FEEDBACK, "Aborting! " + reason, this);
 
         if(mNotificationRequestCode > -1) {
-            startActivity(new Intent(this, CombinedSearchActivity.class));
+            startActivity(new Intent(this, SplitSearchActivity.class));
         }
         finish();
     }

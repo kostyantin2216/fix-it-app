@@ -3,8 +3,13 @@ package com.fixit.general;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.appsflyer.AFInAppEventParameterName;
+import com.appsflyer.AFInAppEventType;
+import com.appsflyer.AppsFlyerLib;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.fixit.data.OrderData;
+import com.fixit.data.Profession;
 import com.fixit.data.Tradesman;
 import com.fixit.utils.CommonUtils;
 import com.fixit.utils.GlobalPreferences;
@@ -20,6 +25,8 @@ import java.util.Map;
 public class AnalyticsManager {
 
     private final static String UP_IS_REGISTERED = "is_registered";
+
+    private final static String DEFAULT_CURRENCY = "ZAR";
 
     private final static String EVENT_SEARCH = FirebaseAnalytics.Event.SEARCH;
     private final static String EVENT_VIEW_SEARCH_RESULTS = FirebaseAnalytics.Event.VIEW_SEARCH_RESULTS;
@@ -40,6 +47,9 @@ public class AnalyticsManager {
     private final static String EVENT_PERMISSION_REQUEST = "permission_request";
     private final static String EVENT_PERMISSION_DENIED = "permission_denied";
     private final static String EVENT_PERMISSION_GRANTED = "permission_granted";
+    private final static String EVENT_SMS_VERIFICATION_REQUEST = "sms_verification_request";
+    private final static String EVENT_SMS_VERIFICATION_COMPLETE = "sms_verification_complete";
+    private final static String EVENT_SMS_VERIFICATION_ERROR = "sms_verification_error";
 
     private final static String PARAM_PROFESSION = "profession";
     private final static String PARAM_LOCATION = "location";
@@ -51,6 +61,9 @@ public class AnalyticsManager {
     private final static String PARAM_PROVIDED_COMMENT = "provided_comment";
     private static final String PARAM_RATING = "rating";
     private final static String PARAM_PERMISSIONS = "permission";
+    private final static String PARAM_MILLI_SECONDS = "milli_seconds";
+    private final static String PARAM_ERROR = "error";
+    private final static String PARAM_ERROR_CODE = "error_code";
 
     private final static String LEAD_VALUE = "50.00";
     private final static String LEAD_VALUE_CURRENCY = "ZAR";
@@ -82,17 +95,27 @@ public class AnalyticsManager {
                 mFirebaseAnalytics.logEvent(event.name, CommonUtils.toBundle(event.params));
             }
 
+            if(event.forAppsFlyer) {
+                HashMap<String, Object> params = new HashMap<>();
+                params.putAll(event.params);
+                AppsFlyerLib.getInstance().trackEvent(event.context, event.name, params);
+            }
         }
     }
 
-    public void login(boolean newUser, String method) {
+    public void login(Context context, boolean newUser, String method) {
         QuickEvent event = new QuickEvent(newUser ? EVENT_SIGN_UP : EVENT_LOGIN)
                 .forFirebase()
                 .addParam(FirebaseAnalytics.Param.SIGN_UP_METHOD, method);
         sendEvent(event);
+
+        event = new QuickEvent(AFInAppEventType.COMPLETE_REGISTRATION)
+                .forAppsFlyer(context)
+                .addParam(AFInAppEventParameterName.REGSITRATION_METHOD, method);
+        sendEvent(event);
     }
 
-    public void trackSearch(String profession, String location) {
+    public void trackSearch(Context context, String profession, String location) {
         QuickEvent event = new QuickEvent(EVENT_SEARCH)
                 .forFirebase()
                 .addParam(FirebaseAnalytics.Param.SEARCH_TERM, profession)
@@ -103,6 +126,12 @@ public class AnalyticsManager {
                 .forAnswers()
                 .addParam(PARAM_PROFESSION, profession)
                 .addParam(PARAM_LOCATION, location);
+        sendEvent(event);
+
+        event = new QuickEvent(AFInAppEventType.SEARCH)
+                .forAppsFlyer(context)
+                .addParam(AFInAppEventParameterName.CONTENT_TYPE, profession)
+                .addParam(AFInAppEventParameterName.SEARCH_STRING, location);
         sendEvent(event);
     }
 
@@ -120,11 +149,20 @@ public class AnalyticsManager {
         sendEvent(event);
     }
 
-    public void trackResultsSelected(String profession, int count) {
+    public void trackResultsSelected(Context context, String profession, int count) {
         QuickEvent event = new QuickEvent(EVENT_RESULTS_SELECTED)
                 .forAnswers()
                 .addParam(PARAM_PROFESSION, profession)
                 .addParam(PARAM_COUNT, String.valueOf(count));
+        sendEvent(event);
+
+        event = new QuickEvent(AFInAppEventType.INITIATED_CHECKOUT)
+                .forAppsFlyer(context)
+                .addParam(AFInAppEventParameterName.PRICE, String.valueOf(count))
+                .addParam(AFInAppEventParameterName.CONTENT_TYPE, profession)
+                .addParam(AFInAppEventParameterName.CURRENCY, DEFAULT_CURRENCY)
+                .addParam(AFInAppEventParameterName.QUANTITY, String.valueOf(count))
+                .addParam(AFInAppEventParameterName.PAYMENT_INFO_AVAILIBLE, String.valueOf(false));
         sendEvent(event);
     }
 
@@ -163,7 +201,7 @@ public class AnalyticsManager {
         sendEvent(event);
     }
 
-    public void trackTradesmanSelected(Tradesman tradesman, String profession) {
+    public void trackTradesmanSelected(Context context, Tradesman tradesman, String profession) {
         trackContentSelect(profession, tradesman.get_id());
 
         QuickEvent event = new QuickEvent(EVENT_TRADESMAN_SELECTED)
@@ -171,6 +209,15 @@ public class AnalyticsManager {
                 .addParam(PARAM_TRADESMAN_ID, tradesman.get_id())
                 .addParam(PARAM_COMPANY_NAME, tradesman.getCompanyName())
                 .addParam(PARAM_PROFESSION, profession);
+        sendEvent(event);
+
+        event = new QuickEvent(AFInAppEventType.ADD_TO_CART)
+                .forAppsFlyer(context)
+                .addParam(AFInAppEventParameterName.PRICE, "1")
+                .addParam(AFInAppEventParameterName.CONTENT_TYPE, profession)
+                .addParam(AFInAppEventParameterName.CONTENT_ID, tradesman.get_id())
+                .addParam(AFInAppEventParameterName.CURRENCY, DEFAULT_CURRENCY)
+                .addParam(AFInAppEventParameterName.QUANTITY, "1");
         sendEvent(event);
     }
 
@@ -184,7 +231,8 @@ public class AnalyticsManager {
         sendEvent(event);
     }
 
-    public void trackTradesmanOrder(String profession, int tradesmenCount) {
+    public void trackTradesmanOrdered(Context context, Profession profession, OrderData order) {
+        int tradesmenCount = order.getTradesmen().length;
         QuickEvent event = new QuickEvent(FirebaseAnalytics.Event.GENERATE_LEAD)
                 .forFirebase()
                 .addParam(FirebaseAnalytics.Param.CURRENCY, LEAD_VALUE_CURRENCY)
@@ -193,8 +241,19 @@ public class AnalyticsManager {
 
         event = new QuickEvent(EVENT_TRADESMEN_ORDERED)
                 .forAnswers()
-                .addParam(PARAM_PROFESSION, profession)
+                .addParam(PARAM_PROFESSION, profession.getName())
                 .addParam(PARAM_COUNT, String.valueOf(tradesmenCount));
+        sendEvent(event);
+
+        event = new QuickEvent(AFInAppEventType.PURCHASE)
+                .forAppsFlyer(context)
+                .addParam(AFInAppEventParameterName.REVENUE, String.valueOf(tradesmenCount * 20))
+                .addParam(AFInAppEventParameterName.CONTENT_TYPE, profession.getName())
+                .addParam(AFInAppEventParameterName.CONTENT_ID, String.valueOf(profession.getId()))
+                .addParam(AFInAppEventParameterName.PRICE, String.valueOf(tradesmenCount))
+                .addParam(AFInAppEventParameterName.CURRENCY, DEFAULT_CURRENCY)
+                .addParam(AFInAppEventParameterName.QUANTITY, String.valueOf(tradesmenCount))
+                .addParam("af_order_id", order.get_id());
         sendEvent(event);
     }
 
@@ -270,6 +329,30 @@ public class AnalyticsManager {
         trackPermissions(event, permissions);
     }
 
+    public void trackSmsVerificationRequest(String number) {
+        QuickEvent event = new QuickEvent(EVENT_SMS_VERIFICATION_REQUEST)
+                .forAnswers()
+                .addParam(PARAM_TELEPHONE, number);
+        sendEvent(event);
+    }
+
+    public void trackSmsVerificationComplete(String number, long timeMillis) {
+        QuickEvent event = new QuickEvent(EVENT_SMS_VERIFICATION_COMPLETE)
+                .forAnswers()
+                .addParam(PARAM_TELEPHONE, number)
+                .addParam(PARAM_MILLI_SECONDS, String.valueOf(timeMillis));
+        sendEvent(event);
+    }
+
+    public void trackSmsVerificationError(String number, int errorCode, String error) {
+        QuickEvent event = new QuickEvent(EVENT_SMS_VERIFICATION_ERROR)
+                .forAnswers()
+                .addParam(PARAM_TELEPHONE, number)
+                .addParam(PARAM_ERROR_CODE, String.valueOf(errorCode))
+                .addParam(PARAM_ERROR, error);
+        sendEvent(event);
+    }
+
     private void trackPermissions(QuickEvent event, String[] permissions) {
         String permissionsStr;
         switch (permissions.length) {
@@ -291,8 +374,11 @@ public class AnalyticsManager {
         private final String name;
         private final Map<String, String> params;
 
+        private Context context;
+
         private boolean forFirebase = false;
         private boolean forAnswers = false;
+        private boolean forAppsFlyer = false;
 
         public QuickEvent(String name) {
             this.name = name;
@@ -306,6 +392,12 @@ public class AnalyticsManager {
 
         public QuickEvent forAnswers() {
             forAnswers = true;
+            return this;
+        }
+
+        public QuickEvent forAppsFlyer(Context context) {
+            this.context = context;
+            forAppsFlyer = true;
             return this;
         }
 

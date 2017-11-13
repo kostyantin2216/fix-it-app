@@ -3,9 +3,10 @@ package com.fixit.ui.activities;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.appsflyer.AppsFlyerLib;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.controllers.LauncherController;
 import com.fixit.general.AppInitializationTask;
 import com.fixit.utils.FILog;
@@ -27,12 +28,13 @@ public abstract class LauncherActivity extends BaseActivity<LauncherController> 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppsFlyerLib.getInstance().startTracking(getApplication());
         Fabric.with(this, new Crashlytics(), new Answers());
     }
 
     @Override
     public LauncherController createController() {
-        return new LauncherController((FixItApplication) getApplication(), this);
+        return new LauncherController((FixxitApplication) getApplication(), this);
     }
 
     @Override

@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import com.fixit.app.R;
 import com.fixit.data.Order;
 import com.fixit.data.Tradesman;
+import com.fixit.ui.activities.SearchActivity;
+import com.fixit.ui.activities.SplitSearchActivity;
 import com.fixit.utils.Constants;
 import com.fixit.ui.activities.CombinedSearchActivity;
 import com.fixit.ui.fragments.feedback.ChoiceSelectionFragment;
@@ -131,14 +133,14 @@ public abstract class BaseOrderFeedbackFlow {
     }
 
     private void openOrderHistory() {
-        Intent intent = mView.createIntent(CombinedSearchActivity.class);
-        intent.putExtra(Constants.ARG_DELEGATE, CombinedSearchActivity.DELEGATE_ORDER_HISTORY);
+        Intent intent = mView.createIntent(SplitSearchActivity.class);
+        intent.putExtra(Constants.ARG_DELEGATE, SearchActivity.DELEGATE_ORDER_HISTORY);
         mView.startActivity(intent);
         mView.finish();
     }
 
     private void startSearch(boolean usePreviousSearchParams) {
-        Intent intent = mView.createIntent(CombinedSearchActivity.class);
+        Intent intent = mView.createIntent(SplitSearchActivity.class);
         if(usePreviousSearchParams) {
             intent.putExtra(Constants.ARG_ORDER_TO_RESTORE, mOrder.getId());
         }

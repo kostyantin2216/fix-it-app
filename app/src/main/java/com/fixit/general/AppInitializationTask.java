@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Process;
 import android.text.TextUtils;
 
+import com.appsflyer.AppsFlyerLib;
 import com.crashlytics.android.Crashlytics;
 import com.fixit.config.AppConfig;
 import com.fixit.data.AppInstallation;
@@ -81,6 +82,7 @@ public class AppInitializationTask extends Thread {
             String userId = GlobalPreferences.getUserId(context);
             if(!TextUtils.isEmpty(userId)) {
                 Crashlytics.setUserIdentifier(userId);
+                AppsFlyerLib.getInstance().setCustomerUserId(userId);
             }
 
             APIFactory serverAPIFactory = mCallback.getServerApiFactory();
@@ -199,12 +201,9 @@ public class AppInitializationTask extends Thread {
     private void finish() {
         FILog.i(LOG_TAG, "finished app synchronization");
         if(!mStopped) {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mCallback.onInitializationComplete(mErrors);
-                    mErrors.clear();
-                }
+            mHandler.post(() -> {
+                mCallback.onInitializationComplete(mErrors);
+                mErrors.clear();
             });
         }
     }

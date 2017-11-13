@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.factories.APIFactory;
 import com.fixit.factories.DAOFactory;
 
@@ -14,11 +14,11 @@ import com.fixit.factories.DAOFactory;
 
 public class BaseBroadcastReceiver extends BroadcastReceiver {
 
-    private FixItApplication mApplication;
+    private FixxitApplication mApplication;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        mApplication = (FixItApplication) context.getApplicationContext();
+        mApplication = (FixxitApplication) context.getApplicationContext();
     }
 
     public APIFactory getAPIFactory() {

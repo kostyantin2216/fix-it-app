@@ -1,6 +1,5 @@
 package com.fixit.ui.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -10,7 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.app.R;
 import com.fixit.config.AppConfig;
 import com.fixit.controllers.OrderController;
@@ -73,7 +72,7 @@ public class DeveloperSettingsActivity extends BaseDeveloperSettingsActivity {
 
                 return true;
             case R.id.restart:
-                ((FixItApplication) getApplication()).onDeveloperSettingsChanged();
+                ((FixxitApplication) getApplication()).onDeveloperSettingsChanged();
                 restartApp(false);
 
                 return true;
@@ -109,7 +108,7 @@ public class DeveloperSettingsActivity extends BaseDeveloperSettingsActivity {
     private void sendOrderNotification(int flowCode) {
         String orderId = GlobalPreferences.getLastOrderId(this);
         if(!TextUtils.isEmpty(orderId)) {
-            OrderController orderController = new OrderController((FixItApplication) getApplication(), this);
+            OrderController orderController = new OrderController((FixxitApplication) getApplication(), this);
             OrderData latestOrder = orderController.getLatestOrder();
 
             if(latestOrder != null) {

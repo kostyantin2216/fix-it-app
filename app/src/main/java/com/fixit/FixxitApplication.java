@@ -1,11 +1,16 @@
 package com.fixit;
 
 import android.app.Application;
+import android.util.Log;
 
+import com.appsflyer.AppsFlyerConversionListener;
+import com.appsflyer.AppsFlyerLib;
+import com.appsflyer.ConversionDataListener;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.fixit.app.R;
 import com.fixit.caching.ApplicationCache;
 import com.fixit.config.AppConfig;
 import com.fixit.factories.APIFactory;
@@ -13,13 +18,15 @@ import com.fixit.factories.DAOFactory;
 import com.fixit.general.AnalyticsManager;
 import com.fixit.utils.FILog;
 
+import java.util.Map;
+
 import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by konstantin on 3/29/2017.
  */
 
-public class FixItApplication extends Application {
+public class FixxitApplication extends Application implements AppsFlyerConversionListener {
 
     private AnalyticsManager mAnalyticsManager;
     private ApplicationCache mAppCache;
@@ -31,6 +38,8 @@ public class FixItApplication extends Application {
         super.onCreate();
 
         FILog.i("running version: " + AppConfig.getVersionInfo(this).getName());
+
+        AppsFlyerLib.getInstance().init(getString(R.string.apps_flyer_key), this);
     }
 
     public AnalyticsManager getAnalyticsManager() {
@@ -66,5 +75,25 @@ public class FixItApplication extends Application {
     public void onDeveloperSettingsChanged() {
         mServerApiFactory = null;
         mDaoFactory = null;
+    }
+
+    @Override
+    public void onInstallConversionDataLoaded(Map<String, String> conversionData) {
+        for (String attrName : conversionData.keySet()) {
+            FILog.d(AppsFlyerLib.LOG_TAG, "attribute: " + attrName + " = " + conversionData.get(attrName));
+        }
+    }
+
+    @Override
+    public void onInstallConversionFailure(String errorMessage) {
+        FILog.d(AppsFlyerLib.LOG_TAG, "error getting conversion data: " + errorMessage);
+    }
+
+    @Override
+    public void onAppOpenAttribution(Map<String, String> conversionData) { }
+
+    @Override
+    public void onAttributionFailure(String errorMessage) {
+        FILog.d(AppsFlyerLib.LOG_TAG, "error onAttributionFailure : " + errorMessage);
     }
 }

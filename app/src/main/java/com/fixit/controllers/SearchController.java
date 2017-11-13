@@ -2,7 +2,7 @@ package com.fixit.controllers;
 
 import android.content.Context;
 
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.data.JobLocation;
 import com.fixit.data.Profession;
 import com.fixit.database.ProfessionDAO;
@@ -21,7 +21,7 @@ public class SearchController extends OrderController {
     private final ProfessionDAO mProfessionDao;
     private final AddressValidator mAddressValidator;
 
-    public SearchController(FixItApplication baseApplication, UiCallback uiCallback) {
+    public SearchController(FixxitApplication baseApplication, UiCallback uiCallback) {
         super(baseApplication, uiCallback);
         mSearchManager = new SearchManager(getServerApiFactory().createSearchServiceApi());
         mProfessionDao = getDaoFactory().createProfessionDao();
@@ -38,6 +38,7 @@ public class SearchController extends OrderController {
 
     public void sendSearch(Context context, Profession profession, JobLocation location, SearchManager.SearchCallback callback) {
         mSearchManager.sendSearch(context, profession, location, callback);
+        getAnalyticsManager().trackSearch(context, profession.getName(), location.getNeighborhood());
     }
 
     public void performSearch(final Context context, String professionName, String address, final SearchCallback callback) {
@@ -50,7 +51,6 @@ public class SearchController extends OrderController {
                         callback.onAddressValidated();
                         JobLocation jobLocation = result.jobLocation;
                         sendSearch(context, profession, jobLocation, callback);
-                        getAnalyticsManager().trackSearch(profession.getName(), address);
                     } else {
                         callback.invalidAddress();
                     }

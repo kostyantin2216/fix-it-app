@@ -4,9 +4,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
-        android:name="com.fixit.FixItApplication"
+        android:name="com.fixit.FixxitApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="${applicationLabel}"
@@ -81,6 +83,12 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
         <receiver
             android:name="com.fixit.notifications.OrderFeedbackNotificationReceiver"
             android:enabled="true"
@@ -89,6 +97,12 @@
                 <action android:name="com.fixit.app.order.feedback.notifier" />
             </intent-filter>
         </receiver>
+
+        <service android:name="com.fixit.general.FixxitInstanceIdService" android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
 
         <service
             android:name="com.fixit.geo.FetchAddressIntentService"

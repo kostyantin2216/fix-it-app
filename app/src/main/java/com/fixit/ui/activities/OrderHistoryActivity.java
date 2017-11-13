@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 
 import com.fixit.app.R;
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.controllers.OrderController;
 import com.fixit.data.Review;
 import com.fixit.data.Tradesman;
@@ -24,7 +24,7 @@ public class OrderHistoryActivity extends BaseActivity<OrderController>
 
     @Override
     public OrderController createController() {
-        return new OrderController((FixItApplication) getApplication(), this);
+        return new OrderController((FixxitApplication) getApplication(), this);
     }
 
     @Override

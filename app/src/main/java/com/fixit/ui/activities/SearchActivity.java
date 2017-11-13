@@ -2,7 +2,6 @@ package com.fixit.ui.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.app.R;
 import com.fixit.controllers.OrderController;
 import com.fixit.controllers.SearchController;
@@ -31,8 +30,6 @@ import com.fixit.external.google.GoogleClientManager;
 import com.fixit.rest.APIError;
 import com.fixit.ui.components.OngoingOrderView;
 import com.fixit.ui.fragments.AboutFragment;
-import com.fixit.ui.fragments.ProfessionsListFragment;
-import com.fixit.ui.fragments.SearchFragment;
 import com.fixit.ui.fragments.TradesmanReviewFragment;
 import com.fixit.ui.helpers.OrderedTradesmanInteractionHandler;
 import com.fixit.ui.helpers.TradesmanActionHandler;
@@ -219,7 +216,7 @@ public class SearchActivity extends BaseActivity<SearchController>
 
     @Override
     public SearchController createController() {
-        return new SearchController((FixItApplication) getApplication(), this);
+        return new SearchController((FixxitApplication) getApplication(), this);
     }
 
     @Override

@@ -57,7 +57,7 @@ public class FloatingTextButton extends CardView {
         title = styleable.getString(R.styleable.FloatingTextButton_buttonText);
         titleColor = styleable.getColor(R.styleable.FloatingTextButton_buttonTextColor, Color.BLACK);
         icon = styleable.getDrawable(R.styleable.FloatingTextButton_buttonIcon);
-        background = styleable.getColor(R.styleable.FloatingTextButton_buttonColor, Color.WHITE);
+        background = styleable.getColor(R.styleable.FloatingTextButton_buttonColor, Color.BLUE);
 
         styleable.recycle();
     }

@@ -83,6 +83,9 @@ public class TextToAddress implements BiFunction<Context, String, FetchAddressIn
                             case postal_code:
                                 address.setPostalCode(addressComponent.getLong_name());
                                 break;
+                            case country:
+                                address.setCountryName(addressComponent.getLong_name());
+                                break;
                         }
                     }
 

@@ -1,6 +1,6 @@
 package com.fixit.controllers;
 
-import com.fixit.FixItApplication;
+import com.fixit.FixxitApplication;
 import com.fixit.data.JobLocation;
 import com.fixit.data.JobReason;
 import com.fixit.data.Order;
@@ -14,11 +14,9 @@ import com.fixit.factories.DAOFactory;
 import com.fixit.factories.OrderFactory;
 import com.fixit.general.UnexpectedErrorCallback;
 import com.fixit.rest.APIError;
-import com.fixit.rest.apis.JobReasonDataAPI;
 import com.fixit.rest.apis.OrderServiceAPI;
 import com.fixit.rest.callbacks.GeneralServiceErrorCallback;
 import com.fixit.rest.callbacks.ManagedServiceCallback;
-import com.fixit.rest.callbacks.RetryingCallback;
 import com.fixit.rest.requests.data.TradesmenOrderRequestData;
 import com.fixit.rest.responses.data.TradesmenOrderResponseData;
 import com.fixit.utils.Constants;
@@ -28,9 +26,6 @@ import com.fixit.utils.GlobalPreferences;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by konstantin on 5/16/2017.
@@ -42,7 +37,7 @@ public class OrderController extends TradesmenController {
     private final OrderServiceAPI mOrderApi;
     private final JobReasonDAO mJobReasonDao;
 
-    public OrderController(FixItApplication baseApplication, UiCallback uiCallback) {
+    public OrderController(FixxitApplication baseApplication, UiCallback uiCallback) {
         super(baseApplication, uiCallback);
         APIFactory apiFactory = getServerApiFactory();
         DAOFactory daoFactory = getDaoFactory();
