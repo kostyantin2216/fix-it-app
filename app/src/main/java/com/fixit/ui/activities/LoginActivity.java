@@ -32,6 +32,7 @@ public class LoginActivity extends BaseActivity<RegistrationController>
     private UserAccountDetails mUserAccountDetails;
 
     private String mLoginMessage;
+    private boolean mFromNavigation;
 
     private boolean isGoogleLoginEnabled = true;
     private boolean isFacebookLoginEnabled = true;
@@ -47,6 +48,7 @@ public class LoginActivity extends BaseActivity<RegistrationController>
 
         Intent intent = getIntent();
         mLoginMessage = intent.getStringExtra(Constants.ARG_LOGIN_MESSAGE);
+        mFromNavigation = intent.getBooleanExtra(Constants.ARG_FROM_NAVIGATION, false);
 
         if(savedInstanceState == null) {
             getSupportFragmentManager()
@@ -147,7 +149,7 @@ public class LoginActivity extends BaseActivity<RegistrationController>
     @Override
     public void onRegistrationSuccess(boolean newUser, String userId) {
         GlobalPreferences.setUserId(this, userId);
-        getAnalyticsManager().login(this, newUser, mUserAccountDetails.getSignUpMethod().name());
+        getAnalyticsManager().login(this, newUser, mUserAccountDetails.getSignUpMethod().name(), mFromNavigation);
         setResult(RESULT_OK, getIntent());
         finish();
     }

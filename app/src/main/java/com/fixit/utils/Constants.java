@@ -45,6 +45,7 @@ public class Constants {
     public static final String ARG_LAT_LNG = "lat_lng";
     public static final String ARG_PARAMS = "params";
     public static final String ARG_MARK_LOCATION = "mark_location";
+    public static final String ARG_FROM_NAVIGATION = "from_navigation";
 
     public final static int HTTP_INTERNAL_SERVER_ERROR = 500;
 

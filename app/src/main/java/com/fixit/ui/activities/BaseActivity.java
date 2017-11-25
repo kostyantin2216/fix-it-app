@@ -34,6 +34,7 @@ import com.fixit.config.AppConfig;
 import com.fixit.controllers.ActivityController;
 import com.fixit.app.R;
 import com.fixit.general.AnalyticsManager;
+import com.fixit.general.PermissionManager;
 import com.fixit.rest.APIError;
 import com.fixit.rest.callbacks.GeneralServiceErrorCallback;
 import com.fixit.ui.fragments.BaseFragment;
@@ -57,6 +58,7 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
     private C mController;
     private MaterialDialog mLoaderDialog;
 
+    private PermissionManager mPermissionManager;
     private Set<OnBackPressListener> mBackPressListeners;
     private ActivityBackPressPrompt mBackPressPrompt;
     private LoginRequester mLoginRequester;
@@ -158,6 +160,24 @@ public abstract class BaseActivity<C extends ActivityController> extends AppComp
         TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         if(toolbarTitle != null) {
             toolbarTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp);
+        }
+    }
+
+    @Override
+    public void requestPermissions(boolean explained, PermissionManager.PermissionRequest request, String... permissions) {
+        if(mPermissionManager == null){
+            ActivityController controller = getController();
+            assert controller != null;
+            mPermissionManager = new PermissionManager(controller.getAnalyticsManager());
+        }
+        mPermissionManager.requestPermissions(this, explained, request, permissions);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(mPermissionManager != null) {
+            mPermissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 

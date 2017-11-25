@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.fixit.controllers.ActivityController;
+import com.fixit.general.PermissionManager;
 import com.fixit.rest.APIError;
 import com.fixit.rest.callbacks.GeneralServiceErrorCallback;
 import com.fixit.ui.activities.BaseActivity;
@@ -33,6 +34,12 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
             return mListener.getController();
         }
         return null;
+    }
+
+    public void requestPermissions(boolean explained, PermissionManager.PermissionRequest request, String... permissions) {
+        if(mListener != null) {
+            mListener.requestPermissions(explained, request, permissions);
+        }
     }
 
     public void startChrome(String url) {
@@ -200,6 +207,7 @@ public abstract class BaseFragment<C extends ActivityController> extends Fragmen
         void hideLoader();
         void setToolbar(Toolbar toolbar, boolean homeAsUpEnabled);
         void setToolbarTitle(String title);
+        void requestPermissions(boolean explained, PermissionManager.PermissionRequest request, String... permissions);
         void startChrome(String url);
         void notifyUser(String msg);
         void notifyUser(String msg, View v);

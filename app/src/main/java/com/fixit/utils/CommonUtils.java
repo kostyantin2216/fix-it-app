@@ -94,7 +94,7 @@ public class CommonUtils {
 
     public static boolean isDecimal(String string) {
         if(string != null) {
-            String regexStr = "([0-9]*)\\.([0-9]*)";
+            String regexStr = "[0-9]{1,13}(\\.[0-9]*)?";
             String trimmed = string.trim();
             return !trimmed.isEmpty() && trimmed.matches(regexStr);
         }
@@ -163,4 +163,5 @@ public class CommonUtils {
 
         return sb.toString();
     }
+
 }

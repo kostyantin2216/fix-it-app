@@ -60,16 +60,18 @@ public class ResultsActivity extends BaseActivity<ResultsController>
                     .beginTransaction()
                     .add(com.fixit.app.R.id.fragment_holder, new TradesmenResultsFragment(), FRAG_TAG_RESULTS_LIST)
                     .commit();
+
+            Intent intent = getIntent();
+            String searchId = intent.getStringExtra(Constants.ARG_SEARCH_ID);
+            getController().fetchResults(searchId, this);
+            showLoader(getString(R.string.waiting_for_results));
+
+            mJobLocation = intent.getParcelableExtra(Constants.ARG_JOB_LOCATION);
+            mProfession = intent.getParcelableExtra(Constants.ARG_PROFESSION);
+            mTradesmenIdsForPositions = new SparseArray<>();
+        } else {
+            finish();
         }
-
-        Intent intent = getIntent();
-        String searchId = intent.getStringExtra(Constants.ARG_SEARCH_ID);
-        getController().fetchResults(searchId, this);
-        showLoader(getString(R.string.waiting_for_results));
-
-        mJobLocation = intent.getParcelableExtra(Constants.ARG_JOB_LOCATION);
-        mProfession = intent.getParcelableExtra(Constants.ARG_PROFESSION);
-        mTradesmenIdsForPositions = new SparseArray<>();
     }
 
     @Override

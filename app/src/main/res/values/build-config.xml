@@ -4,7 +4,7 @@
     <bool name="is_production">false</bool>
 
 
-    <string name="server_api_base_url">http://10.0.0.4/rest/</string>
+    <string name="server_api_base_url">http://fixxit-web.co.za/rest/</string>
     <string name="appsee_api_key">c32da018835344e8b2f6546f3c5807b3</string>
 
 

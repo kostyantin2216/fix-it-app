@@ -258,7 +258,9 @@ public class SearchActivity extends BaseActivity<SearchController>
         closeNavigationDrawer();
         switch (item.getItemId()) {
             case R.id.login:
-                startActivity(new Intent(this, LoginActivity.class));
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.getExtras().putBoolean(Constants.ARG_FROM_NAVIGATION, true);
+                startActivity(intent);
                 return true;
             case R.id.order_history:
                 startActivity(new Intent(this, OrderHistoryActivity.class));

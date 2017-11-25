@@ -56,7 +56,6 @@ public class TradesmenResultsFragment extends StaticRecyclerListFragment<Results
 
         if(context instanceof TradesmenResultsInteractionListener) {
             mListener = (TradesmenResultsInteractionListener) context;
-            mListener.setDoneBtnClickListener(this);
         } else {
             throw new IllegalArgumentException("context must implement "
                         + TradesmenResultsInteractionListener.class.getName());
@@ -67,8 +66,21 @@ public class TradesmenResultsFragment extends StaticRecyclerListFragment<Results
     public void onDetach() {
         super.onDetach();
 
-        mListener.setDoneBtnClickListener(null);
         mListener = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mListener.setDoneBtnClickListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mListener.setDoneBtnClickListener(null);
     }
 
     @Override

@@ -40,6 +40,8 @@ public class FixxitApplication extends Application implements AppsFlyerConversio
         FILog.i("running version: " + AppConfig.getVersionInfo(this).getName());
 
         AppsFlyerLib.getInstance().init(getString(R.string.apps_flyer_key), this);
+        AppsFlyerLib.getInstance().startTracking(this);
+        Fabric.with(this, new Crashlytics(), new Answers());
     }
 
     public AnalyticsManager getAnalyticsManager() {

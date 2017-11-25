@@ -28,8 +28,6 @@ public abstract class LauncherActivity extends BaseActivity<LauncherController> 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppsFlyerLib.getInstance().startTracking(getApplication());
-        Fabric.with(this, new Crashlytics(), new Answers());
     }
 
     @Override

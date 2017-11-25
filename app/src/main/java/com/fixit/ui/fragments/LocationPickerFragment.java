@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import android.widget.AutoCompleteTextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fixit.app.R;
 import com.fixit.config.AppConfig;
+import com.fixit.controllers.ActivityController;
 import com.fixit.controllers.SearchController;
 import com.fixit.data.JobLocation;
 import com.fixit.data.Profession;
@@ -96,6 +98,20 @@ public class LocationPickerFragment extends BaseFragment<SearchController>
         public void setAddress(CharSequence address) {
             this.actvAddress.setText(address);
             this.actvAddress.clearFocus();
+        }
+
+        public String getAddress() {
+            return this.actvAddress.getText().toString();
+        }
+
+        public String getMarkerAddress() {
+            if(locationMarker != null) {
+                Address address = (Address) locationMarker.getTag();
+                if(address != null) {
+                    return DataUtils.combineAddressLines(address);
+                }
+            }
+            return null;
         }
 
         public void showLoader() {
@@ -177,10 +193,9 @@ public class LocationPickerFragment extends BaseFragment<SearchController>
         super.onCreate(savedInstanceState);
 
         mResultReceiver = new AddressResultReceiver(new Handler());
+
         Profession profession = getArguments().getParcelable(Constants.ARG_PROFESSION);
-
         assert profession != null;
-
         mProfession = profession.getNamePlural();
     }
 
@@ -232,6 +247,19 @@ public class LocationPickerFragment extends BaseFragment<SearchController>
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        String address = mView.getAddress();
+        if(!TextUtils.isEmpty(address)) {
+            String markerAddress = mView.getMarkerAddress();
+            if(markerAddress == null || !markerAddress.equals(address)) {
+                fetchAddress(address);
+            }
+        }
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         hideLoader();
         mMap = new GoogleMapWrapper(googleMap);
@@ -270,9 +298,7 @@ public class LocationPickerFragment extends BaseFragment<SearchController>
             if(PermissionManager.hasPermissions(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)) {
                 showCurrentLocationWithPermission();
             } else {
-                SearchController controller = getController();
-                final PermissionManager pm = new PermissionManager(controller != null ? controller.getAnalyticsManager() : null);
-                pm.requestPermissions(getActivity(), GlobalPreferences.isLocationPermissionExplained(getContext()), new PermissionManager.PermissionRequest() {
+                requestPermissions(GlobalPreferences.isLocationPermissionExplained(getContext()), new PermissionManager.PermissionRequest() {
                     @Override
                     public void onPermissionGranted(String[] permissions) {
                         showCurrentLocationWithPermission();
@@ -293,7 +319,7 @@ public class LocationPickerFragment extends BaseFragment<SearchController>
                                 .title(R.string.permission_request)
                                 .content(R.string.location_permission_explanation)
                                 .positiveText(R.string.grant)
-                                .onPositive((dialog, which) -> pm.requestPermissions(getActivity(), true, this))
+                                .onPositive((dialog, which) -> requestPermissions(true, this, permissions))
                                 .negativeText(R.string.deny)
                                 .onNegative((dialog, which) -> showDefaultLocation())
                                 .show();

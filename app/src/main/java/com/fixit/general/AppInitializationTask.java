@@ -22,6 +22,7 @@ import com.fixit.utils.GlobalPreferences;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.net.ConnectException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -143,6 +144,11 @@ public class AppInitializationTask extends Thread {
             appInstallationId = null;
             // Do nothing, try again next time app opens.
             FILog.e(LOG_TAG, "Couldn't send app installation to server.", e);
+
+            if(e instanceof ConnectException) {
+                mStopped = true;
+                mCallback.serverUnavailable();
+            }
         }
         return appInstallationId;
     }
